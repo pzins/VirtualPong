@@ -1,2 +1,2 @@
 # Android_test
-Application which use sensors
+Application which uses sensors
