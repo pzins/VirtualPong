@@ -9,6 +9,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -88,11 +89,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
         discover();
 
+
     }
 
     // method called when discoverPeers listener's onSuccess is called
     private void peersUpdated() {
-        mManager.requestPeers(mChannel, new MyPeerListListener());
+        MyPeerListListener myListener = new MyPeerListListener();
+        mManager.requestPeers(mChannel, myListener);
+        WifiP2pDevice dev = myListener.getWifiP2pDevice();
+        connection(dev);
     }
 
     private void discover(){
@@ -113,6 +118,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
     }
+
+    public void connection(WifiP2pDevice device)
+    {
+        //obtain a peer from the WifiP2pDeviceList
+        if(device != null)
+        {
+            WifiP2pConfig config = new WifiP2pConfig();
+            config.deviceAddress = device.deviceAddress;
+            mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
+
+                @Override
+                public void onSuccess() {
+                    //success logic
+                    Log.w("CONNECTION SUCCESSFUL", "CONNECTION SUCCESSFUL");
+                }
+
+                @Override
+                public void onFailure(int reason) {
+                    //failure logic
+                }
+            });
+        }
+    }
+
+
 
 
     protected void onPause() {

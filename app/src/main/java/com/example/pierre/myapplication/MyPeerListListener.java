@@ -10,13 +10,21 @@ import android.util.Log;
  */
 public class MyPeerListListener implements WifiP2pManager.PeerListListener {
 
+    WifiP2pDevice mDevice;
+
+
+
+    public WifiP2pDevice getWifiP2pDevice()
+    {
+        return mDevice;
+    }
 
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peers) {
         // print all peers
+        mDevice = peers.getDeviceList().iterator().next();
         for (WifiP2pDevice device : peers.getDeviceList()) {
             Log.w("............", device.deviceName);
-
         }
     }
 }
