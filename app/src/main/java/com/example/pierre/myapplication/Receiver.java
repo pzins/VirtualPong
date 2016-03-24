@@ -13,10 +13,11 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
  */
 public class Receiver extends BroadcastReceiver{
 
-    WifiP2pManager manager;
-    Channel channel;
-    MainActivity myActivity;
+    private WifiP2pManager manager;
+    private Channel channel;
+    private MainActivity myActivity;
 
+    private DeviceListFragment listFragment;
 
 
 
@@ -24,10 +25,12 @@ public class Receiver extends BroadcastReceiver{
         this.manager = _manager;
         this.channel = _channel;
         this.myActivity=  _myActivity;
+
     }
 
     public void onReceive(Context context, Intent intent)
     {
+
         Log.w("----------------", "ololololoolol");
         String action = intent.getAction();
         Log.w("++++++++++++++++", action);
@@ -42,10 +45,13 @@ public class Receiver extends BroadcastReceiver{
                 myActivity.setIsWifiP2pEnabled(false);
             }
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-
-            // The peer list has changed!  We should probably do something about
-            // that.
-
+            // request available peers from the wifi p2p manager. This is an
+            // asynchronous call and the calling activity is notified with a
+            // callback on PeerListListener.onPeersAvailable()
+                Log.w("(((((()))))))))))", "))))))))))((((((((");
+            if (manager != null) {
+                manager.requestPeers(channel, listFragment);
+            }
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
             // Connection state changed!  We should probably do something about

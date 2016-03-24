@@ -82,20 +82,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
-        receiver = new Receiver(mManager, mChannel, this);
+        mManager.discoverPeers(mChannel, null);
+
+
     }
 
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
         unregisterReceiver(receiver);
-
     }
 
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_NORMAL);
-//        receiver = new Receiver(mManager, mChannel, this);
+        receiver = new Receiver(mManager, mChannel, this);
         registerReceiver(receiver, intentFilter);
     }
 
