@@ -1,6 +1,7 @@
 package com.example.pierre.myapplication;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.hardware.Sensor;
@@ -8,6 +9,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
@@ -46,10 +48,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private boolean isWifiP2pEnabled;
 
 
-    private final IntentFilter intentFilter = new IntentFilter();
+    private IntentFilter mIntentFilter;
     private Channel mChannel;
     private WifiP2pManager mManager;
-    private Receiver receiver;
+    private BroadcastReceiver mReceiver;
 
 
     @Override
@@ -75,29 +77,57 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
 
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
-        mManager.discoverPeers(mChannel, null);
-
+        mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
+        discover();
 
     }
+
+    // method called when discoverPeers listener's onSuccess is called
+    private void peersUpdated() {
+        mManager.requestPeers(mChannel, new MyPeerListListener());
+    }
+
+    private void discover(){
+        mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.w(">>>>>>>>>>>>>>", "Dicovery Successfull");
+                Toast.makeText(MainActivity.this, "Discovery Initiated",
+                        Toast.LENGTH_SHORT).show();
+                peersUpdated();
+            }
+
+            @Override
+            public void onFailure(int reasonCode) {
+                Log.w(">>>>>>>>>>>>>>", "Dicovery Failed");
+                Toast.makeText(MainActivity.this, "Discovery Failed : " + reasonCode,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
-        unregisterReceiver(receiver);
+        unregisterReceiver(mReceiver);
     }
 
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_NORMAL);
-        receiver = new Receiver(mManager, mChannel, this);
-        registerReceiver(receiver, intentFilter);
+        registerReceiver(mReceiver, mIntentFilter);
+        discover();
+
+
     }
 
     @Override
@@ -228,7 +258,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onStart() {
         super.onStart();
 
-
     }
 
     @Override
@@ -241,6 +270,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void setIsWifiP2pEnabled(boolean state)
     {
         isWifiP2pEnabled = state;
+        Log.w("change Wifi P2P", Boolean.toString(isWifiP2pEnabled));
     }
 
 }
