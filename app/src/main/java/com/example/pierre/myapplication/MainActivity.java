@@ -8,6 +8,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
+import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -24,7 +25,11 @@ import android.widget.TextView;
 
 
 import java.lang.Math;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -77,23 +82,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
-
-        mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
-
-            @Override
-            public void onSuccess() {
-                // Code for when the discovery initiation is successful goes here.
-                // No services have actually been discovered yet, so this method
-                // can often be left blank.  Code for peer discovery goes in the
-                // onReceive method, detailed below.
-            }
-
-            @Override
-            public void onFailure(int reasonCode) {
-                // Code for when the discovery initiation fails goes here.
-                // Alert the user that something went wrong.
-            }
-        });
+        receiver = new Receiver(mManager, mChannel, this);
     }
 
     protected void onPause() {
@@ -106,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_NORMAL);
-        receiver = new Receiver(mManager, mChannel, this);
+//        receiver = new Receiver(mManager, mChannel, this);
         registerReceiver(receiver, intentFilter);
     }
 
@@ -128,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

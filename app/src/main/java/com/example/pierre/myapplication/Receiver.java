@@ -1,11 +1,8 @@
 package com.example.pierre.myapplication;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.p2p.WifiP2pConfig;
-import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
@@ -31,7 +28,9 @@ public class Receiver extends BroadcastReceiver{
 
     public void onReceive(Context context, Intent intent)
     {
+        Log.w("----------------", "ololololoolol");
         String action = intent.getAction();
+        Log.w("++++++++++++++++", action);
         if(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action))
         {
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
