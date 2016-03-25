@@ -3,6 +3,7 @@ package com.example.pierre.myapplication;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.NetworkInfo;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -80,12 +81,28 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
 //                MyPeerListListener myListener = new MyPeerListListener();
                 manager.requestPeers(channel, peerListListener);
                 Log.w(":::::::::::::::", "change peer");
+                connect();
             }
 
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
             // Connection state changed!  We should probably do something about
             // that.
+
+            if (manager == null) {
+                return;
+            }
+
+            NetworkInfo networkInfo = (NetworkInfo) intent
+                    .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+
+            if (networkInfo.isConnected()) {
+
+                // We are connected with the other device, request connection
+                // info to find group owner IP
+
+                manager.requestConnectionInfo(channel, null);
+            }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
         }
@@ -98,12 +115,13 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = device.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
-
+        Log.w("sdrgfdn,ohdnrhjh", "ropgrkphjqfknqe");
         manager.connect(channel, config, new WifiP2pManager.ActionListener() {
 
             @Override
             public void onSuccess() {
                 // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
+                Log.w(";;;;;;;;;;;;;;;;", ";;;;;;;;;;;;;;;;;;;;;");
             }
 
             @Override
