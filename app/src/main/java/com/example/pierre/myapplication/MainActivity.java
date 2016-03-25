@@ -96,10 +96,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private void peersUpdated() {
         MyPeerListListener myListener = new MyPeerListListener();
         mManager.requestPeers(mChannel, myListener);
-        WifiP2pDevice dev = myListener.getWifiP2pDevice();
-        connection(dev);
     }
+    public void connection(WifiP2pDevice device)
+    {
+        //obtain a peer from the WifiP2pDeviceList
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = device.deviceAddress;
+        mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
 
+            @Override
+            public void onSuccess() {
+                //success logic
+                Log.w("CONNECTION SUCCESSFUL", "CONNECTION SUCCESSFUL");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                //failure logic
+            }
+        });
+    }
     private void discover(){
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
             @Override
@@ -107,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 Log.w(">>>>>>>>>>>>>>", "Dicovery Successfull");
                 Toast.makeText(MainActivity.this, "Discovery Initiated",
                         Toast.LENGTH_SHORT).show();
-                peersUpdated();
+                //peersUpdated();
             }
 
             @Override
@@ -119,28 +135,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
     }
 
-    public void connection(WifiP2pDevice device)
-    {
-        //obtain a peer from the WifiP2pDeviceList
-        if(device != null)
-        {
-            WifiP2pConfig config = new WifiP2pConfig();
-            config.deviceAddress = device.deviceAddress;
-            mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
 
-                @Override
-                public void onSuccess() {
-                    //success logic
-                    Log.w("CONNECTION SUCCESSFUL", "CONNECTION SUCCESSFUL");
-                }
-
-                @Override
-                public void onFailure(int reason) {
-                    //failure logic
-                }
-            });
-        }
-    }
 
 
 
