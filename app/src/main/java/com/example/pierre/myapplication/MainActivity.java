@@ -147,7 +147,7 @@ public class MainActivity extends Activity implements SensorEventListener ,
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
-        unregisterReceiver(receivereceiver);
+        unregisterReceiver(receiver);
     }
 
     protected void onResume() {
