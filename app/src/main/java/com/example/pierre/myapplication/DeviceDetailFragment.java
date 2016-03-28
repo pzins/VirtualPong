@@ -3,18 +3,19 @@ package com.example.pierre.myapplication;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import javax.sql.ConnectionEventListener;
 
 /**
  * Created by pierre on 28/03/16.
@@ -79,6 +80,8 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         return mContentView;
     }
 
+
+
     @Override
     public void onConnectionInfoAvailable(final WifiP2pInfo info) {
         if (progressDialog != null && progressDialog.isShowing()) {
@@ -116,6 +119,7 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
     }
 
     public void showDetails(WifiP2pDevice device) {
+        Log.w("SHOWDETAIL3", "DU FRAGEMENT");
         this.device = device;
         this.getView().setVisibility(View.VISIBLE);
         TextView view = (TextView) mContentView.findViewById(R.id.device_address);

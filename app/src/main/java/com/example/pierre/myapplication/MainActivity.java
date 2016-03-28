@@ -38,7 +38,7 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener ,
-        WifiP2pManager.ChannelListener{
+        WifiP2pManager.ChannelListener, DeviceListFragment.DeviceActionListener{
 
 
     private SensorManager sensorManager;
@@ -151,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return super.onOptionsItemSelected(item);
     }
 
+
     public void connect(WifiP2pConfig config)
     {
         manager.connect(channel, config, new WifiP2pManager.ActionListener() {
@@ -165,6 +166,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void disconnect() {
+
+    }
+
+    @Override
+    public void showDetails(WifiP2pDevice device) {
+        DeviceDetailFragment fragment = (DeviceDetailFragment) getFragmentManager()
+                .findFragmentById(R.id.frag_detail);
+        fragment.showDetails(device);
+
+    }
+
+    @Override
+    public void cancelDisconnect() {
+
     }
 
     @Override

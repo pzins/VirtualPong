@@ -46,13 +46,14 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
 
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peerList) {
-        Log.w("*****************", peerList.toString());
+        Log.w("xxxxxxxxxxxxxxxxxxx", "ooooooooo");
         if(progressDialog != null && progressDialog.isShowing()){
             progressDialog.dismiss();
         }
         peers.clear();
         peers.addAll(peerList.getDeviceList());
-        ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
+        ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged(); //update affichage
+        Log.w("SIZE = ", Integer.toString(peers.size()));
         if (peers.size() == 0) {
             Log.d(MainActivity.TAG, "No devices found");
             return;
@@ -97,29 +98,35 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
                 return "Unknow";
         }
     }
+    /**
+     * Initiate a connection with the peer.
+     */
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         WifiP2pDevice device = (WifiP2pDevice) getListAdapter().getItem(position);
         ((DeviceActionListener) getActivity()).showDetails(device);
     }
 
+    //class WifiPeerListAdapter
     private class WiFiPeerListAdapter extends ArrayAdapter<WifiP2pDevice> {
         private List<WifiP2pDevice> items;
 
         public WiFiPeerListAdapter(Context context, int textViewResourceId,
-                                   List<WifiP2pDevice> objects){
+                                   List<WifiP2pDevice> objects)
+        {
             super(context, textViewResourceId, objects);
             items = objects;
         }
 
         public View getView(int position, View convertView, ViewGroup parent){
+            Log.w("GETVIEW"," CALLED !!!! ");
             View v = convertView;
             if(v == null){
                 LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = vi.inflate(R.layout.row_devices, null);
             }
             WifiP2pDevice device = items.get(position);
-            if(device == null)
-            {
+            if (device != null) {
                 TextView top = (TextView) v.findViewById(R.id.device_name);
                 TextView bottom = (TextView) v.findViewById(R.id.device_details);
                 if (top != null) {
