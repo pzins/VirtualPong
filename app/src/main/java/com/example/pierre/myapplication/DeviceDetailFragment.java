@@ -32,8 +32,9 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        Log.w("oncreateview", "Detail Fragment");
         mContentView = inflater.inflate(R.layout.device_detail, null);
-        mContentView.findViewById(R.id.btn_connect).setOnClickListener(new View.OnClickListener(){
+        mContentView.findViewById(R.id.btn_connect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 WifiP2pConfig config = new WifiP2pConfig();
@@ -118,15 +119,19 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         mContentView.findViewById(R.id.btn_connect).setVisibility(View.GONE);
     }
 
+    /**
+     * Updates the UI with device data
+     *
+     * @param device the device to be displayed
+     */
     public void showDetails(WifiP2pDevice device) {
-        Log.w("SHOWDETAIL3", "DU FRAGEMENT");
         this.device = device;
         this.getView().setVisibility(View.VISIBLE);
         TextView view = (TextView) mContentView.findViewById(R.id.device_address);
         view.setText(device.deviceAddress);
         view = (TextView) mContentView.findViewById(R.id.device_info);
         view.setText(device.toString());
-
+        Log.w("SHOW DETAILS", "DETAIL FRAGMENT");
     }
 
 
