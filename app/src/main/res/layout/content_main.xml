@@ -16,32 +16,35 @@
         android:layout_width="match_parent"
         android:id="@+id/linearLayout1"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_gravity="right"
+        android:weightSum="1">
         <fragment
             class="com.example.pierre.myapplication.DeviceListFragment"
             android:id="@+id/frag_list"
             android:layout_width="match_parent"
-            android:layout_height="188dp">
+            android:layout_height="106dp"
+            android:layout_weight="0.29">
             <!-- Preview: layout=@layout/row_devices -->
         </fragment>
         <fragment
             class="com.example.pierre.myapplication.DeviceDetailFragment"
             android:id="@+id/frag_detail"
             android:layout_width="match_parent"
-            android:layout_height="380dp">
+            android:layout_height="294dp">
             <!-- Preview: layout=@layout/device_detail -->
         </fragment>
 
 
-        <TextView
+        <!--<TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="Orientation"
             android:textSize="32sp"
             />
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="41dp"
             android:text="X"
             android:id="@+id/x"
             android:textSize="24sp"
@@ -101,6 +104,6 @@
             android:id="@+id/direction"
             android:textSize="32sp"
             android:textStyle="bold"
-            />
+            />-->
     </LinearLayout>
 </RelativeLayout>

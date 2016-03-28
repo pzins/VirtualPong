@@ -2,6 +2,7 @@ package com.example.pierre.myapplication;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.wifi.WpsInfo;
@@ -9,12 +10,21 @@ import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 
 /**
@@ -32,7 +42,6 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        Log.w("oncreateview", "Detail Fragment");
         mContentView = inflater.inflate(R.layout.device_detail, null);
         mContentView.findViewById(R.id.btn_connect).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,21 +108,23 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
 
         // InetAddress from WifiP2pInfo struct.
         view = (TextView) mContentView.findViewById(R.id.device_info);
-        view.setText("Group Owner IP - " + info.groupOwnerAddress.getHostAddress());
+        view.setText("Group Owner IP" + info.groupOwnerAddress.getHostAddress());
 
         // After the group negotiation, we assign the group owner as the file
         // server. The file server is single threaded, single connection server
         // socket.
-//        if (info.groupFormed && info.isGroupOwner) {
-//            new FileServerAsyncTask(getActivity(), mContentView.findViewById(R.id.status_text))
-//                    .execute();
-//        } else if (info.groupFormed) {
-//            // The other device acts as the client. In this case, we enable the
-//            // get file button.
-//            mContentView.findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
-//            ((TextView) mContentView.findViewById(R.id.status_text)).setText(getResources()
-//                    .getString(R.string.client_text));
-//        }
+        if (info.groupFormed && info.isGroupOwner) {
+            Log.w("##############","#########");
+
+            new FileServerAsyncTask(getActivity(), mContentView.findViewById(R.id.status_text))
+                    .execute();
+        } else if (info.groupFormed) {
+            // The other device acts as the client. In this case, we enable the
+            // get file button.
+            mContentView.findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
+            ((TextView) mContentView.findViewById(R.id.status_text)).setText(getResources()
+                    .getString(R.string.client_text));
+        }
 
         // hide the connect button
         mContentView.findViewById(R.id.btn_connect).setVisibility(View.GONE);
@@ -149,4 +160,79 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         this.getView().setVisibility(View.GONE);
     }
 
+
+    /**
+     * A simple server socket that accepts connection and writes some data on
+     * the stream.
+     */
+    public static class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
+
+        private Context context;
+        private TextView statusText;
+
+        /**
+         * @param context
+         * @param statusText
+         */
+        public FileServerAsyncTask(Context context, View statusText) {
+            this.context = context;
+            this.statusText = (TextView) statusText;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            Log.w("DOINBACKGROUND", "-//*-/-*/-*/");
+            try {
+                ServerSocket serverSocket = new ServerSocket(8988);
+                Log.w(MainActivity.TAG, "Server: Socket opened");
+                Socket client = serverSocket.accept();
+                Log.w("___________","----------");
+                Log.w(MainActivity.TAG, "Server: connection done");
+                final File f = new File(Environment.getExternalStorageDirectory() + "/"
+                        + context.getPackageName() + "/wifip2pshared-" + System.currentTimeMillis()
+                        + ".jpg");
+
+                File dirs = new File(f.getParent());
+                if (!dirs.exists())
+                    dirs.mkdirs();
+                f.createNewFile();
+
+                Log.d(MainActivity.TAG, "server: copying files " + f.toString());
+                InputStream inputstream = client.getInputStream();
+//                copyFile(inputstream, new FileOutputStream(f));
+                serverSocket.close();
+                return f.getAbsolutePath();
+            } catch (IOException e) {
+                Log.e(MainActivity.TAG, e.getMessage());
+                return null;
+            }
+
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+         */
+        @Override
+        protected void onPostExecute(String result) {
+            if (result != null) {
+                statusText.setText("File copied - " + result);
+                Intent intent = new Intent();
+                intent.setAction(android.content.Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse("file://" + result), "image/*");
+                context.startActivity(intent);
+            }
+
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see android.os.AsyncTask#onPreExecute()
+         */
+        @Override
+        protected void onPreExecute() {
+            statusText.setText("Opening a server socket");
+        }
+
+    }
 }

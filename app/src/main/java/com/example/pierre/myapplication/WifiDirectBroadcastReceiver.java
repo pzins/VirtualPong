@@ -39,6 +39,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
         Log.w("Broadcast receiver", "onReceive");
         String action = intent.getAction();
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
@@ -81,12 +82,12 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
                 // we are connected with the other device, request connection
                 // info to find group owner IP
 
-//                DeviceDetailFragment fragment = (DeviceDetailFragment) activity
-//                        .getFragmentManager().findFragmentById(R.id.frag_detail);
-//                manager.requestConnectionInfo(channel, fragment);
+                DeviceDetailFragment fragment = (DeviceDetailFragment) activity
+                        .getFragmentManager().findFragmentById(R.id.frag_detail);
+                manager.requestConnectionInfo(channel, fragment);
             } else {
                 // It's a disconnect
-//                activity.resetData();
+                activity.resetData();
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
             Log.w("WIFI P2P THIS", " DEVICE CHANGED");

@@ -46,14 +46,12 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
 
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peerList) {
-        Log.w("xxxxxxxxxxxxxxxxxxx", "ooooooooo");
         if(progressDialog != null && progressDialog.isShowing()){
             progressDialog.dismiss();
         }
         peers.clear();
         peers.addAll(peerList.getDeviceList());
         ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged(); //update affichage
-        Log.w("SIZE = ", Integer.toString(peers.size()));
         if (peers.size() == 0) {
             Log.d(MainActivity.TAG, "No devices found");
             return;
