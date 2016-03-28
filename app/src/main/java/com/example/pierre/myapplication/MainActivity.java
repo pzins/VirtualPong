@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Log.w("okokokkoo","okokokoko");
             if(!isWifiP2pEnabled){
                 Toast.makeText(MainActivity.this, "P2P Wifi is not enabled",
                         Toast.LENGTH_SHORT).show();
