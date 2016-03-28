@@ -36,7 +36,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-//        this.setListAdapter(new WiFiPeerListAdapter(getActivity(), R.layout.row_devices, peers));
+        this.setListAdapter(new WiFiPeerListAdapter(getActivity(), R.layout.row_devices, peers));
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -79,7 +79,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
 
     public WifiP2pDevice getDevice(){return device;}
 
-    private static String getdeviceStatus(int deviceStatus)
+    private static String getDeviceStatus(int deviceStatus)
     {
         Log.d(MainActivity.TAG, "Peer status :" + deviceStatus);
         switch (deviceStatus){
@@ -99,7 +99,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
     }
     public void onListItemClick(ListView l, View v, int position, long id) {
         WifiP2pDevice device = (WifiP2pDevice) getListAdapter().getItem(position);
-//        ((DeviceActionListener) getActivity()).showDetails(device);
+        ((DeviceActionListener) getActivity()).showDetails(device);
     }
 
     private class WiFiPeerListAdapter extends ArrayAdapter<WifiP2pDevice> {
@@ -115,19 +115,19 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
             View v = convertView;
             if(v == null){
                 LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//                v = vi.inflate(R.layout.row_devices, null);
+                v = vi.inflate(R.layout.row_devices, null);
             }
             WifiP2pDevice device = items.get(position);
             if(device == null)
             {
-     /*           TextView top = (TextView) v.findViewById(R.id.device_name);
+                TextView top = (TextView) v.findViewById(R.id.device_name);
                 TextView bottom = (TextView) v.findViewById(R.id.device_details);
                 if (top != null) {
                     top.setText(device.deviceName);
                 }
                 if (bottom != null) {
                     bottom.setText(getDeviceStatus(device.status));
-                }*/
+                }
             }
             return v;
         }
@@ -137,10 +137,10 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
     public void updateThisDevice(WifiP2pDevice device)
     {
         this.device = device;
-        /*TextView view = (TextView) mContentView.findViewById(R.id.my_name);
+        TextView view = (TextView) mContentView.findViewById(R.id.my_name);
         view.setText(device.deviceName);
         view = (TextView) mContentView.findViewById(R.id.my_status);
-        view.setText(getDeviceStatus(device.status));*/
+        view.setText(getDeviceStatus(device.status));
     }
 
     public interface DeviceActionListener{

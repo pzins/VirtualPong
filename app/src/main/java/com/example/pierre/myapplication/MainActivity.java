@@ -97,56 +97,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         channel = manager.initialize(this, getMainLooper(), null);
     }
 
-    // method called when discoverPeers listener's onSuccess is called
-/*
-    private void peersUpdated() {
-        MyPeerListListener myListener = new MyPeerListListener();
-        mManager.requestPeers(mChannel, myListener);
-    }
-    public void connection(WifiP2pDevice device)
-    {
-        //obtain a peer from the WifiP2pDeviceList
-        WifiP2pConfig config = new WifiP2pConfig();
-        config.deviceAddress = device.deviceAddress;
-        mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
-
-            @Override
-            public void onSuccess() {
-                //success logic
-                Log.w("CONNECTION SUCCESSFUL", "CONNECTION SUCCESSFUL");
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                //failure logic
-            }
-        });
-    }
-    private void discover(){
-        mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.w(">>>>>>>>>>>>>>", "Dicovery Successfull");
-                Toast.makeText(MainActivity.this, "Discovery Initiated",
-                        Toast.LENGTH_SHORT).show();
-                //peersUpdated();
-            }
-
-            @Override
-            public void onFailure(int reasonCode) {
-                Log.w(">>>>>>>>>>>>>>", "Dicovery Failed");
-                Toast.makeText(MainActivity.this, "Discovery Failed : " + reasonCode,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-*/
-
-
-
-
-
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
@@ -177,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Log.w("okokokkoo","okokokoko");
             if(!isWifiP2pEnabled){
                 Toast.makeText(MainActivity.this, "P2P Wifi is not enabled",
                         Toast.LENGTH_SHORT).show();
