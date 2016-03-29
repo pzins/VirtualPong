@@ -125,8 +125,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.atn_direct_discover){
+
+
+        }
+        else if(id == R.id.atn_direct_enable){
+            
+        }
+        else if (id == R.id.action_settings) {
             if(!isWifiP2pEnabled){
                 Toast.makeText(MainActivity.this, "P2P Wifi is not enabled",
                         Toast.LENGTH_SHORT).show();
