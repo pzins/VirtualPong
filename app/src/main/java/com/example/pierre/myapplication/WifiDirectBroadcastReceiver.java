@@ -62,23 +62,20 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
             }
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
             Log.w("WIFI P2P CONNECTION ", "CHANGED");
-
             if (manager == null) {
                 return;
             }
-
-            NetworkInfo networkInfo = (NetworkInfo) intent
-                    .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-
-            if (networkInfo.isConnected()) {
-
+            NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+            if (networkInfo.isConnected())
+            {
                 // we are connected with the other device, request connection
                 // info to find group owner IP
-
                 DeviceDetailFragment fragment = (DeviceDetailFragment) activity
                         .getFragmentManager().findFragmentById(R.id.frag_detail);
                 manager.requestConnectionInfo(channel, fragment);
-            } else {
+            }
+            else
+            {
                 // It's a disconnect
                 activity.resetData();
             }

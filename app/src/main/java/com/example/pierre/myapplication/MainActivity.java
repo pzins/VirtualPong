@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         }
         else if(id == R.id.atn_direct_enable){
-            
+
         }
         else if (id == R.id.action_settings) {
             if(!isWifiP2pEnabled){
