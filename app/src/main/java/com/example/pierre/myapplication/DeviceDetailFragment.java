@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -87,7 +88,12 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
                     public void onClick(View v) {
                         // Allow user to pick an image from Gallery or other
                         // registered apps
-                            Socket socket = null;
+
+                        new ClientAsyncTask(getActivity()).execute();
+
+
+
+    /*                        Socket socket = null;
                             OutputStreamWriter osw;
                             String str = "Hello World";
                             try {
@@ -102,11 +108,11 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                            }
+                            }*/
 
 
-                       /* Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                        intent.setType("image*//*");
+/*                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.setType("image");
                         startActivityForResult(intent, CHOOSE_FILE_RESULT_CODE);*/
                     }
                 });
@@ -227,12 +233,23 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
                 Socket client = serverSocket.accept();
                 Log.w(MainActivity.TAG, "Server: connection done");
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                BufferedReader in = new BufferedReader(new     InputStreamReader(client.getInputStream()));
+                String message = in.readLine();
+                Log.w("!!!!!!" , message);
+
+                /*BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 StringBuilder sb = new StringBuilder();
                 String line;
+
+                Log.w("--------------","############");
+                line = " " + reader.read();
+                Log.w("+++++", line);
                 while ((line = reader.readLine()) != null)
+                {
                     sb.append(line).append("\n");
-                Log.w("RESULT! ! ! ! ", sb.toString());
+                    Log.w("------", line);
+                }*/
+                //Log.w("RESULT! ! ! ! ", sb.toString());
 
 
 /*                final File f = new File(Environment.getExternalStorageDirectory() + "/"
@@ -284,6 +301,56 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
             statusText.setText("Opening a server socket");
         }
     }
+
+
+    /**
+     * A simple server socket that accepts connection and writes some data on
+     * the stream.
+     */
+    public static class ClientAsyncTask extends AsyncTask<Void, Void, String> {
+
+        private Context context;
+
+        /**
+         * @param context
+         */
+        public ClientAsyncTask(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            Socket socket = new Socket();
+            String str = "Lacazette\n";
+            try {
+                socket.connect((new InetSocketAddress("192.168.49.1", 8988)), 5000);
+                OutputStreamWriter osw =new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
+                osw.write(str, 0, str.length());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "OL";
+        }
+        /*
+         * (non-Javadoc)
+         * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+         */
+        @Override
+        protected void onPostExecute(String result) {
+            }
+
+        /*
+         * (non-Javadoc)
+         * @see android.os.AsyncTask#onPreExecute()
+         */
+        @Override
+        protected void onPreExecute() {
+        }
+    }
+
+
+
     public static boolean copyFile(InputStream inputStream, OutputStream out) {
         byte buf[] = new byte[1024];
         int len;

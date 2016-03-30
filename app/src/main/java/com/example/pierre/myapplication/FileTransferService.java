@@ -56,6 +56,8 @@ public class FileTransferService extends IntentService {
             try {
                 Log.d(MainActivity.TAG, "Opening client socket - ");
                 socket.bind(null);
+                Log.w("host = ", host);
+                Log.w("port = ",Integer.toString(port));
                 socket.connect((new InetSocketAddress(host, port)), SOCKET_TIMEOUT);
 
                 Log.d(MainActivity.TAG, "Client socket - " + socket.isConnected());
