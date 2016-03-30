@@ -19,12 +19,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 
 /**
@@ -82,14 +87,49 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
                     public void onClick(View v) {
                         // Allow user to pick an image from Gallery or other
                         // registered apps
-                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                        intent.setType("image/*");
-                        startActivityForResult(intent, CHOOSE_FILE_RESULT_CODE);
+                            Socket socket = null;
+                            OutputStreamWriter osw;
+                            String str = "Hello World";
+                            try {
+                                socket = new Socket("192.168.49.1", 8988);
+                                osw =new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
+                                osw.write(str, 0, str.length());
+                            } catch (IOException e) {
+                                System.err.print(e);
+                            } finally {
+                                try {
+                                    socket.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                       /* Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.setType("image*//*");
+                        startActivityForResult(intent, CHOOSE_FILE_RESULT_CODE);*/
                     }
                 });
         return mContentView;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // User has picked an image. Transfer it to group owner i.e peer using
+        // FileTransferService.
+        Uri uri = data.getData();
+        TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
+        statusText.setText("Sending: " + uri);
+        Log.d(MainActivity.TAG, "Intent----------- " + uri);
+        Intent serviceIntent = new Intent(getActivity(), FileTransferService.class);
+        serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
+        serviceIntent.putExtra(FileTransferService.EXTRAS_FILE_PATH, uri.toString());
+        serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_ADDRESS,
+                info.groupOwnerAddress.getHostAddress());
+        serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
+        getActivity().startService(serviceIntent);
+    }
 
 
     @Override
@@ -181,14 +221,21 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
 
         @Override
         protected String doInBackground(Void... params) {
-            Log.w("DOINBACKGROUND", "-//*-/-*/-*/");
             try {
                 ServerSocket serverSocket = new ServerSocket(8988);
                 Log.w(MainActivity.TAG, "Server: Socket opened");
                 Socket client = serverSocket.accept();
-                Log.w("___________","----------");
                 Log.w(MainActivity.TAG, "Server: connection done");
-                final File f = new File(Environment.getExternalStorageDirectory() + "/"
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null)
+                    sb.append(line).append("\n");
+                Log.w("RESULT! ! ! ! ", sb.toString());
+
+
+/*                final File f = new File(Environment.getExternalStorageDirectory() + "/"
                         + context.getPackageName() + "/wifip2pshared-" + System.currentTimeMillis()
                         + ".jpg");
 
@@ -205,10 +252,13 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
             } catch (IOException e) {
                 Log.e(MainActivity.TAG, e.getMessage());
                 return null;
+            }*/
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
+            return "OL";
         }
-
         /*
          * (non-Javadoc)
          * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
@@ -233,6 +283,22 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         protected void onPreExecute() {
             statusText.setText("Opening a server socket");
         }
-
     }
+    public static boolean copyFile(InputStream inputStream, OutputStream out) {
+        byte buf[] = new byte[1024];
+        int len;
+        try {
+            while ((len = inputStream.read(buf)) != -1) {
+                out.write(buf, 0, len);
+
+            }
+            out.close();
+            inputStream.close();
+        } catch (IOException e) {
+            Log.d(MainActivity.TAG, e.toString());
+            return false;
+        }
+        return true;
+    }
+
 }
