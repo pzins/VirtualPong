@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,6 +28,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -233,16 +236,48 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         protected String doInBackground(Void... params) {
             try {
 
+                ServerSocket s = new ServerSocket(8988);
+                Socket soc = s.accept();
 
-                ServerSocket serverSocket = new ServerSocket(8988);
+                // Un BufferedReader permet de lire par ligne.
+                BufferedReader plec = new BufferedReader(
+                        new InputStreamReader(soc.getInputStream())
+                );
+
+                // Un PrintWriter possède toutes les opérations print classiques.
+                // En mode auto-flush, le tampon est vidé (flush) à l'appel de println.
+                PrintWriter pred = new PrintWriter(
+                        new BufferedWriter(
+                                new OutputStreamWriter(soc.getOutputStream())),
+                        true);
+
+                while (true) {
+                    String str = plec.readLine();          // lecture du message
+                    if (str.equals("END")) break;
+                    System.out.println("ECHO = " + str);   // trace locale
+                    pred.println(str);                     // renvoi d'un écho
+                }
+                plec.close();
+                pred.close();
+                soc.close();
+              /*  ServerSocket serverSocket = new ServerSocket(8988);
                 Log.w(MainActivity.TAG, "Server: Socket opened");
                 Socket client = serverSocket.accept();
                 Log.w(MainActivity.TAG, "Server: connection done");
-                while(true) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                    String message = in.readLine();
-                    Log.w("!!!!!!", message);
-                }
+                Socket s = new Socket(InetAddress.getByName("stackoverflow.com"), 80);
+                PrintWriter pw = new PrintWriter(s.getOutputStream());
+                pw.print("GET / HTTP/1.1");
+                pw.print("Host: stackoverflow.com");
+                pw.print("");
+                pw.flush();
+                BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                String t;
+                while((t = br.readLine()) != null) System.out.println(t);
+                br.close();*/
+        /*        OutputStream mmOutStream = client.getOutputStream();
+                String str = "FEKIR";
+                mmOutStream.write(str.getBytes());*/
+
 
                 /*BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 StringBuilder sb = new StringBuilder();
@@ -289,7 +324,7 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
          */
         @Override
         protected void onPostExecute(String result) {
-            if (result != null) {
+            if (result != null && false) {
                 statusText.setText("File copied - " + result);
                 Intent intent = new Intent();
                 intent.setAction(android.content.Intent.ACTION_VIEW);
@@ -317,7 +352,8 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
     public static class ClientAsyncTask extends AsyncTask<Void, Void, String> {
 
         private Context context;
-
+        PrintWriter out;
+        BufferedReader in;
         /**
          * @param context
          */
@@ -327,22 +363,79 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
 
         @Override
         protected String doInBackground(Void... params) {
+            Socket socket = null;
+            try {
+                socket = new Socket("192.168.49.1", 8988);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("SOCKET = " + socket);
 
-            Socket socket = new Socket();
+            BufferedReader plec = null;
+            try {
+                plec = new BufferedReader(
+                        new InputStreamReader(socket.getInputStream())
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            PrintWriter pred = null;
+            try {
+                pred = new PrintWriter(
+                        new BufferedWriter(
+                                new OutputStreamWriter(socket.getOutputStream())),
+                        true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            pred.println("Lacazette Fekir Cornet Tolisso Umtiti Darder Ferri Kalulu");
+            String str = "bonjour";
+           /* for (int i = 0; i < 10; i++) {
+                pred.println(str);          // envoi d'un message
+                try {
+                    str = plec.readLine();      // lecture de l'écho
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }*/
+            System.out.println("END");     // message de terminaison
+            pred.println("END") ;
+            try {
+                plec.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            pred.close();
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+           /* Socket socket = new Socket();
             String str = "Lacazette\n";
             try {
                 socket.connect((new InetSocketAddress("192.168.49.1", 8988)), 5000);
+                out = new PrintWriter(socket.getOutputStream());
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                OutputStreamWriter osw =new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
-                while (true) {
-                    Thread.sleep(1000);
-                    osw.write(str, 0, str.length());
-                }
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+            try {
+                String message = "";
+                int charsRead = 0;
+                char[] buffer = new char[2048];
+
+                while ((charsRead = in.read(buffer)) != -1) {
+                    message += new String(buffer).substring(0, charsRead);
+                }
+                Log.w("{{{{{{{{'  ", message);
+            } catch (IOException e) {
+                return "Error receiving response:  " + e.getMessage();
+            }*/
             return "OL";
         }
         /*
