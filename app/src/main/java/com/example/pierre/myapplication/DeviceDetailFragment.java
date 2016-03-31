@@ -88,7 +88,11 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
                     public void onClick(View v) {
                         // Allow user to pick an image from Gallery or other
                         // registered apps
-
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         new ClientAsyncTask(getActivity()).execute();
 
 
@@ -228,14 +232,17 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         @Override
         protected String doInBackground(Void... params) {
             try {
+
+
                 ServerSocket serverSocket = new ServerSocket(8988);
                 Log.w(MainActivity.TAG, "Server: Socket opened");
                 Socket client = serverSocket.accept();
                 Log.w(MainActivity.TAG, "Server: connection done");
-
-                BufferedReader in = new BufferedReader(new     InputStreamReader(client.getInputStream()));
-                String message = in.readLine();
-                Log.w("!!!!!!" , message);
+                while(true) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                    String message = in.readLine();
+                    Log.w("!!!!!!", message);
+                }
 
                 /*BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 StringBuilder sb = new StringBuilder();
@@ -325,9 +332,15 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
             String str = "Lacazette\n";
             try {
                 socket.connect((new InetSocketAddress("192.168.49.1", 8988)), 5000);
+
                 OutputStreamWriter osw =new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
-                osw.write(str, 0, str.length());
+                while (true) {
+                    Thread.sleep(1000);
+                    osw.write(str, 0, str.length());
+                }
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             return "OL";
