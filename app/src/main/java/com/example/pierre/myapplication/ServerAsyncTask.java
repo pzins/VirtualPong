@@ -24,18 +24,21 @@ import java.net.Socket;
  * A simple server socket that accepts connection and writes some data on
  * the stream.
  */
-public class ServerAsyncTask extends AsyncTask<Void, Void, String> {
+public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
 
     private Context context;
     private TextView statusText;
+    private TextView v_x_accel;
+    private String x_accel ="";
 
     /**
      * @param context
      * @param statusText
      */
-    public ServerAsyncTask(Context context, View statusText) {
+    public ServerAsyncTask(Context context, View statusText, TextView v) {
         this.context = context;
         this.statusText = (TextView) statusText;
+        this.v_x_accel = v;
     }
 
     @Override
@@ -60,6 +63,8 @@ public class ServerAsyncTask extends AsyncTask<Void, Void, String> {
                 String str = reader.readLine();
                 if (str.equals("END")) break;
 //                System.out.println(str);
+                x_accel = str;
+                publishProgress();
                 printer.println("message recu");
             }
             reader.close();
@@ -71,4 +76,15 @@ public class ServerAsyncTask extends AsyncTask<Void, Void, String> {
         }
         return "OL";
     }
+    @Override
+    protected void onProgressUpdate(Integer... progress) {
+
+
+        super.onProgressUpdate(progress);
+        // Update the ProgressBar
+        v_x_accel.setText(x_accel);
+
+
+    }
+
 }

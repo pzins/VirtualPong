@@ -74,8 +74,7 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
                     @Override
                     public void onClick(View v) {
                         client = new ClientAsyncTask(getActivity(),
-                                info.groupOwnerAddress.getHostAddress(),
-                                (TextView) mContentView.findViewById(R.id.btn_disconnect));
+                                info.groupOwnerAddress.getHostAddress());
                         client.execute();
                     }
                 });
@@ -106,7 +105,8 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         // server. The file server is single threaded, single connection server
         // socket.
         if (info.groupFormed && info.isGroupOwner) {
-            new ServerAsyncTask(getActivity(), mContentView.findViewById(R.id.status_text))
+            new ServerAsyncTask(getActivity(), mContentView.findViewById(R.id.status_text),
+                    (TextView) mContentView.findViewById(R.id.btn_disconnect))
                     .execute();
         } else if (info.groupFormed) {
             // The other device acts as the client. In this case, we enable the

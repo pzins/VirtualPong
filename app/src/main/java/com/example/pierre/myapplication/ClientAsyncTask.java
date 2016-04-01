@@ -16,7 +16,7 @@ import java.net.Socket;
  * A simple server socket that accepts connection and writes some data on
  * the stream.
  */
-public class ClientAsyncTask extends AsyncTask<Void, Integer, String> {
+public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
 
     private Context context;
     PrintWriter out;
@@ -24,16 +24,14 @@ public class ClientAsyncTask extends AsyncTask<Void, Integer, String> {
     String groupOwnerIP;
     float x_accel;
 
-    TextView v_x_accel;
 
     /**
      * @param context
      */
-    public ClientAsyncTask(Context context, String ip, TextView v) {
+    public ClientAsyncTask(Context context, String ip) {
         this.context = context;
         this.groupOwnerIP = ip;
         this.x_accel = 0;
-        this.v_x_accel = v;
     }
 
     public void setX_accel(float x)
@@ -68,7 +66,6 @@ public class ClientAsyncTask extends AsyncTask<Void, Integer, String> {
         while (true)
         {
             pred.println("X =>" + Float.toString(x_accel));
-            publishProgress();
             try {
                 str = plec.readLine();      // lecture de reponse
                 System.out.println(str);
@@ -92,16 +89,6 @@ public class ClientAsyncTask extends AsyncTask<Void, Integer, String> {
             e.printStackTrace();
         }
         return "OL";
-    }
-    @Override
-    protected void onProgressUpdate(Integer... progress) {
-
-
-        super.onProgressUpdate(progress);
-        // Update the ProgressBar
-        v_x_accel.setText(Float.toString(x_accel));
-
-
     }
 
 }
