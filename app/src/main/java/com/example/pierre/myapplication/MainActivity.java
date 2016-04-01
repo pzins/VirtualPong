@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Channel channel;
     private BroadcastReceiver receiver = null;
 
+    ClientAsyncTask client;
 
 
     public void setIsWifiP2pEnabled(boolean state)
@@ -275,9 +276,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
     @Override
-    public void onSensorChanged(SensorEvent event) {/*
-        Sensor mySensor = event.sensor;
+    public void onSensorChanged(SensorEvent event) {
+        DeviceDetailFragment fragment = (DeviceDetailFragment) getFragmentManager().findFragmentById(R.id.frag_detail);
 
+        Sensor mySensor = event.sensor;
+/*
         if (mySensor.getType() == Sensor.TYPE_GRAVITY) {
 
 
@@ -323,13 +326,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
 
 
-        }
+        }*/
 
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
-
+            if(fragment != null) {
+                if(fragment.getClient() != null){
+                    fragment.getClient().setX_accel(x);
+                }
+            }
+/*
             long curTime = System.currentTimeMillis();
 
             if ((curTime - lastUpdate) > 100) {
@@ -343,17 +351,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
 
                 if (true || Math.abs(x - last_x) > 1 || Math.abs(y - last_y) > 1 || Math.abs(z - last_z) > 1) {
-//                    Log.w("-----------------------", "---------------------");
-//                    Log.w("x = ", String.valueOf(x));
-//                    Log.w("y = ", String.valueOf(y));
-//                    Log.w("z = ", String.valueOf(z));
-//                    Log.w("+++++++++++++++++++++++", "+++++++++++++++++++++");
-  *//*                  Context context = getApplicationContext();
+                    Log.w("-----------------------", "---------------------");
+                    Log.w("x = ", String.valueOf(x));
+                    Log.w("y = ", String.valueOf(y));
+                    Log.w("z = ", String.valueOf(z));
+                    Log.w("+++++++++++++++++++++++", "+++++++++++++++++++++");
+                    Context context = getApplicationContext();
                     CharSequence text = String.valueOf(x);
                     int duration = Toast.LENGTH_SHORT;
 
                     Toast toast = Toast.makeText(context, text, duration);
-                    toast.show(); *//*
+                    toast.show(); /*
                     TextView textViewX = (TextView) findViewById(R.id.x);
                     TextView textViewY = (TextView) findViewById(R.id.y);
                     TextView textViewZ = (TextView) findViewById(R.id.z);
@@ -368,8 +376,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 last_z = z;
 
 
-            }
-        }*/
+            }*/
+        }
     }
 
 
