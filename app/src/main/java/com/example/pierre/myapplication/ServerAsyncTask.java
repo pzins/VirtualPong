@@ -9,6 +9,8 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -57,7 +59,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Void, String> {
             while (true) {
                 String str = reader.readLine();
                 if (str.equals("END")) break;
-                System.out.println(str);
+//                System.out.println(str);
                 printer.println("message recu");
             }
             reader.close();

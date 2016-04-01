@@ -73,7 +73,9 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        client = new ClientAsyncTask(getActivity(), info.groupOwnerAddress.getHostAddress());
+                        client = new ClientAsyncTask(getActivity(),
+                                info.groupOwnerAddress.getHostAddress(),
+                                (TextView) mContentView.findViewById(R.id.btn_disconnect));
                         client.execute();
                     }
                 });
