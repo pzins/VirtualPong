@@ -96,7 +96,7 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         view.setText(getResources().getString(R.string.group_owner_text)
                 + ((info.isGroupOwner == true) ? getResources().getString(R.string.yes)
                 : getResources().getString(R.string.no)));
-
+        System.out.println(info.toString());
         // InetAddress from WifiP2pInfo struct.
         view = (TextView) mContentView.findViewById(R.id.device_info);
         view.setText("Group Owner IP" + info.groupOwnerAddress.getHostAddress());
@@ -106,7 +106,7 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         // socket.
         if (info.groupFormed && info.isGroupOwner) {
             new ServerAsyncTask(getActivity(), mContentView.findViewById(R.id.status_text),
-                    (TextView) mContentView.findViewById(R.id.btn_disconnect))
+                    (TextView) mContentView.findViewById(R.id.sensor_value))
                     .execute();
         } else if (info.groupFormed) {
             // The other device acts as the client. In this case, we enable the
