@@ -38,7 +38,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     public ServerAsyncTask(Context context, View statusText, TextView v) {
         this.context = context;
         this.statusText = (TextView) statusText;
-        this.v_x_accel = v;
+        this.v_x_accel = (TextView) v;
     }
 
     @Override
