@@ -24,7 +24,7 @@
             android:id="@+id/frag_list"
             android:layout_width="match_parent"
             android:layout_height="113dp"
-            android:layout_weight="0.36">
+            android:layout_weight="0.09">
             <!-- Preview: layout=@layout/row_devices -->
         </fragment>
 
@@ -33,7 +33,7 @@
             android:id="@+id/frag_detail"
             android:layout_width="match_parent"
             android:layout_height="134dp"
-            android:layout_weight="0.36">
+            android:layout_weight="0.45">
             <!-- Preview: layout=@layout/device_detail -->
         </fragment>
 
@@ -41,7 +41,8 @@
             class="com.example.pierre.myapplication.SensorFragment"
             android:id="@+id/frag_sensor"
             android:layout_width="match_parent"
-            android:layout_height="40dp">
+            android:layout_height="40dp"
+            android:layout_weight="0.13">
         </fragment>
 
 

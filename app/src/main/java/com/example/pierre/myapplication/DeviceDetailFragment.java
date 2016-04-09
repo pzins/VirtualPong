@@ -132,7 +132,7 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         TextView view = (TextView) mContentView.findViewById(R.id.device_address);
         view.setText(device.deviceAddress);
         view = (TextView) mContentView.findViewById(R.id.device_info);
-        view.setText(device.toString());
+        //view.setText(device.toString());
     }
 
 

@@ -62,7 +62,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
             while (true) {
                 String str = reader.readLine();
                 if (str.equals("END")) break;
-//                System.out.println(str);
+                System.out.println(str);
                 x_accel = str;
                 publishProgress();
                 printer.println("message recu");
