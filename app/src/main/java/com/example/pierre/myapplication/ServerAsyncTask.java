@@ -4,8 +4,10 @@ package com.example.pierre.myapplication;
  * Created by pierre on 01/04/16.
  */
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -31,6 +33,9 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     private TextView v_x_accel;
     private String x_accel ="";
 
+    private DrawActivity.GameView gameView;
+    private float xx = 0;
+    private Activity act;
     /**
      * @param context
      * @param statusText
@@ -41,12 +46,18 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
         this.v_x_accel = (TextView) v;
     }
 
+    public ServerAsyncTask(Context context, DrawActivity.GameView game, Activity drawAct) {
+        this.context = context;
+        this.gameView = game;
+        this.act = drawAct;
+    }
     @Override
     protected String doInBackground(Void... params) {
         try {
 
             ServerSocket s = new ServerSocket(8988);
             Socket soc = s.accept();
+
 
             // Un BufferedReader permet de lire par ligne.
             BufferedReader reader = new BufferedReader(
@@ -62,10 +73,12 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
             while (true) {
                 String str = reader.readLine();
                 if (str.equals("END")) break;
-                System.out.println(str);
+//                System.out.println(str);
+//                Log.w("OLOLOL  : ", str);
                 x_accel = str;
+                xx = Float.parseFloat(x_accel);
                 publishProgress();
-                printer.println("message recu");
+//                printer.println("message recu");
             }
             reader.close();
             printer.close();
@@ -82,8 +95,15 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
 
         super.onProgressUpdate(progress);
         // Update the ProgressBar
-        v_x_accel.setText(x_accel);
-
+//        v_x_accel.setText(x_accel);
+/*        act.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // Your UI changes here.
+                gameView.setX(xx);
+            }
+        });*/
+        gameView.setXPos(Math.round(xx));
 
     }
 

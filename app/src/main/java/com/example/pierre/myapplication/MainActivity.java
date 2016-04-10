@@ -3,6 +3,7 @@ package com.example.pierre.myapplication;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedWriter;
@@ -77,7 +79,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         last_gz = 0;
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
@@ -145,7 +148,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         }
         else if(id == R.id.atn_direct_enable){
-
+            Intent intent = new Intent(MainActivity.this, DrawActivity.class);
+            startActivity(intent);
         }
         else if (id == R.id.action_settings) {
             if(!isWifiP2pEnabled){
@@ -342,7 +346,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         }*/
 
-        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+//        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        if (mySensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
@@ -352,6 +357,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     fragment.getClient().setX_accel(x);
                 }
             }
+            TextView textViewX = (TextView) findViewById(R.id.x);
+            TextView textViewY = (TextView) findViewById(R.id.y);
+            TextView textViewZ = (TextView) findViewById(R.id.z);
+            textViewX.setText(String.valueOf(x));
+            textViewY.setText(String.valueOf(y));
+            textViewZ.setText(String.valueOf(z));
 /*
             long curTime = System.currentTimeMillis();
 

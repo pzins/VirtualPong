@@ -32,6 +32,7 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
         this.context = context;
         this.groupOwnerIP = ip;
         this.x_accel = 0;
+        this.y_accel = 0;
     }
 
     public void setX_accel(float x)
@@ -65,13 +66,14 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
         String str;
         while (true)
         {
-            pred.println("X =>" + Float.toString(x_accel));
-            try {
+            pred.println(Float.toString(x_accel) + );
+//            pred.println("X =>" + Float.toString(x_accel));
+/*            try {
                 str = plec.readLine();      // lecture de reponse
                 System.out.println(str);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
             if(false){
                 break;
             }
