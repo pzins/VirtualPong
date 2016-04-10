@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     ClientAsyncTask client;
 
+    private float globX = 0;
+
 
     public void setIsWifiP2pEnabled(boolean state)
     {
@@ -121,24 +123,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (id == R.id.atn_direct_discover){
             new Thread(new Runnable(){
                 public void run(){
-                    Log.w("0","0");
                     Socket socket = null;
                     try {
                         socket = new Socket("192.168.0.15", 8988);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Log.w("1","1");
                     PrintWriter pred = null;
                     try {
                         pred = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Log.w("2","2");
                     while(true){
-                        Log.w("OL", "OL");
-                        pred.println("Lacazette Fekir");
+                        pred.println(Float.toString(globX));
                     }
                     //open socket
                 }
@@ -348,6 +346,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
+            globX = x;
             if(fragment != null) {
                 if(fragment.getClient() != null){
                     fragment.getClient().setX_accel(x);
