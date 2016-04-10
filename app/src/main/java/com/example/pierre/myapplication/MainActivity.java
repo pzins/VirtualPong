@@ -22,6 +22,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener ,
         WifiP2pManager.ChannelListener, DeviceListFragment.DeviceActionListener{
@@ -113,6 +119,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         int id = item.getItemId();
 
         if (id == R.id.atn_direct_discover){
+            new Thread(new Runnable(){
+                public void run(){
+                    Log.w("0","0");
+                    Socket socket = null;
+                    try {
+                        socket = new Socket("192.168.0.15", 8988);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.w("1","1");
+                    PrintWriter pred = null;
+                    try {
+                        pred = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.w("2","2");
+                    while(true){
+                        Log.w("OL", "OL");
+                        pred.println("Lacazette Fekir");
+                    }
+                    //open socket
+                }
+            }).start();
 
 
         }
