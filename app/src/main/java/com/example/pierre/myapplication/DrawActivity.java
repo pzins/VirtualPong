@@ -40,8 +40,8 @@ public class DrawActivity extends AppCompatActivity {
 
         }
 
-        public void setXPos(int _x){this.x = _x;invalidate();}
-        public void setY(int _y){this.y = _y;invalidate();}
+        public void setXPos(int _x){this.x = _x;}
+        public void setYPos(int _y){this.y = _y;invalidate();}
         @Override
         protected void onDraw(Canvas canvas)
         {
@@ -49,7 +49,7 @@ public class DrawActivity extends AppCompatActivity {
             int radius=40;
             Paint p=new Paint();
             p.setColor(Color.RED);
-            canvas.drawCircle(x*20+500, 1000, radius, p);
+            canvas.drawCircle(x*20+500, y*20+750, radius, p);
             Log.w("----------------","------------------");
         }
 

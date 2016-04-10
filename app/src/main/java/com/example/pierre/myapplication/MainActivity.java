@@ -355,6 +355,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             if(fragment != null) {
                 if(fragment.getClient() != null){
                     fragment.getClient().setX_accel(x);
+                    fragment.getClient().setY_accel(y);
                 }
             }
             TextView textViewX = (TextView) findViewById(R.id.x);

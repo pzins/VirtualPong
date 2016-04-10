@@ -23,7 +23,7 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
     BufferedReader in;
     String groupOwnerIP;
     float x_accel;
-
+    float y_accel;
 
     /**
      * @param context
@@ -38,6 +38,10 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
     public void setX_accel(float x)
     {
         this.x_accel = x;
+    }
+    public void setY_accel(float y)
+    {
+        this.y_accel = y;
     }
 
     @Override
@@ -66,7 +70,7 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
         String str;
         while (true)
         {
-            pred.println(Float.toString(x_accel) + );
+            pred.println(Float.toString(x_accel) + "|" + Float.toString(y_accel));
 //            pred.println("X =>" + Float.toString(x_accel));
 /*            try {
                 str = plec.readLine();      // lecture de reponse

@@ -32,9 +32,11 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     private TextView statusText;
     private TextView v_x_accel;
     private String x_accel ="";
+    private String y_accel = "";
 
     private DrawActivity.GameView gameView;
     private float xx = 0;
+    private float yy = 0;
     private Activity act;
     /**
      * @param context
@@ -75,8 +77,11 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
                 if (str.equals("END")) break;
 //                System.out.println(str);
 //                Log.w("OLOLOL  : ", str);
-                x_accel = str;
+                String[] sep = str.split("\\|");
+                x_accel = sep[0];
+                y_accel = sep[1];
                 xx = Float.parseFloat(x_accel);
+                yy = Float.parseFloat(y_accel);
                 publishProgress();
 //                printer.println("message recu");
             }
@@ -104,6 +109,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
             }
         });*/
         gameView.setXPos(Math.round(xx));
+        gameView.setYPos(Math.round(yy));
 
     }
 
