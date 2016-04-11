@@ -108,15 +108,15 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         // socket.
         if (info.groupFormed && info.isGroupOwner) {
 
-//            new ServerAsyncTask(getActivity(), mContentView.findViewById(R.id.status_text),
-//                    (TextView) mContentView.findViewById(R.id.status_text))
-//                    .execute();
+            new ServerAsyncTask(getActivity(), mContentView.findViewById(R.id.status_text),
+                    (TextView) mContentView.findViewById(R.id.status_text))
+                    .execute();
         } else if (info.groupFormed) {
             // The other device acts as the client. In this case, we enable the
             // get file button.
             mContentView.findViewById(R.id.btn_send_mess).setVisibility(View.VISIBLE);
-            ((TextView) mContentView.findViewById(R.id.status_text)).setText(getResources()
-                    .getString(R.string.client_text));
+//            ((TextView) mContentView.findViewById(R.id.status_text)).setText(getResources()
+//                    .getString(R.string.client_text));
         }
         // hide the connect button
         mContentView.findViewById(R.id.btn_connect).setVisibility(View.GONE);

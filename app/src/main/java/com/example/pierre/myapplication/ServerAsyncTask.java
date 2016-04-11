@@ -34,7 +34,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     private String x_accel ="";
     private String y_accel = "";
 
-    private DrawActivity.GameView gameView;
+    private DrawActivity.GameView gameView = null;
     private float xx = 0;
     private float yy = 0;
     private Activity act;
@@ -59,7 +59,6 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
 
             ServerSocket s = new ServerSocket(8988);
             Socket soc = s.accept();
-
 
             // Un BufferedReader permet de lire par ligne.
             BufferedReader reader = new BufferedReader(
@@ -100,7 +99,6 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
 
         super.onProgressUpdate(progress);
         // Update the ProgressBar
-//        v_x_accel.setText(x_accel);
 /*        act.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -108,9 +106,14 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
                 gameView.setX(xx);
             }
         });*/
-        gameView.setXPos(Math.round(xx));
-        gameView.setYPos(Math.round(yy));
+        if(gameView != null) {
+            gameView.setXPos(Math.round(xx));
+            gameView.setYPos(Math.round(yy));
+        } else
+        {
+            v_x_accel.setText(x_accel);
 
+        }
     }
 
 }
