@@ -2,6 +2,7 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -11,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.DecimalFormat;
 
 /**
  * A simple server socket that accepts connection and writes some data on
@@ -70,7 +72,12 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
         String str;
         while (true)
         {
-            pred.println(Float.toString(x_accel) + "|" + Float.toString(y_accel));
+//            pred.println(Float.toString(x_accel) + "|" + Float.toString(y_accel));
+            String strx = String.format("%.2f", x_accel);
+            String stry = String.format("%.2f", y_accel);
+            String res = strx + "|" + stry;
+            Log.w("######", res);
+            pred.println(res);
 //            pred.println("X =>" + Float.toString(x_accel));
 /*            try {
                 str = plec.readLine();      // lecture de reponse
@@ -96,5 +103,6 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
         }
         return "OL";
     }
+
 
 }

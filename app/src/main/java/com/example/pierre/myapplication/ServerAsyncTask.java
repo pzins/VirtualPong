@@ -79,6 +79,9 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
                 String[] sep = str.split("\\|");
                 x_accel = sep[0];
                 y_accel = sep[1];
+                x_accel = x_accel.replaceAll(",",".");
+                y_accel = y_accel.replaceAll(",",".");
+
                 xx = Float.parseFloat(x_accel);
                 yy = Float.parseFloat(y_accel);
                 publishProgress();
@@ -111,7 +114,8 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
             gameView.setYPos(Math.round(yy));
         } else
         {
-            v_x_accel.setText(x_accel);
+
+            v_x_accel.setText("X:" + x_accel + "  Y:" + y_accel);
 
         }
     }
