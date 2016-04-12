@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(this, gravity, 100000);
+        sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_FASTEST);
 //        sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_NORMAL);
         receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
         registerReceiver(receiver, intentFilter);
@@ -359,12 +359,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     fragment.getClient().setY_accel(y);
                 }
             }
-            TextView textViewX = (TextView) findViewById(R.id.x);
-            TextView textViewY = (TextView) findViewById(R.id.y);
-            TextView textViewZ = (TextView) findViewById(R.id.z);
-            textViewX.setText(String.valueOf(x));
-            textViewY.setText(String.valueOf(y));
-            textViewZ.setText(String.valueOf(z));
+//            TextView textViewX = (TextView) findViewById(R.id.x);
+//            TextView textViewY = (TextView) findViewById(R.id.y);
+//            TextView textViewZ = (TextView) findViewById(R.id.z);
+//            textViewX.setText(String.valueOf(x));
+//            textViewY.setText(String.valueOf(y));
+//            textViewZ.setText(String.valueOf(z));
 /*
             long curTime = System.currentTimeMillis();
 

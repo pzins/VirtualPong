@@ -56,7 +56,6 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     @Override
     protected String doInBackground(Void... params) {
         try {
-
             ServerSocket s = new ServerSocket(8988);
             Socket soc = s.accept();
 
@@ -75,12 +74,11 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
                 String str = reader.readLine();
                 if (str.equals("END")) break;
 //                System.out.println(str);
-//                Log.w("OLOLOL  : ", str);
                 String[] sep = str.split("\\|");
                 x_accel = sep[0];
                 y_accel = sep[1];
                 x_accel = x_accel.replaceAll(",",".");
-                y_accel = y_accel.replaceAll(",",".");
+                y_accel = y_accel.replaceAll(",", ".");
 
                 xx = Float.parseFloat(x_accel);
                 yy = Float.parseFloat(y_accel);
@@ -109,14 +107,13 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
                 gameView.setX(xx);
             }
         });*/
-        if(gameView != null) {
-            gameView.setXPos(Math.round(xx));
-            gameView.setYPos(Math.round(yy));
+
+        if(this.gameView != null) {
+            this.gameView.setXPos(Math.round(xx));
+            this.gameView.setYPos(Math.round(yy));
         } else
         {
-
             v_x_accel.setText("X:" + x_accel + "  Y:" + y_accel);
-
         }
     }
 

@@ -76,7 +76,7 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
             String strx = String.format("%.2f", x_accel);
             String stry = String.format("%.2f", y_accel);
             String res = strx + "|" + stry;
-            Log.w("######", res);
+//            Log.w("######", res);
             pred.println(res);
 //            pred.println("X =>" + Float.toString(x_accel));
 /*            try {

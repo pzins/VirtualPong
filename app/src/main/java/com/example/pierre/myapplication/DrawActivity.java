@@ -15,6 +15,8 @@ public class DrawActivity extends AppCompatActivity {
     private ServerAsyncTask server;
     private int x;
     private int y;
+    private int posX;
+    private int posY;
     private GameView gameView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,9 @@ public class DrawActivity extends AppCompatActivity {
         server = new ServerAsyncTask(this, gameView,this);
         x = 50;
         y = 50;
+        posX = 500;
+        posY = 850;
+
         server.execute();
     }
 
@@ -49,8 +54,22 @@ public class DrawActivity extends AppCompatActivity {
             int radius=40;
             Paint p=new Paint();
             p.setColor(Color.RED);
-            canvas.drawCircle(x*20+500, y*20+750, radius, p);
-            Log.w("----------------","------------------");
+            if(x > 1.5)
+            {
+                posX += 10;
+            }
+            else if(x < -1.5)
+            {
+                posX -= 10;
+            }
+            if(y > 1.5)
+            {
+                posY += 10;
+            } else if (y < -1.5)
+            {
+                posY -= 10;
+            }
+            canvas.drawCircle(posX, posY, radius, p);
         }
 
     }
