@@ -82,6 +82,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
 
                 xx = Float.parseFloat(x_accel);
                 yy = Float.parseFloat(y_accel);
+                Log.w("RECEIVE", "SOMETHING : " + str);
                 publishProgress();
 //                printer.println("message recu");
             }

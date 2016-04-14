@@ -26,7 +26,7 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
     String groupOwnerIP;
     float x_accel;
     float y_accel;
-
+    Boolean shouldSend = false;
     /**
      * @param context
      */
@@ -40,10 +40,12 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
     public void setX_accel(float x)
     {
         this.x_accel = x;
+        shouldSend = true;
     }
     public void setY_accel(float y)
     {
         this.y_accel = y;
+        shouldSend = true;
     }
 
     @Override
@@ -73,11 +75,14 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
         while (true)
         {
 //            pred.println(Float.toString(x_accel) + "|" + Float.toString(y_accel));
-            String strx = String.format("%.2f", x_accel);
-            String stry = String.format("%.2f", y_accel);
-            String res = strx + "|" + stry;
+            if(shouldSend){
+                String strx = String.format("%.2f", x_accel);
+                String stry = String.format("%.2f", y_accel);
+                String res = strx + "|" + stry;
+                pred.println(res);
+                shouldSend = false;
+            }
 //            Log.w("######", res);
-            pred.println(res);
 //            pred.println("X =>" + Float.toString(x_accel));
 /*            try {
                 str = plec.readLine();      // lecture de reponse

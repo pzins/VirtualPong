@@ -54,18 +54,19 @@ public class DrawActivity extends AppCompatActivity {
             int radius=40;
             Paint p=new Paint();
             p.setColor(Color.RED);
-            if(x > 1.5)
+            float threshold = 0.1f;
+            if(x > threshold)
             {
                 posX += 10;
             }
-            else if(x < -1.5)
+            else if(x < -threshold)
             {
                 posX -= 10;
             }
-            if(y > 1.5)
+            if(y > threshold )
             {
                 posY += 10;
-            } else if (y < -1.5)
+            } else if (y < -threshold)
             {
                 posY -= 10;
             }

@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     ClientAsyncTask client;
 
+    private int delay = 0;
+    private boolean s1 = true;
+    private boolean s2 = true;
+    private int sens = 0;
     private float globX = 0;
 
 
@@ -353,12 +357,40 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float y = event.values[1];
             float z = event.values[2];
             globX = x;
-            if(fragment != null) {
-                if(fragment.getClient() != null){
-                    fragment.getClient().setX_accel(x);
-                    fragment.getClient().setY_accel(y);
+
+            if(x > 2 && s1)
+            {
+                if(fragment != null) {
+                    if(fragment.getClient() != null){
+                        fragment.getClient().setX_accel(x);
+                        fragment.getClient().setY_accel(y);
+                    }
                 }
+                s2 = false;
             }
+            if(x < -2 && s2)
+            {
+                if(fragment != null) {
+                    if(fragment.getClient() != null){
+                        fragment.getClient().setX_accel(x);
+                        fragment.getClient().setY_accel(y);
+                    }
+                }
+                s1 = false;
+            }
+            if(x < 1 && x > -1)
+            {
+                delay++;
+            }
+            if(delay >= 100)
+            {
+                s1 = true;
+                s2 = true;
+                delay = 0;
+            }
+
+
+
 //            TextView textViewX = (TextView) findViewById(R.id.x);
 //            TextView textViewY = (TextView) findViewById(R.id.y);
 //            TextView textViewZ = (TextView) findViewById(R.id.z);
