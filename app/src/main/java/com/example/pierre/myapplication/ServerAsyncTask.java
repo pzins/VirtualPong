@@ -38,6 +38,9 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     private float xx = 0;
     private float yy = 0;
     private Activity act;
+
+
+    private String direction = "";
     /**
      * @param context
      * @param statusText
@@ -74,15 +77,18 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
                 String str = reader.readLine();
                 if (str.equals("END")) break;
 //                System.out.println(str);
-                String[] sep = str.split("\\|");
-                x_accel = sep[0];
-                y_accel = sep[1];
-                x_accel = x_accel.replaceAll(",",".");
-                y_accel = y_accel.replaceAll(",", ".");
+//                String[] sep = str.split("\\|");
+//                x_accel = sep[0];
+//                y_accel = sep[1];
+//                x_accel = x_accel.replaceAll(",",".");
+//                y_accel = y_accel.replaceAll(",", ".");
+//
+//                xx = Float.parseFloat(x_accel);
+//                yy = Float.parseFloat(y_accel);
+//                Log.w("RECEIVE", "SOMETHING : " + str);
+                direction = str;
+                Log.w("received", str);
 
-                xx = Float.parseFloat(x_accel);
-                yy = Float.parseFloat(y_accel);
-                Log.w("RECEIVE", "SOMETHING : " + str);
                 publishProgress();
 //                printer.println("message recu");
             }
@@ -110,8 +116,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
         });*/
 
         if(this.gameView != null) {
-            this.gameView.setXPos(Math.round(xx));
-            this.gameView.setYPos(Math.round(yy));
+            this.gameView.move(direction);
         } else
         {
             v_x_accel.setText("X:" + x_accel + "  Y:" + y_accel);

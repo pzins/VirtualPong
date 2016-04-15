@@ -13,64 +13,59 @@ public class DrawActivity extends AppCompatActivity {
 
     private Paint paint = new Paint();
     private ServerAsyncTask server;
-    private int x;
-    private int y;
     private int posX;
     private int posY;
     private GameView gameView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        gameView = new GameView(this, x, y);
+        posX = 500;
+        posY = 850;
+        gameView = new GameView(this, posX, posY);
         setContentView(gameView);
         gameView.setWillNotDraw(false);
         server = new ServerAsyncTask(this, gameView,this);
-        x = 50;
-        y = 50;
-        posX = 500;
-        posY = 850;
 
         server.execute();
     }
+
 
 
     class GameView extends View
     {
         private int x;
         private int y;
+        public int delta  = 0;
         public GameView(Context context, int _x, int _y) {
             super(context);
             x = _x;
             y = _y;
 
         }
+        public void move(String str)
+        {
+            Log.w("DIRECTION = ", str);
+            if(str.equals("d"))
+            {
+                x += 10;
+            }else if(str.equals("g"))
+            {
+                x -= 10;
+            }
+            invalidate();
 
-        public void setXPos(int _x){this.x = _x;}
-        public void setYPos(int _y){this.y = _y;invalidate();}
+        }
+
+
         @Override
         protected void onDraw(Canvas canvas)
         {
             super.onDraw(canvas);
+            Log.w("--------","++++++++");
             int radius=40;
             Paint p=new Paint();
             p.setColor(Color.RED);
-            float threshold = 0.1f;
-            if(x > threshold)
-            {
-                posX += 10;
-            }
-            else if(x < -threshold)
-            {
-                posX -= 10;
-            }
-            if(y > threshold )
-            {
-                posY += 10;
-            } else if (y < -threshold)
-            {
-                posY -= 10;
-            }
-            canvas.drawCircle(posX, posY, radius, p);
+            canvas.drawCircle(x, y, radius, p);
         }
 
     }

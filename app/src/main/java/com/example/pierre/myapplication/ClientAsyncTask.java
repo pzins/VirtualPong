@@ -27,6 +27,7 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
     float x_accel;
     float y_accel;
     Boolean shouldSend = false;
+    String direction = "";
     /**
      * @param context
      */
@@ -47,7 +48,10 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
         this.y_accel = y;
         shouldSend = true;
     }
-
+    public void setDirection(String str){
+        this.direction = str;
+        shouldSend = true;
+    }
     @Override
     protected String doInBackground(Void... params) {
         Socket socket = null;
@@ -76,10 +80,11 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
         {
 //            pred.println(Float.toString(x_accel) + "|" + Float.toString(y_accel));
             if(shouldSend){
-                String strx = String.format("%.2f", x_accel);
-                String stry = String.format("%.2f", y_accel);
-                String res = strx + "|" + stry;
-                pred.println(res);
+//                String strx = String.format("%.2f", x_accel);
+//                String stry = String.format("%.2f", y_accel);
+//                String res = strx + "|" + stry;
+
+                pred.println(direction);
                 shouldSend = false;
             }
 //            Log.w("######", res);
