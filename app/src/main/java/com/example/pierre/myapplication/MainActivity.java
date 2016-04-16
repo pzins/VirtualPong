@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -65,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private boolean s2 = true;
 
 
+    private  DeviceDetailFragment fragment;
+
+
     public void setIsWifiP2pEnabled(boolean state)
     {
         isWifiP2pEnabled = state;
@@ -84,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         last_gx = 0;
         last_gy = 0;
         last_gz = 0;
+        fragment = (DeviceDetailFragment) getFragmentManager().findFragmentById(R.id.frag_detail);
+
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 //        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -112,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
 //        sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_GAME);
         receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
         registerReceiver(receiver, intentFilter);
     }
@@ -304,19 +310,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        DeviceDetailFragment fragment = (DeviceDetailFragment) getFragmentManager().findFragmentById(R.id.frag_detail);
 
         Sensor mySensor = event.sensor;
         if(mySensor.getType() == Sensor.TYPE_GRAVITY){
             float x = event.values[0];
-            Log.w("VALUE", Float.toString(x));
-            if(x > 0) {
+            if(x > 1) {
                 if(fragment != null) {
                     if(fragment.getClient() != null){
                         fragment.getClient().setDirection("g");
                     }
                 }
-            }else if (x < 0){
+            }else if (x < -1){
                 if(fragment != null) {
                     if(fragment.getClient() != null){
                         fragment.getClient().setDirection("d");
@@ -366,55 +370,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 s2 = true;
                 delay = 0;
             }
-
-
-
-//            TextView textViewX = (TextView) findViewById(R.id.x);
-//            TextView textViewY = (TextView) findViewById(R.id.y);
-//            TextView textViewZ = (TextView) findViewById(R.id.z);
-//            textViewX.setText(String.valueOf(x));
-//            textViewY.setText(String.valueOf(y));
-//            textViewZ.setText(String.valueOf(z));
-/*
-            long curTime = System.currentTimeMillis();
-
-            if ((curTime - lastUpdate) > 100) {
-                long diffTime = (curTime - lastUpdate);
-                lastUpdate = curTime;
-
-                float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
-
-                if (speed > SHAKE_THRESHOLD) {
-
-                }
-
-                if (true || Math.abs(x - last_x) > 1 || Math.abs(y - last_y) > 1 || Math.abs(z - last_z) > 1) {
-                    Log.w("-----------------------", "---------------------");
-                    Log.w("x = ", String.valueOf(x));
-                    Log.w("y = ", String.valueOf(y));
-                    Log.w("z = ", String.valueOf(z));
-                    Log.w("+++++++++++++++++++++++", "+++++++++++++++++++++");
-                    Context context = getApplicationContext();
-                    CharSequence text = String.valueOf(x);
-                    int duration = Toast.LENGTH_SHORT;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show(); /*
-                    TextView textViewX = (TextView) findViewById(R.id.x);
-                    TextView textViewY = (TextView) findViewById(R.id.y);
-                    TextView textViewZ = (TextView) findViewById(R.id.z);
-                    textViewX.setText(String.valueOf(x));
-                    textViewY.setText(String.valueOf(y));
-                    textViewZ.setText(String.valueOf(z));
-
-                }
-
-                last_x = x;
-                last_y = y;
-                last_z = z;
-
-
-            }*/
         }
     }
 
