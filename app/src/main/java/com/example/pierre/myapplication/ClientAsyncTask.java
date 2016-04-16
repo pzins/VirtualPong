@@ -24,8 +24,6 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
     PrintWriter out;
     BufferedReader in;
     String groupOwnerIP;
-    float x_accel;
-    float y_accel;
     Boolean shouldSend = false;
     String direction = "";
     /**
@@ -34,21 +32,9 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
     public ClientAsyncTask(Context context, String ip) {
         this.context = context;
         this.groupOwnerIP = ip;
-        this.x_accel = 0;
-        this.y_accel = 0;
     }
 
-    public void setX_accel(float x)
-    {
-        this.x_accel = x;
-        shouldSend = true;
-    }
-    public void setY_accel(float y)
-    {
-        this.y_accel = y;
-        shouldSend = true;
-    }
-    public void setDirection(String str){
+     public void setDirection(String str){
         this.direction = str;
         shouldSend = true;
     }
@@ -74,27 +60,12 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        String str;
         while (true)
         {
-//            pred.println(Float.toString(x_accel) + "|" + Float.toString(y_accel));
             if(shouldSend){
-//                String strx = String.format("%.2f", x_accel);
-//                String stry = String.format("%.2f", y_accel);
-//                String res = strx + "|" + stry;
-
                 pred.println(direction);
                 shouldSend = false;
             }
-//            Log.w("######", res);
-//            pred.println("X =>" + Float.toString(x_accel));
-/*            try {
-                str = plec.readLine();      // lecture de reponse
-                System.out.println(str);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
             if(false){
                 break;
             }

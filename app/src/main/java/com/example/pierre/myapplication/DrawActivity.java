@@ -24,7 +24,7 @@ public class DrawActivity extends AppCompatActivity {
         gameView = new GameView(this, posX, posY);
         setContentView(gameView);
         gameView.setWillNotDraw(false);
-        server = new ServerAsyncTask(this, gameView,this);
+        server = new ServerAsyncTask(this, gameView);
 
         server.execute();
     }
@@ -51,6 +51,10 @@ public class DrawActivity extends AppCompatActivity {
             }else if(str.equals("g"))
             {
                 x -= 10;
+            }else if(str.equals("h")){
+                y += 10;
+            }else if(str.equals("b")){
+                y -= 10;
             }
             invalidate();
 

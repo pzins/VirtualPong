@@ -30,6 +30,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import javax.net.ssl.SSLEngine;
+
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener ,
         WifiP2pManager.ChannelListener, DeviceListFragment.DeviceActionListener{
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private SensorManager sensorManager;
     private Sensor accelerometer;
+    private Sensor gyro;
     private Sensor gravity;
     private long lastUpdate = 0;
     private long lastUpdate2 = 0;
@@ -55,11 +58,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     ClientAsyncTask client;
 
+    private float globX = 0;
+
     private int delay = 0;
     private boolean s1 = true;
     private boolean s2 = true;
-    private int sens = 0;
-    private float globX = 0;
 
 
     public void setIsWifiP2pEnabled(boolean state)
@@ -85,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 //        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
@@ -107,8 +111,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_FASTEST);
-//        sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_NORMAL);
+//        sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_NORMAL);
         receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
         registerReceiver(receiver, intentFilter);
     }
@@ -303,56 +307,32 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         DeviceDetailFragment fragment = (DeviceDetailFragment) getFragmentManager().findFragmentById(R.id.frag_detail);
 
         Sensor mySensor = event.sensor;
-/*
-        if (mySensor.getType() == Sensor.TYPE_GRAVITY) {
-
-
-            TextView textViewgx = (TextView) findViewById(R.id.gx);
-            textViewgx.setText(String.valueOf(event.values[0]));
-            TextView textViewgy = (TextView) findViewById(R.id.gy);
-            textViewgy.setText(String.valueOf(event.values[1]));
-            TextView textViewgz = (TextView) findViewById(R.id.gz);
-            textViewgz.setText(String.valueOf(event.values[2]));
-            long curTime = System.currentTimeMillis();
-
-            if ((curTime - lastUpdate2) > 200) {
-                lastUpdate2 = curTime;
-
-                float gx = Math.abs(event.values[0]);
-                float gy = Math.abs(event.values[1]);
-                float gz = Math.abs(event.values[2]);
-
-
-                float last_sum = Math.abs(last_gx) + Math.abs(last_gy) + Math.abs(last_gz);
-                float sum = gx + gy + gz;
-                TextView calc = (TextView) findViewById(R.id.calc);
-                calc.setText(String.valueOf(last_sum - sum));
-
-                if(last_sum - sum > 0.05)
-                {
-                    TextView dir = (TextView) findViewById(R.id.direction);
-                    dir.setText("Up");
+        if(mySensor.getType() == Sensor.TYPE_GRAVITY){
+            float x = event.values[0];
+            Log.w("VALUE", Float.toString(x));
+            if(x > 0) {
+                if(fragment != null) {
+                    if(fragment.getClient() != null){
+                        fragment.getClient().setDirection("g");
+                    }
                 }
-                else if(last_sum - sum < 0.05)
-                {
-                    TextView dir = (TextView) findViewById(R.id.direction);
-                    dir.setText("Down");
-                }else
-                {
-                    TextView dir = (TextView) findViewById(R.id.direction);
-                    dir.setText("...");
+            }else if (x < 0){
+                if(fragment != null) {
+                    if(fragment.getClient() != null){
+                        fragment.getClient().setDirection("d");
+                    }
                 }
-                last_gx = gx;
-                last_gy = gy;
-                last_gz = gz;
-
             }
+        }
+        else if (mySensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            float x = event.values[0];
+            Log.w("VALUE", Float.toString(x));
 
 
-        }*/
+        }
 
 //        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-        if (mySensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+        else if (mySensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];

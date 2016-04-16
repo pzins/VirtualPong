@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -35,9 +33,6 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     private String y_accel = "";
 
     private DrawActivity.GameView gameView = null;
-    private float xx = 0;
-    private float yy = 0;
-    private Activity act;
 
 
     private String direction = "";
@@ -51,10 +46,9 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
         this.v_x_accel = (TextView) v;
     }
 
-    public ServerAsyncTask(Context context, DrawActivity.GameView game, Activity drawAct) {
+    public ServerAsyncTask(Context context, DrawActivity.GameView game) {
         this.context = context;
         this.gameView = game;
-        this.act = drawAct;
     }
     @Override
     protected String doInBackground(Void... params) {
@@ -76,19 +70,8 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
             while (true) {
                 String str = reader.readLine();
                 if (str.equals("END")) break;
-//                System.out.println(str);
-//                String[] sep = str.split("\\|");
-//                x_accel = sep[0];
-//                y_accel = sep[1];
-//                x_accel = x_accel.replaceAll(",",".");
-//                y_accel = y_accel.replaceAll(",", ".");
-//
-//                xx = Float.parseFloat(x_accel);
-//                yy = Float.parseFloat(y_accel);
-//                Log.w("RECEIVE", "SOMETHING : " + str);
                 direction = str;
                 Log.w("received", str);
-
                 publishProgress();
 //                printer.println("message recu");
             }
@@ -103,23 +86,12 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     }
     @Override
     protected void onProgressUpdate(Integer... progress) {
-
-
         super.onProgressUpdate(progress);
-        // Update the ProgressBar
-/*        act.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // Your UI changes here.
-                gameView.setX(xx);
-            }
-        });*/
-
         if(this.gameView != null) {
             this.gameView.move(direction);
         } else
         {
-            v_x_accel.setText("X:" + x_accel + "  Y:" + y_accel);
+            v_x_accel.setText("DIRECTION : " + direction);
         }
     }
 
