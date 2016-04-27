@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private  DeviceDetailFragment fragment;
 
+    private String dire = "0";
 
     public void setIsWifiP2pEnabled(boolean state)
     {
@@ -143,7 +144,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 public void run(){
                     Socket socket = null;
                     try {
-                        socket = new Socket("192.168.0.15", 8988);
+//                        socket = new Socket("172.25.33.184", 8988);
+                        socket = new Socket("192.168.0.11", 8988);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -153,8 +155,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
+
+                    String tmp = "0";
                     while(true){
-                        pred.println(Float.toString(globX));
+                        if(tmp != dire)
+                        {
+                            tmp = dire;
+                            pred.println(dire);
+                            Log.w("dir",dire);
+                        }
                     }
                     //open socket
                 }
@@ -315,17 +325,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if(mySensor.getType() == Sensor.TYPE_GRAVITY){
             float x = event.values[0];
             if(x > 1) {
+                dire = "g";
                 if(fragment != null) {
                     if(fragment.getClient() != null){
                         fragment.getClient().setDirection("g");
                     }
                 }
             }else if (x < -1){
+                dire = "d";
                 if(fragment != null) {
                     if(fragment.getClient() != null){
                         fragment.getClient().setDirection("d");
                     }
                 }
+            } else {
+                dire = "0";
             }
         }
         else if (mySensor.getType() == Sensor.TYPE_GYROSCOPE) {
@@ -340,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
-            globX = x;
+//            globX = x;
 
             if(x > 2 && s1)
             {
