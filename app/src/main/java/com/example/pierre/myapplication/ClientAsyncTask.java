@@ -64,11 +64,23 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
         {
             if(shouldSend){
                 pred.println(direction);
+//                long time= System.currentTimeMillis();
+//                pred.println(direction + "|" + Long.toString(time));
                 shouldSend = false;
+/*                try {
+                    String str = plec.readLine();
+                    time = System.currentTimeMillis();
+                    Long debut = Long.parseLong(str.substring(2), 10);
+                    Log.w("OLOLOL", Long.toString(time - debut));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }*/
             }
             if(false){
                 break;
             }
+
+
         }
         pred.println("END");
         try {

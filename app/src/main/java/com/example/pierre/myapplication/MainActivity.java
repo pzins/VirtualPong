@@ -144,8 +144,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 public void run(){
                     Socket socket = null;
                     try {
-//                        socket = new Socket("172.25.33.184", 8988);
-                        socket = new Socket("192.168.0.11", 8988);
+//                        socket = new Socket("10.42.0.71", 8988);
+                        socket = new Socket("172.25.33.184", 8988);
+//                        socket = new Socket("192.168.0.11", 8988);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -163,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         {
                             tmp = dire;
                             pred.println(dire);
-                            Log.w("dir",dire);
                         }
                     }
                     //open socket
@@ -324,6 +324,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Sensor mySensor = event.sensor;
         if(mySensor.getType() == Sensor.TYPE_GRAVITY){
             float x = event.values[0];
+            Log.w("*",Float.toString(x));
             if(x > 1) {
                 dire = "g";
                 if(fragment != null) {
