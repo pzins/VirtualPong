@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -22,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedWriter;
@@ -30,8 +28,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-
-import javax.net.ssl.SSLEngine;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener ,
@@ -145,8 +141,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     Socket socket = null;
                     try {
 //                        socket = new Socket("10.42.0.71", 8988);
-                        socket = new Socket("172.25.33.184", 8988);
-//                        socket = new Socket("192.168.0.11", 8988);
+//                        socket = new Socket("172.25.33.184", 8988);
+                        socket = new Socket("192.168.0.11", 8988);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
