@@ -39,6 +39,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     private String direction = "";
 
     private Boolean shouldStart = true;
+    private ClientAsyncTask client;
     /**
      * @param context
      * @param statusText
@@ -48,17 +49,29 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
         this.statusText = (TextView) statusText;
         this.v_x_accel = (TextView) v;
     }
-
-    public ServerAsyncTask(Context context, DrawActivity.GameView game) {
+    public ServerAsyncTask(Context context, DrawActivity.GameView game, int type) {
         this.context = context;
         this.gameView = game;
+        if (type != 0){
+            shouldStart = false;
+        }
+    }
+    public ServerAsyncTask(Context context, DrawActivity.GameView game, int type, ClientAsyncTask client) {
+        this.context = context;
+        this.gameView = game;
+        if (type != 0){
+            shouldStart = false;
+        }
+        this.client = client;
     }
     @Override
     protected String doInBackground(Void... params) {
         try {
             ServerSocket s = new ServerSocket(8988);
+            Log.w("AVANT","ACCEPT");
             Socket soc = s.accept();
-            adr = soc.getInetAddress().toString();
+            Log.w("AVANT","ACCEPT");
+            adr = soc.getInetAddress().toString().substring(1);
             // Un BufferedReader permet de lire par ligne.
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(soc.getInputStream())
@@ -90,9 +103,11 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     protected void onProgressUpdate(Integer... progress) {
         super.onProgressUpdate(progress);
         if(shouldStart ) {
-            Log.w("START", "CLIENTASYNCHTASK");
-            new ClientAsyncTask(context, adr).execute();
             shouldStart = false;
+//            new ClientAsyncTask(context, adr).execute();
+            Log.w("--------", "-------------");
+            client.setAdresseIp(adr);
+            client.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
         if(this.gameView != null) {

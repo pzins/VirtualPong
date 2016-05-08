@@ -32,6 +32,14 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
     public ClientAsyncTask(Context context, String ip) {
         this.context = context;
         this.groupOwnerIP = ip;
+        Log.w("olol", ip);
+    }
+    public ClientAsyncTask(Context context) {
+        this.context = context;
+    }
+
+    public void setAdresseIp(String ip){
+        this.groupOwnerIP = ip;
     }
 
      public void setDirection(String str){
@@ -40,12 +48,14 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
     }
     @Override
     protected String doInBackground(Void... params) {
+
         Socket socket = null;
         try {
             socket = new Socket(groupOwnerIP, 8988);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
         BufferedReader plec = null;
         try {
@@ -63,6 +73,7 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
         while (true)
         {
             if(shouldSend){
+                Log.w("PRNIT DIRECTION", direction);
                 pred.println(direction);
 //                long time= System.currentTimeMillis();
 //                pred.println(direction + "|" + Long.toString(time));

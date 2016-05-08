@@ -11,6 +11,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,12 +55,7 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
         gameView = new GameView(this, posX, posY, playerX, playerY);
         setContentView(gameView);
         gameView.setWillNotDraw(false);
-        server = new ServerAsyncTask(this, gameView);
 
-
-
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
         Bundle b = getIntent().getExtras();
 
@@ -70,10 +66,20 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
         }
         if(!isGo){
             client = new ClientAsyncTask(this, goIpAddr);
+            server = new ServerAsyncTask(this, gameView,1);
             client.execute();
+        } else {
+            client = new ClientAsyncTask(this);
+            server = new ServerAsyncTask(this, gameView,0, client);
         }
 
-        server.execute();
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+
+
+
+        server.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     protected void onPause() {
