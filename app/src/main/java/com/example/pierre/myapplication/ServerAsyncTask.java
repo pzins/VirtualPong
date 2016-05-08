@@ -32,10 +32,13 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     private String x_accel ="";
     private String y_accel = "";
 
+    private String adr = "";
+
     private DrawActivity.GameView gameView = null;
 
-
     private String direction = "";
+
+    private Boolean shouldStart = true;
     /**
      * @param context
      * @param statusText
@@ -55,7 +58,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
         try {
             ServerSocket s = new ServerSocket(8988);
             Socket soc = s.accept();
-
+            adr = soc.getInetAddress().toString();
             // Un BufferedReader permet de lire par ligne.
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(soc.getInputStream())
@@ -86,6 +89,12 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     @Override
     protected void onProgressUpdate(Integer... progress) {
         super.onProgressUpdate(progress);
+        if(shouldStart ) {
+            Log.w("START", "CLIENTASYNCHTASK");
+            new ClientAsyncTask(context, adr).execute();
+            shouldStart = false;
+        }
+
         if(this.gameView != null) {
             this.gameView.move(direction);
         } else

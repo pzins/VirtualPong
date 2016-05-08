@@ -170,6 +170,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
         else if(id == R.id.atn_direct_enable){
             Intent intent = new Intent(MainActivity.this, DrawActivity.class);
+            Bundle b = new Bundle();
+            DeviceDetailFragment frag = (DeviceDetailFragment) getFragmentManager()
+                    .findFragmentById(R.id.frag_detail);
+            b.putBoolean("go", frag.isGroupOwner());
+            b.putString("ip", frag.getIp());
+            intent.putExtras(b);
             startActivity(intent);
         }
         else if (id == R.id.action_settings) {
@@ -320,7 +326,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Sensor mySensor = event.sensor;
         if(mySensor.getType() == Sensor.TYPE_GRAVITY){
             float x = event.values[0];
-            Log.w("*",Float.toString(x));
             if(x > 1) {
                 dire = "g";
                 if(fragment != null) {
@@ -341,7 +346,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
         else if (mySensor.getType() == Sensor.TYPE_GYROSCOPE) {
             float x = event.values[0];
-            Log.w("VALUE", Float.toString(x));
 
 
         }

@@ -8,10 +8,13 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.io.UnsupportedEncodingException;
 
 
 /**
@@ -30,7 +33,12 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         return client;
     }
 
-
+    public Boolean isGroupOwner(){
+        return info.isGroupOwner;
+    }
+    public String getIp(){
+            return info.groupOwnerAddress.getHostAddress();
+    }
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
@@ -102,6 +110,10 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         // InetAddress from WifiP2pInfo struct.
         view = (TextView) mContentView.findViewById(R.id.device_info);
         view.setText("Group Owner IP" + info.groupOwnerAddress.getHostAddress());
+        String str = null; // for UTF-8 encoding
+
+        System.out.println("### : " + info.groupOwnerAddress.getAddress());
+        System.out.println("### : " + info.groupOwnerAddress.getHostAddress());
 
         // After the group negotiation, we assign the group owner as the file
         // server. The file server is single threaded, single connection server

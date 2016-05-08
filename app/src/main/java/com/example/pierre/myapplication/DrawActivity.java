@@ -1,5 +1,7 @@
 package com.example.pierre.myapplication;
 
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,10 +16,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 public class DrawActivity extends AppCompatActivity implements SensorEventListener {
 
     private Paint paint = new Paint();
     private ServerAsyncTask server;
+    private ClientAsyncTask client;
+
     private int posX;
     private int posY;
     private GameView gameView;
@@ -27,6 +40,9 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
     private int playerY;
     private SensorManager sensorManager;
     private Sensor gravity;
+
+    private Boolean isGo;
+    private String goIpAddr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +60,14 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+
+        Bundle b = getIntent().getExtras();
+
+
+        if(b != null) {
+            goIpAddr = b.getString("ip");
+            isGo = b.getBoolean("go");
+        }
 
 
         server.execute();
