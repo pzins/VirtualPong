@@ -35,11 +35,12 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     private String adr = "";
 
     private DrawActivity.GameView gameView = null;
+    private DrawActivityClient.GameView clientGameView = null;
 
     private String direction = "";
 
     private Boolean shouldStart = true;
-    private ClientAsyncTask client;
+    private GameAsyncTask client;
     /**
      * @param context
      * @param statusText
@@ -49,19 +50,17 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
         this.statusText = (TextView) statusText;
         this.v_x_accel = (TextView) v;
     }
-    public ServerAsyncTask(Context context, DrawActivity.GameView game, int type) {
+    public ServerAsyncTask(Context context, DrawActivity.GameView game) {
         this.context = context;
         this.gameView = game;
-        if (type != 0){
-            shouldStart = false;
-        }
     }
-    public ServerAsyncTask(Context context, DrawActivity.GameView game, int type, ClientAsyncTask client) {
+    public ServerAsyncTask(Context context, DrawActivityClient.GameView game) {
+        this.context = context;
+        this.clientGameView = game;
+    }
+    public ServerAsyncTask(Context context, DrawActivity.GameView game, GameAsyncTask client) {
         this.context = context;
         this.gameView = game;
-        if (type != 0){
-            shouldStart = false;
-        }
         this.client = client;
     }
     @Override
@@ -104,7 +103,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
         super.onProgressUpdate(progress);
         if(shouldStart ) {
             shouldStart = false;
-//            new ClientAsyncTask(context, adr).execute();
+//            new GameAsyncTask(context, adr).execute();
             Log.w("--------", "-------------");
             client.setAdresseIp(adr);
             client.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

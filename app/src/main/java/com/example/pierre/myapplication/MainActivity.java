@@ -170,10 +170,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
         else if(id == R.id.atn_direct_enable){
             Intent intent = new Intent(MainActivity.this, DrawActivity.class);
+            startActivity(intent);
+        }
+        else if(id == R.id.client){
+            Intent intent = new Intent(MainActivity.this, DrawActivityClient.class);
             Bundle b = new Bundle();
             DeviceDetailFragment frag = (DeviceDetailFragment) getFragmentManager()
                     .findFragmentById(R.id.frag_detail);
-            b.putBoolean("go", frag.isGroupOwner());
+//            b.putBoolean("go", frag.isGroupOwner());
             b.putString("ip", frag.getIp());
             intent.putExtras(b);
             startActivity(intent);

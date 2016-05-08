@@ -30,7 +30,7 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
 
     private Paint paint = new Paint();
     private ServerAsyncTask server;
-    private ClientAsyncTask client;
+    private GameAsyncTask client;
 
     private int posX;
     private int posY;
@@ -48,7 +48,7 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         posX = 500;
-        posY = 850;
+        posY = 1400;
 
         playerX = 500;
         playerY = 300;
@@ -57,39 +57,28 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
         gameView.setWillNotDraw(false);
 
 
-        Bundle b = getIntent().getExtras();
-
-
-        if(b != null) {
-            goIpAddr = b.getString("ip");
-            isGo = b.getBoolean("go");
-        }
-        if(!isGo){
-            client = new ClientAsyncTask(this, goIpAddr);
-            server = new ServerAsyncTask(this, gameView,1);
-            client.execute();
-        } else {
-            client = new ClientAsyncTask(this);
-            server = new ServerAsyncTask(this, gameView,0, client);
-        }
-
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
-
+        client = new GameAsyncTask(this);
+        server = new ServerAsyncTask(this, gameView, client);
 
         server.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     protected void onPause() {
         super.onPause();
-        sensorManager.unregisterListener(this);
+        if(sensorManager != null) {
+            sensorManager.unregisterListener(this);
+        }
     }
 
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_GAME);
+        if(sensorManager != null) {
+            sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_GAME);
+        }
     }
 
     @Override
@@ -160,7 +149,8 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
             int radius=40;
             Paint p=new Paint();
             p.setColor(Color.RED);
-            canvas.drawCircle(x, y, radius, p);
+//            canvas.drawCircle(x, y, radius, p);
+            canvas.drawRect(x - 100, y - 52, x + 100, y + 25, p);
             p.setColor(Color.BLUE);
             canvas.drawRect(px - 100, py - 52, px + 100, py + 25, p);
         }

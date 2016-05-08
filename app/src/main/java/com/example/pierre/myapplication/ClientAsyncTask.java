@@ -2,6 +2,7 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.util.LogWriter;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -32,7 +33,6 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
     public ClientAsyncTask(Context context, String ip) {
         this.context = context;
         this.groupOwnerIP = ip;
-        Log.w("olol", ip);
     }
     public ClientAsyncTask(Context context) {
         this.context = context;
@@ -56,7 +56,6 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
             e.printStackTrace();
         }
 
-
         BufferedReader plec = null;
         try {
             plec = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -70,10 +69,11 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Log.w("PRED= ", Boolean.toString((pred== null)));
         while (true)
         {
             if(shouldSend){
-                Log.w("PRNIT DIRECTION", direction);
+//                Log.w("PRNIT DIRECTION", "" + direction);
                 pred.println(direction);
 //                long time= System.currentTimeMillis();
 //                pred.println(direction + "|" + Long.toString(time));

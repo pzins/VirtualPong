@@ -25,6 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".DrawActivity"></activity>
+        <activity android:name=".DrawActivityClient"></activity>
     </application>
 
 </manifest>
