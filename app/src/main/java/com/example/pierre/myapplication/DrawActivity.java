@@ -68,7 +68,10 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
             goIpAddr = b.getString("ip");
             isGo = b.getBoolean("go");
         }
-
+        if(!isGo){
+            client = new ClientAsyncTask(this, goIpAddr);
+            client.execute();
+        }
 
         server.execute();
     }
@@ -90,8 +93,10 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
             float x = event.values[0];
             if(x > 1) {
                 gameView.movePlayer("g");
+                client.setDirection("g");
             }else if (x < -1) {
                 gameView.movePlayer("d");
+                client.setDirection("d");
             }
         }
     }
