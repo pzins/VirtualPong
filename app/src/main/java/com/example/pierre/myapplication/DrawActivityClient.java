@@ -1,36 +1,26 @@
 package com.example.pierre.myapplication;
 
-import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
-
-public class DrawActivity extends AppCompatActivity implements SensorEventListener {
-
+/**
+ * Created by pierre on 08/05/16.
+ */
+public class DrawActivityClient  extends AppCompatActivity implements SensorEventListener {
     private Paint paint = new Paint();
     private ServerAsyncTask server;
-    private GameSendAsyncTask client;
+    private ClientAsyncTask client;
 
     private int posX;
     private int posY;
@@ -39,6 +29,7 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
 
     private int playerX;
     private int playerY;
+
     private SensorManager sensorManager;
     private Sensor gravity;
 
@@ -56,14 +47,18 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
         setContentView(gameView);
         gameView.setWillNotDraw(false);
 
+        Bundle b = getIntent().getExtras();
 
 
+        if(b != null) {
+            goIpAddr = b.getString("ip");
+        }
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
-        client = new GameAsyncTask(this);
-        server = new ServerAsyncTask(this, gameView, client);
-
+        client = new ClientAsyncTask(this, goIpAddr);
+        server = new ServerAsyncTask(this, gameView);
+        client.execute();
         server.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -87,10 +82,10 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
         if(mySensor.getType() == Sensor.TYPE_GRAVITY){
             float x = event.values[0];
             if(x > 1) {
-                gameView.movePlayer("g");
+//                gameView.movePlayer("g");
                 client.setDirection("g");
             }else if (x < -1) {
-                gameView.movePlayer("d");
+//                gameView.movePlayer("d");
                 client.setDirection("d");
             }
         }
@@ -98,8 +93,8 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    }
 
+    }
 
     class GameView extends View
     {
@@ -158,3 +153,5 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
     }
 
 }
+
+
