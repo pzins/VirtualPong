@@ -114,9 +114,8 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         public void setPositions(String str){
             String[] array = str.split(" ");
             x = Integer.parseInt(array[0]);
-            y = Integer.parseInt(array[1]);
-            px = Integer.parseInt(array[2]);
-            py = Integer.parseInt(array[3]);
+            px = Integer.parseInt(array[1]);
+            Log.w("LACAZETTE", Integer.toString(x) + " " + Integer.toString(px));
             invalidate();
 
         }

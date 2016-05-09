@@ -93,6 +93,8 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
             }else if (x < -1) {
                 gameView.movePlayer("d");
 //                client.setDirection("d");
+                client.setDirection(gameView.getPositions());
+
             }
         }
     }
@@ -122,8 +124,7 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
         }
 
         public String getPositions(){
-            return Integer.toString(x) + " " + Integer.toString(x) + " " +
-                    Integer.toString(px) + " " + Integer.toString(py);
+            return Integer.toString(x) + " " + Integer.toString(px);
         }
 
 
