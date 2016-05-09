@@ -1,30 +1,18 @@
 package com.example.pierre.myapplication;
 
-import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 public class DrawActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -42,8 +30,6 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager sensorManager;
     private Sensor gravity;
 
-    private Boolean isGo;
-    private String goIpAddr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +96,6 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
         private int y;
         private int px;
         private int py;
-        public int delta  = 0;
 
         private int ball_x;
         private int ball_y;
@@ -137,10 +122,6 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
             }else if(str.equals("g"))
             {
                 x -= 10;
-            }else if(str.equals("h")){
-                y += 10;
-            }else if(str.equals("b")){
-                y -= 10;
             }
             invalidate();
 

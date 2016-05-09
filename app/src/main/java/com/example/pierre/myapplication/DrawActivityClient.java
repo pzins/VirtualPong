@@ -33,7 +33,6 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
     private SensorManager sensorManager;
     private Sensor gravity;
 
-    private Boolean isGo;
     private String goIpAddr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +101,6 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         private int y;
         private int px;
         private int py;
-        public int delta  = 0;
         public GameView(Context context, int _x, int _y, int _px, int _py) {
             super(context);
             x = _x;

@@ -4,7 +4,6 @@ package com.example.pierre.myapplication;
  * Created by pierre on 01/04/16.
  */
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -27,37 +26,20 @@ import java.net.Socket;
 public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
 
     private Context context;
-    private TextView statusText;
-    private TextView v_x_accel;
-    private String x_accel ="";
-    private String y_accel = "";
-
     private String adr = "";
 
     private DrawActivity.GameView gameView = null;
-    private DrawActivityClient.GameView clientGameView = null;
 
     private String direction = "";
 
     private Boolean shouldStart = true;
     private GameSendAsyncTask client;
-    /**
-     * @param context
-     * @param statusText
-     */
-    public ServerAsyncTask(Context context, View statusText, TextView v) {
-        this.context = context;
-        this.statusText = (TextView) statusText;
-        this.v_x_accel = (TextView) v;
-    }
+
     public ServerAsyncTask(Context context, DrawActivity.GameView game) {
         this.context = context;
         this.gameView = game;
     }
-    public ServerAsyncTask(Context context, DrawActivityClient.GameView game) {
-        this.context = context;
-        this.clientGameView = game;
-    }
+
     public ServerAsyncTask(Context context, DrawActivity.GameView game, GameSendAsyncTask client) {
         this.context = context;
         this.gameView = game;
@@ -67,10 +49,9 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     protected String doInBackground(Void... params) {
         try {
             ServerSocket s = new ServerSocket(8988);
-            Log.w("AVANT","ACCEPT");
             Socket soc = s.accept();
-            Log.w("AVANT","ACCEPT");
             adr = soc.getInetAddress().toString().substring(1);
+
             // Un BufferedReader permet de lire par ligne.
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(soc.getInputStream())
@@ -103,8 +84,6 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
         super.onProgressUpdate(progress);
         if(shouldStart ) {
             shouldStart = false;
-//            new GameAsyncTask(context, adr).execute();
-            Log.w("--------", "-------------");
             client.setAdresseIp(adr);
             client.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -112,10 +91,6 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
         if(this.gameView != null) {
             this.gameView.move(direction);
             client.setDirection(this.gameView.getPositions());
-        } else
-        {
-            v_x_accel.setText("DIRECTION : " + direction);
         }
     }
-
 }

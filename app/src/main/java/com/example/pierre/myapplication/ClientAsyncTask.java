@@ -2,9 +2,7 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.util.LogWriter;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,7 +11,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.text.DecimalFormat;
 
 /**
  * A simple server socket that accepts connection and writes some data on
@@ -21,15 +18,13 @@ import java.text.DecimalFormat;
  */
 public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
 
-    private Context context;
-    PrintWriter out;
-    BufferedReader in;
+    Context context;
     String groupOwnerIP;
     Boolean shouldSend = false;
     String direction = "";
-    /**
-     * @param context
-     */
+
+
+
     public ClientAsyncTask(Context context, String ip) {
         this.context = context;
         this.groupOwnerIP = ip;
@@ -73,25 +68,12 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
         while (true)
         {
             if(shouldSend){
-//                Log.w("PRNIT DIRECTION", "" + direction);
                 pred.println(direction);
-//                long time= System.currentTimeMillis();
-//                pred.println(direction + "|" + Long.toString(time));
                 shouldSend = false;
-/*                try {
-                    String str = plec.readLine();
-                    time = System.currentTimeMillis();
-                    Long debut = Long.parseLong(str.substring(2), 10);
-                    Log.w("OLOLOL", Long.toString(time - debut));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
             }
             if(false){
                 break;
             }
-
-
         }
         pred.println("END");
         try {

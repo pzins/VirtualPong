@@ -2,7 +2,6 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,33 +19,12 @@ import java.net.Socket;
  */
 public class GameReceiverAsyncTask  extends AsyncTask<Void, Integer, String> {
 
-    private Context context;
-    private TextView statusText;
-    private TextView v_x_accel;
-    private String x_accel ="";
-    private String y_accel = "";
+    Context context;
+    DrawActivityClient.GameView clientGameView = null;
 
-    private String adr = "";
+    String direction = "";
+    String adr;
 
-    private DrawActivity.GameView gameView = null;
-    private DrawActivityClient.GameView clientGameView = null;
-
-    private String direction = "";
-
-    private Boolean shouldStart = true;
-    /**
-     * @param context
-     * @param statusText
-     */
-    public GameReceiverAsyncTask(Context context, View statusText, TextView v) {
-        this.context = context;
-        this.statusText = (TextView) statusText;
-        this.v_x_accel = (TextView) v;
-    }
-    public GameReceiverAsyncTask(Context context, DrawActivity.GameView game) {
-        this.context = context;
-        this.gameView = game;
-    }
     public GameReceiverAsyncTask(Context context, DrawActivityClient.GameView game) {
         this.context = context;
         this.clientGameView = game;
@@ -92,10 +70,6 @@ public class GameReceiverAsyncTask  extends AsyncTask<Void, Integer, String> {
         if(this.clientGameView != null) {
 //            this.clientGameView.move(direction);
             this.clientGameView.setPositions(direction);
-        } else
-        {
-//            v_x_accel.setText("DIRECTION : " + direction);
         }
     }
-
 }

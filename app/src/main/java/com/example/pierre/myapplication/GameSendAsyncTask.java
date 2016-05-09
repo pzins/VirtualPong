@@ -16,15 +16,11 @@ import java.net.Socket;
  * Created by pierre on 09/05/16.
  */
 public class GameSendAsyncTask extends AsyncTask<Void, Void, String> {
-    private Context context;
-    PrintWriter out;
-    BufferedReader in;
+    Context context;
     String groupOwnerIP;
     Boolean shouldSend = false;
     String direction = "";
-    /**
-     * @param context
-     */
+
     public GameSendAsyncTask(Context context, String ip) {
         this.context = context;
         this.groupOwnerIP = ip;
