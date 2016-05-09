@@ -19,7 +19,7 @@ import android.view.View;
  */
 public class DrawActivityClient  extends AppCompatActivity implements SensorEventListener {
     private Paint paint = new Paint();
-    private ServerAsyncTask server;
+    private GameReceiverAsyncTask server;
     private ClientAsyncTask client;
 
     private int posX;
@@ -57,7 +57,7 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
         client = new ClientAsyncTask(this, goIpAddr);
-        server = new ServerAsyncTask(this, gameView);
+        server = new GameReceiverAsyncTask(this, gameView);
         client.execute();
         server.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -110,6 +110,16 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             px = _px;
             py = _py;
         }
+
+        public void setPositions(String str){
+            String[] array = str.split(" ");
+            x = Integer.parseInt(array[0]);
+            y = Integer.parseInt(array[1]);
+            px = Integer.parseInt(array[2]);
+            py = Integer.parseInt(array[3]);
+            invalidate();
+
+        }
         public void move(String str)
         {
             Log.w("DIRECTION = ", str);
@@ -125,6 +135,7 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
                 y -= 10;
             }
             invalidate();
+            Log.w("UPDATE", "positions");
 
         }
 

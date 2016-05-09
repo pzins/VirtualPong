@@ -61,7 +61,7 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
-        client = new GameAsyncTask(this);
+        client = new GameSendAsyncTask(this);
         server = new ServerAsyncTask(this, gameView, client);
 
         server.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -88,10 +88,11 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
             float x = event.values[0];
             if(x > 1) {
                 gameView.movePlayer("g");
-                client.setDirection("g");
+//                client.setDirection("g");
+                client.setDirection(gameView.getPositions());
             }else if (x < -1) {
                 gameView.movePlayer("d");
-                client.setDirection("d");
+//                client.setDirection("d");
             }
         }
     }
@@ -108,6 +109,10 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
         private int px;
         private int py;
         public int delta  = 0;
+
+        private int ball_x;
+        private int ball_y;
+
         public GameView(Context context, int _x, int _y, int _px, int _py) {
             super(context);
             x = _x;
@@ -115,6 +120,13 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
             px = _px;
             py = _py;
         }
+
+        public String getPositions(){
+            return Integer.toString(x) + " " + Integer.toString(x) + " " +
+                    Integer.toString(px) + " " + Integer.toString(py);
+        }
+
+
         public void move(String str)
         {
             Log.w("DIRECTION = ", str);

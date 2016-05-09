@@ -29,6 +29,7 @@ public class GameSendAsyncTask extends AsyncTask<Void, Void, String> {
         this.context = context;
         this.groupOwnerIP = ip;
     }
+
     public GameSendAsyncTask(Context context) {
         this.context = context;
     }
@@ -68,19 +69,9 @@ public class GameSendAsyncTask extends AsyncTask<Void, Void, String> {
         while (true)
         {
             if(shouldSend){
-//                Log.w("PRNIT DIRECTION", "" + direction);
+                Log.w("SEND  ", direction);
                 pred.println(direction);
-//                long time= System.currentTimeMillis();
-//                pred.println(direction + "|" + Long.toString(time));
                 shouldSend = false;
-/*                try {
-                    String str = plec.readLine();
-                    time = System.currentTimeMillis();
-                    Long debut = Long.parseLong(str.substring(2), 10);
-                    Log.w("OLOLOL", Long.toString(time - debut));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
             }
             if(false){
                 break;

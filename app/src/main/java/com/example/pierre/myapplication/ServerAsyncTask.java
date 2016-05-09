@@ -40,7 +40,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     private String direction = "";
 
     private Boolean shouldStart = true;
-    private GameAsyncTask client;
+    private GameSendAsyncTask client;
     /**
      * @param context
      * @param statusText
@@ -58,7 +58,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
         this.context = context;
         this.clientGameView = game;
     }
-    public ServerAsyncTask(Context context, DrawActivity.GameView game, GameAsyncTask client) {
+    public ServerAsyncTask(Context context, DrawActivity.GameView game, GameSendAsyncTask client) {
         this.context = context;
         this.gameView = game;
         this.client = client;
@@ -111,6 +111,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
 
         if(this.gameView != null) {
             this.gameView.move(direction);
+            client.setDirection(this.gameView.getPositions());
         } else
         {
             v_x_accel.setText("DIRECTION : " + direction);

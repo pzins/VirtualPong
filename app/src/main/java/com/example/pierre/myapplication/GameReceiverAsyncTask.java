@@ -34,7 +34,6 @@ public class GameReceiverAsyncTask  extends AsyncTask<Void, Integer, String> {
     private String direction = "";
 
     private Boolean shouldStart = true;
-    private GameAsyncTask client;
     /**
      * @param context
      * @param statusText
@@ -52,18 +51,12 @@ public class GameReceiverAsyncTask  extends AsyncTask<Void, Integer, String> {
         this.context = context;
         this.clientGameView = game;
     }
-    public GameReceiverAsyncTask(Context context, DrawActivity.GameView game, GameAsyncTask client) {
-        this.context = context;
-        this.gameView = game;
-        this.client = client;
-    }
+
     @Override
     protected String doInBackground(Void... params) {
         try {
             ServerSocket s = new ServerSocket(8988);
-            Log.w("AVANT", "ACCEPT");
             Socket soc = s.accept();
-            Log.w("AVANT","ACCEPT");
             adr = soc.getInetAddress().toString().substring(1);
             // Un BufferedReader permet de lire par ligne.
             BufferedReader reader = new BufferedReader(
@@ -81,7 +74,7 @@ public class GameReceiverAsyncTask  extends AsyncTask<Void, Integer, String> {
                 if (str.equals("END")) break;
                 direction = str;
                 publishProgress();
-//                printer.println(str);
+                printer.println(str);
             }
             reader.close();
             printer.close();
@@ -95,19 +88,13 @@ public class GameReceiverAsyncTask  extends AsyncTask<Void, Integer, String> {
     @Override
     protected void onProgressUpdate(Integer... progress) {
         super.onProgressUpdate(progress);
-        if(shouldStart ) {
-            shouldStart = false;
-//            new GameAsyncTask(context, adr).execute();
-            Log.w("--------", "-------------");
-            client.setAdresseIp(adr);
-            client.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
 
-        if(this.gameView != null) {
-            this.gameView.move(direction);
+        if(this.clientGameView != null) {
+//            this.clientGameView.move(direction);
+            this.clientGameView.setPositions(direction);
         } else
         {
-            v_x_accel.setText("DIRECTION : " + direction);
+//            v_x_accel.setText("DIRECTION : " + direction);
         }
     }
 
