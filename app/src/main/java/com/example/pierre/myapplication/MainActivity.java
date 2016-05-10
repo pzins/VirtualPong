@@ -4,10 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -29,21 +25,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener ,
+public class MainActivity extends AppCompatActivity implements
         WifiP2pManager.ChannelListener, DeviceListFragment.DeviceActionListener{
 
-
-    private SensorManager sensorManager;
-    private Sensor accelerometer;
-    private Sensor gyro;
-    private Sensor gravity;
-    private long lastUpdate = 0;
-    private long lastUpdate2 = 0;
-    private float last_x, last_y, last_z;
-    private static final int SHAKE_THRESHOLD = 600;
-    private float last_gx, last_gy, last_gz;
-
-    public static final String TAG = "wifidemo";
     private WifiP2pManager manager;
     private boolean isWifiP2pEnabled = false;
     private boolean retryChannel = false;
@@ -52,19 +36,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Channel channel;
     private BroadcastReceiver receiver = null;
 
-    MoveSendAsyncTask client;
-
-    private float globX = 0;
-
-    private int delay = 0;
-    private boolean s1 = true;
-    private boolean s2 = true;
-
-
-    private  DeviceDetailFragment fragment;
-
     private String dire = "0";
-
     public void setIsWifiP2pEnabled(boolean state)
     {
         isWifiP2pEnabled = state;
@@ -78,24 +50,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
-        last_x = 0;
-        last_y = 0;
-        last_z = 0;
-        last_gx = 0;
-        last_gy = 0;
-        last_gz = 0;
-        fragment = (DeviceDetailFragment) getFragmentManager().findFragmentById(R.id.frag_detail);
-
-
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-//        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-
-
-
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
@@ -107,14 +61,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     protected void onPause() {
         super.onPause();
-        sensorManager.unregisterListener(this);
         unregisterReceiver(receiver);
     }
 
     protected void onResume() {
         super.onResume();
-//        sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_GAME);
         receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
         registerReceiver(receiver, intentFilter);
     }
@@ -168,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         }
         else if(id == R.id.atn_direct_enable){
-            Intent intent = new Intent(MainActivity.this, DrawActivity.class);
+            Intent intent = new Intent(MainActivity.this, DrawActivityServer.class);
             startActivity(intent);
         }
         else if(id == R.id.client){
@@ -231,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             @Override
             public void onFailure(int reasonCode) {
-                Log.d(TAG, "Disconnect failed. Reason :" + reasonCode);
+                Log.d("My app", "Disconnect failed. Reason :" + reasonCode);
 
             }
 
@@ -323,80 +274,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-
-        Sensor mySensor = event.sensor;
-        if(mySensor.getType() == Sensor.TYPE_GRAVITY){
-            float x = event.values[0];
-            if(x > 1) {
-                dire = "g";
-                if(fragment != null) {
-                    if(fragment.getClient() != null){
-                        fragment.getClient().setDirection("g");
-                    }
-                }
-            }else if (x < -1){
-                dire = "d";
-                if(fragment != null) {
-                    if(fragment.getClient() != null){
-                        fragment.getClient().setDirection("d");
-                    }
-                }
-            } else {
-                dire = "0";
-            }
-        }
-        else if (mySensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            float x = event.values[0];
-
-
-        }
-
-//        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-        else if (mySensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-            float x = event.values[0];
-            float y = event.values[1];
-            float z = event.values[2];
-//            globX = x;
-
-            if(x > 2 && s1)
-            {
-                if(fragment != null) {
-                    if(fragment.getClient() != null){
-                        fragment.getClient().setDirection("d");
-                    }
-                }
-                s2 = false;
-            }
-            if(x < -2 && s2)
-            {
-                if(fragment != null) {
-                    if(fragment.getClient() != null){
-                        fragment.getClient().setDirection("g");
-                    }
-                }
-                s1 = false;
-            }
-            if(x < 1 && x > -1)
-            {
-                delay++;
-            }
-            if(delay >= 100)
-            {
-                s1 = true;
-                s2 = true;
-                delay = 0;
-            }
-        }
-    }
-
-
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
 
  /*   @Override
     public void onStart() {

@@ -14,7 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-public class DrawActivity extends AppCompatActivity implements SensorEventListener {
+public class DrawActivityServer extends AppCompatActivity implements SensorEventListener {
 
     private Paint paint = new Paint();
     private MoveReceiveAsyncTask server;
@@ -41,7 +41,6 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
         gameView = new GameView(this, posX, posY, playerX, playerY);
         setContentView(gameView);
         gameView.setWillNotDraw(false);
-
 
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);

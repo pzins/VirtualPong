@@ -8,30 +8,22 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.io.UnsupportedEncodingException;
 
 
 /**
  * Created by pierre on 28/03/16.
  */
 public class DeviceDetailFragment extends Fragment implements WifiP2pManager.ConnectionInfoListener{
+
     protected static  final int CHOOSE_FILE_RESULT_CODE = 20;
     private View mContentView = null;
     private WifiP2pDevice device;
     private WifiP2pInfo info;
-    ProgressDialog progressDialog = null;
-
-    MoveSendAsyncTask client;
-
-    public MoveSendAsyncTask getClient(){
-        return client;
-    }
+    private ProgressDialog progressDialog = null;
 
     public Boolean isGroupOwner(){
         return info.isGroupOwner;
@@ -58,13 +50,6 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
                 }
                 progressDialog = ProgressDialog.show(getActivity(), "Press back to cancel",
                         "Connecting to :" + device.deviceAddress, true, true
-//                        new DialogInterface.OnCancelListener() {
-//
-//                            @Override
-//                            public void onCancel(DialogInterface dialog) {
-//                                ((DeviceActionListener) getActivity()).cancelDisconnect();
-//                            }
-//                        }
                 );
                 ((DeviceListFragment.DeviceActionListener) getActivity()).connect(config);
 
@@ -83,9 +68,6 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        client = new MoveSendAsyncTask(getActivity(),
-                                info.groupOwnerAddress.getHostAddress());
-                        client.execute();
                     }
                 });
         return mContentView;
@@ -111,27 +93,8 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
         view = (TextView) mContentView.findViewById(R.id.device_info);
         view.setText("Group Owner IP" + info.groupOwnerAddress.getHostAddress());
         String str = null; // for UTF-8 encoding
-
-        System.out.println("### : " + info.groupOwnerAddress.getAddress());
-        System.out.println("### : " + info.groupOwnerAddress.getHostAddress());
-
-        // After the group negotiation, we assign the group owner as the file
-        // server. The file server is single threaded, single connection server
-        // socket.
-        if (info.groupFormed && info.isGroupOwner) {
-
-//            new ServerAsyncTask(getActivity(), mContentView.findViewById(R.id.status_text),
-//                    (TextView) mContentView.findViewById(R.id.status_text))
-//                    .execute();
-        } else if (info.groupFormed) {
-            // The other device acts as the client. In this case, we enable the
-            // get file button.
-            mContentView.findViewById(R.id.btn_send_mess).setVisibility(View.VISIBLE);
-//            ((TextView) mContentView.findViewById(R.id.status_text)).setText(getResources()
-//                    .getString(R.string.client_text));
-        }
-        // hide the connect button
         mContentView.findViewById(R.id.btn_connect).setVisibility(View.GONE);
+
     }
 
     /**

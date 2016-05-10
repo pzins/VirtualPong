@@ -25,19 +25,19 @@ public class MoveReceiveAsyncTask extends AsyncTask<Void, Integer, String> {
     private Context context;
     private String adr = "";
 
-    private DrawActivity.GameView gameView = null;
+    private DrawActivityServer.GameView gameView = null;
 
     private String direction = "";
 
     private Boolean shouldStart = true;
     private GameSendAsyncTask client;
 
-    public MoveReceiveAsyncTask(Context context, DrawActivity.GameView game) {
+    public MoveReceiveAsyncTask(Context context, DrawActivityServer.GameView game) {
         this.context = context;
         this.gameView = game;
     }
 
-    public MoveReceiveAsyncTask(Context context, DrawActivity.GameView game, GameSendAsyncTask client) {
+    public MoveReceiveAsyncTask(Context context, DrawActivityServer.GameView game, GameSendAsyncTask client) {
         this.context = context;
         this.gameView = game;
         this.client = client;

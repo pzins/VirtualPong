@@ -28,8 +28,8 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
 
 
     private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
-    ProgressDialog progressDialog = null;
-    View mContentView = null;
+    private ProgressDialog progressDialog = null;
+    private View mContentView = null;
     private WifiP2pDevice device;
 
     //when its activity finish its onCreate()
@@ -53,7 +53,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
         peers.addAll(peerList.getDeviceList());
         ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged(); //update affichage
         if (peers.size() == 0) {
-            Log.d(MainActivity.TAG, "No devices found");
+            Log.d("Main activity", "No devices found");
             return;
         }
     }
@@ -80,7 +80,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
 
     private static String getDeviceStatus(int deviceStatus)
     {
-        Log.d(MainActivity.TAG, "Peer status :" + deviceStatus);
+        Log.d("MainActivity", "Peer status :" + deviceStatus);
         switch (deviceStatus){
             case WifiP2pDevice.AVAILABLE:
                 return "Available";
