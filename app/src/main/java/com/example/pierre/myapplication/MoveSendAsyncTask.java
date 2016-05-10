@@ -16,7 +16,7 @@ import java.net.Socket;
  * A simple server socket that accepts connection and writes some data on
  * the stream.
  */
-public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
+public class MoveSendAsyncTask extends AsyncTask<Void, Void, String> {
 
     Context context;
     String groupOwnerIP;
@@ -25,11 +25,11 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, String> {
 
 
 
-    public ClientAsyncTask(Context context, String ip) {
+    public MoveSendAsyncTask (Context context, String ip) {
         this.context = context;
         this.groupOwnerIP = ip;
     }
-    public ClientAsyncTask(Context context) {
+    public MoveSendAsyncTask (Context context) {
         this.context = context;
     }
 

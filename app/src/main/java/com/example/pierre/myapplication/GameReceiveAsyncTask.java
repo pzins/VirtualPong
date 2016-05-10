@@ -17,7 +17,7 @@ import java.net.Socket;
 /**
  * Created by pierre on 09/05/16.
  */
-public class GameReceiverAsyncTask  extends AsyncTask<Void, Integer, String> {
+public class GameReceiveAsyncTask  extends AsyncTask<Void, Integer, String> {
 
     Context context;
     DrawActivityClient.GameView clientGameView = null;
@@ -25,7 +25,7 @@ public class GameReceiverAsyncTask  extends AsyncTask<Void, Integer, String> {
     String direction = "";
     String adr;
 
-    public GameReceiverAsyncTask(Context context, DrawActivityClient.GameView game) {
+    public GameReceiveAsyncTask(Context context, DrawActivityClient.GameView game) {
         this.context = context;
         this.clientGameView = game;
     }

@@ -1,6 +1,5 @@
 package com.example.pierre.myapplication;
 
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Channel channel;
     private BroadcastReceiver receiver = null;
 
-    ClientAsyncTask client;
+    MoveSendAsyncTask client;
 
     private float globX = 0;
 

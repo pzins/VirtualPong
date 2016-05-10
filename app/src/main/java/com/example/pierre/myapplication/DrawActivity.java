@@ -17,7 +17,7 @@ import android.view.View;
 public class DrawActivity extends AppCompatActivity implements SensorEventListener {
 
     private Paint paint = new Paint();
-    private ServerAsyncTask server;
+    private MoveReceiveAsyncTask server;
     private GameSendAsyncTask client;
 
     private int posX;
@@ -48,7 +48,7 @@ public class DrawActivity extends AppCompatActivity implements SensorEventListen
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
         client = new GameSendAsyncTask(this);
-        server = new ServerAsyncTask(this, gameView, client);
+        server = new MoveReceiveAsyncTask(this, gameView, client);
 
         server.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

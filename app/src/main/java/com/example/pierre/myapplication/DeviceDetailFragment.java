@@ -27,9 +27,9 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
     private WifiP2pInfo info;
     ProgressDialog progressDialog = null;
 
-    ClientAsyncTask client;
+    MoveSendAsyncTask client;
 
-    public ClientAsyncTask getClient(){
+    public MoveSendAsyncTask getClient(){
         return client;
     }
 
@@ -83,7 +83,7 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        client = new ClientAsyncTask(getActivity(),
+                        client = new MoveSendAsyncTask(getActivity(),
                                 info.groupOwnerAddress.getHostAddress());
                         client.execute();
                     }

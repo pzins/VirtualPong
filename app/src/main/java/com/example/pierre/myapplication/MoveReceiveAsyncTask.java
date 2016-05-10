@@ -6,9 +6,6 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -23,7 +20,7 @@ import java.net.Socket;
  * A simple server socket that accepts connection and writes some data on
  * the stream.
  */
-public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
+public class MoveReceiveAsyncTask extends AsyncTask<Void, Integer, String> {
 
     private Context context;
     private String adr = "";
@@ -35,12 +32,12 @@ public class ServerAsyncTask extends AsyncTask<Void, Integer, String> {
     private Boolean shouldStart = true;
     private GameSendAsyncTask client;
 
-    public ServerAsyncTask(Context context, DrawActivity.GameView game) {
+    public MoveReceiveAsyncTask(Context context, DrawActivity.GameView game) {
         this.context = context;
         this.gameView = game;
     }
 
-    public ServerAsyncTask(Context context, DrawActivity.GameView game, GameSendAsyncTask client) {
+    public MoveReceiveAsyncTask(Context context, DrawActivity.GameView game, GameSendAsyncTask client) {
         this.context = context;
         this.gameView = game;
         this.client = client;
