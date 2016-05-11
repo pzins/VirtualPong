@@ -6,6 +6,7 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,7 +21,7 @@ import java.net.Socket;
  * A simple server socket that accepts connection and writes some data on
  * the stream.
  */
-public class MoveReceiveAsyncTask extends AsyncTask<Void, Integer, String> {
+public class ServerComAsyncTask extends AsyncTask<Void, Integer, String> {
 
     private Context context;
     private String adr = "";
@@ -28,19 +29,24 @@ public class MoveReceiveAsyncTask extends AsyncTask<Void, Integer, String> {
     private DrawActivityServer.GameView gameView = null;
 
     private String direction = "";
+    private  String recDirection = "";
 
-    private Boolean shouldStart = true;
-    private GameSendAsyncTask client;
-
-    public MoveReceiveAsyncTask(Context context, DrawActivityServer.GameView game) {
+    private String groupOwnerIP;
+    private Boolean shouldSend = false;
+    public ServerComAsyncTask(Context context, DrawActivityServer.GameView game) {
         this.context = context;
         this.gameView = game;
     }
 
-    public MoveReceiveAsyncTask(Context context, DrawActivityServer.GameView game, GameSendAsyncTask client) {
-        this.context = context;
-        this.gameView = game;
-        this.client = client;
+
+
+    public void setAdresseIp(String ip){
+        this.groupOwnerIP = ip;
+    }
+
+    public void setDirection(String str){
+        this.direction = str;
+        shouldSend = true;
     }
     @Override
     protected String doInBackground(Void... params) {
@@ -49,26 +55,39 @@ public class MoveReceiveAsyncTask extends AsyncTask<Void, Integer, String> {
             Socket soc = s.accept();
             adr = soc.getInetAddress().toString().substring(1);
 
+            Socket socket = null;
+            try {
+                socket = new Socket(adr, 8989);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             // Un BufferedReader permet de lire par ligne.
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(soc.getInputStream())
             );
-
-            // Un PrintWriter possède toutes les opérations print classiques.
-            // En mode auto-flush, le tampon est vidé (flush) à l'appel de println.
-            PrintWriter printer = new PrintWriter( new BufferedWriter(
-                    new OutputStreamWriter(soc.getOutputStream())),
-                    true);
+            PrintWriter pred = null;
+            try {
+                pred = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             while (true) {
-                String str = reader.readLine();
-                if (str.equals("END")) break;
-                direction = str;
-                publishProgress();
-//                printer.println(str);
+                if(soc.getInputStream().available() > 0) {
+                    String str = reader.readLine();
+                    if (str.equals("END")) break;
+                    recDirection = str;
+                    publishProgress();
+                }
+                if(shouldSend){
+                    pred.println(direction);
+                    shouldSend = false;
+                }
+                if(false){break;}
             }
             reader.close();
-            printer.close();
+            pred.close();
             soc.close();
             s.close();
         } catch (IOException e) {
@@ -79,15 +98,9 @@ public class MoveReceiveAsyncTask extends AsyncTask<Void, Integer, String> {
     @Override
     protected void onProgressUpdate(Integer... progress) {
         super.onProgressUpdate(progress);
-        if(shouldStart ) {
-            shouldStart = false;
-            client.setAdresseIp(adr);
-            client.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-
         if(this.gameView != null) {
-            this.gameView.move(direction);
-            client.setDirection(this.gameView.getPositions());
+            this.gameView.move(recDirection);
+            setDirection(this.gameView.getPositions());
         }
     }
 }

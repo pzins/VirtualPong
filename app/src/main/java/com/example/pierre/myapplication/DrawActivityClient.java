@@ -19,8 +19,7 @@ import android.view.View;
  */
 public class DrawActivityClient  extends AppCompatActivity implements SensorEventListener {
     private Paint paint = new Paint();
-    private GameReceiveAsyncTask server;
-    private MoveSendAsyncTask client;
+    private ClientComAsyncTask comAT;
 
     private int posX;
     private int posY;
@@ -55,10 +54,8 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
-        client = new MoveSendAsyncTask(this, goIpAddr);
-        server = new GameReceiveAsyncTask(this, gameView);
-        client.execute();
-        server.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        comAT = new ClientComAsyncTask(this, goIpAddr, gameView);
+        comAT.execute();
     }
 
     protected void onPause() {
@@ -82,10 +79,10 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             float x = event.values[0];
             if(x > 1) {
 //                gameView.movePlayer("g");
-                client.setDirection("g");
+                comAT.setDirection("g");
             }else if (x < -1) {
 //                gameView.movePlayer("d");
-                client.setDirection("d");
+                comAT.setDirection("d");
             }
         }
     }
