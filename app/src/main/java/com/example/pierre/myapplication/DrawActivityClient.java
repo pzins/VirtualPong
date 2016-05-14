@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.SurfaceView;
 import android.view.View;
 
 /**
@@ -92,7 +93,7 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
 
     }
 
-    class GameView extends View
+    class GameView extends SurfaceView
     {
         private int x;
         private int y;

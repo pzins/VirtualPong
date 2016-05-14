@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.SurfaceView;
 import android.view.View;
 
 import com.google.android.gms.appindexing.Action;
@@ -94,7 +95,7 @@ public class DrawActivityServer extends AppCompatActivity implements SensorEvent
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
-    class GameView extends View {
+    class GameView extends SurfaceView {
         private int x;
         private int y;
         private int px;
