@@ -10,6 +10,8 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.util.Log;
 
+import com.example.R;
+
 /**
  * Created by pierre on 24/03/16.
  */

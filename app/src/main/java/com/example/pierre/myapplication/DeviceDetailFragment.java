@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.R;
+
 
 /**
  * Created by pierre on 28/03/16.
