@@ -1,7 +1,7 @@
 package com.example.pierre.myapplication;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 
 /**
@@ -13,15 +13,16 @@ public class Player {
     private float  y;
     private float  width;
     private float  height;
-    private Color color;
+    private int color;
     private int speed;
 
-    public Player(float _x, float _y, float _width, float _height){
+    public Player(float _x, float _y, float _width, float _height, int _color){
         this.x =    _x;
         this.y = _y;
         this.width = _width;
         this.height = _height;
         this.speed = 10;
+        this.color = _color;
     }
 
     public void moveLeft(){
@@ -31,8 +32,12 @@ public class Player {
     public void moveRight(){
         x += speed;
     }
-    public void draw(Canvas canvas, Paint    paint){
-        canvas.drawRect(x - 100, y - 52, x + width * 0.5f, y + height * 0.5f, paint);
+    public void draw(Canvas canvas, Bitmap bitmap){
+        Paint paint = new Paint();
+        paint.setColor(color);
+        canvas.drawBitmap(bitmap, x, y, null);
+
+//        canvas.drawRect(x - 100, y - 52, x + width * 0.5f, y + height * 0.5f, paint);
     }
 
     public float getWidth() {
