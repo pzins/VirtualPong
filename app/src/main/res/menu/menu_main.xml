@@ -24,4 +24,10 @@ tools:context="com.example.pierre.myapplication.MainActivity">
         android:icon="@drawable/setting"
         android:title="@string/discover_peers_button"
         android:showAsAction="ifRoom|withText" />
+
+    <item
+        android:id="@+id/atn_direct_ball"
+        android:icon="@drawable/setting"
+        android:title="Ball Activity"
+        android:showAsAction="ifRoom|withText" />
 </menu>
