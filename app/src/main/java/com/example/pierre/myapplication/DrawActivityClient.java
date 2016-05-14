@@ -8,41 +8,46 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceView;
-import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 /**
  * Created by pierre on 08/05/16.
  */
 public class DrawActivityClient  extends AppCompatActivity implements SensorEventListener {
-    private Paint paint = new Paint();
+    private Paint paint;
     private ClientComAsyncTask comAT;
 
-    private int posX;
-    private int posY;
+    private Player player;
+    private Player opp;
+
     private GameView gameView;
-
-
-    private int playerX;
-    private int playerY;
 
     private SensorManager sensorManager;
     private Sensor gravity;
 
     private String goIpAddr;
+    private Display screenSize;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        posX = 500;
-        posY = 1400;
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        playerX = 500;
-        playerY = 300;
-        gameView = new GameView(this, posX, posY, playerX, playerY);
+        screenSize = getWindowManager().getDefaultDisplay();
+
+        int screenWidth = screenSize.getWidth();
+        int screenHeight = screenSize.getHeight();
+        player = new Player(screenWidth * 0.5f, screenHeight * 0.2f, 100, 10);
+        opp = new Player(screenWidth * 0.5f, screenHeight * 0.8f, 100, 10);
+        Log.w("width", Integer.toString(screenWidth));
+        Log.w("height", Integer.toString(screenHeight));
+        gameView = new GameView(this, player, opp, screenWidth, screenHeight);
         setContentView(gameView);
         gameView.setWillNotDraw(false);
 
@@ -79,10 +84,8 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         if(mySensor.getType() == Sensor.TYPE_GRAVITY){
             float x = event.values[0];
             if(x > 1) {
-//                gameView.movePlayer("g");
                 comAT.setDirection("g");
             }else if (x < -1) {
-//                gameView.movePlayer("d");
                 comAT.setDirection("d");
             }
         }
@@ -95,51 +98,23 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
 
     class GameView extends SurfaceView
     {
-        private int x;
-        private int y;
-        private int px;
-        private int py;
-        public GameView(Context context, int _x, int _y, int _px, int _py) {
+        private Player player;
+        private Player opp;
+        private int screenWidth;
+        private int screenHeight;
+
+        public GameView(Context context, Player _player, Player _opp, int _width, int _height) {
             super(context);
-            x = _x;
-            y = _y;
-            px = _px;
-            py = _py;
+            this.player = _player;
+            this.opp = _opp;
+            this.screenHeight = _height;
+            this.screenWidth = _width;
         }
 
         public void setPositions(String str){
             String[] array = str.split(" ");
-            x = Integer.parseInt(array[0]);
-            px = Integer.parseInt(array[1]);
-            Log.w("LACAZETTE", Integer.toString(x) + " " + Integer.toString(px));
-            invalidate();
-
-        }
-        public void move(String str)
-        {
-            Log.w("DIRECTION = ", str);
-            if(str.equals("d"))
-            {
-                x += 10;
-            }else if(str.equals("g"))
-            {
-                x -= 10;
-            }else if(str.equals("h")){
-                y += 10;
-            }else if(str.equals("b")){
-                y -= 10;
-            }
-            invalidate();
-            Log.w("UPDATE", "positions");
-
-        }
-
-        public void movePlayer(String str){
-            if(str.equals("d")){
-                px += 10;
-            } else if(str.equals("g")){
-                px -= 10;
-            }
+            player.setX(Float.parseFloat(array[0]) * screenWidth);
+            opp.setX(Float.parseFloat(array[1]) * screenWidth);
             invalidate();
         }
 
@@ -147,17 +122,13 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         protected void onDraw(Canvas canvas)
         {
             super.onDraw(canvas);
-            int radius=40;
             Paint p=new Paint();
-            p.setColor(Color.RED);
-//            canvas.drawCircle(x, y, radius, p);
-            canvas.drawRect(x - 100, y - 52, x + 100, y + 25, p);
             p.setColor(Color.BLUE);
-            canvas.drawRect(px - 100, py - 52, px + 100, py + 25, p);
+            player.draw(canvas, p);
+            p.setColor(Color.RED);
+            opp.draw(canvas, p);
         }
-
     }
-
 }
 
 

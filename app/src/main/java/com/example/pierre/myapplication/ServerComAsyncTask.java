@@ -6,7 +6,6 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -99,7 +98,7 @@ public class ServerComAsyncTask extends AsyncTask<Void, Integer, String> {
     protected void onProgressUpdate(Integer... progress) {
         super.onProgressUpdate(progress);
         if(this.gameView != null) {
-            this.gameView.move(recDirection);
+            this.gameView.moveOpponent(recDirection);
             setDirection(this.gameView.getPositions());
         }
     }

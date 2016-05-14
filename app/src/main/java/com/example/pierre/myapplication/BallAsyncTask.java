@@ -30,10 +30,10 @@ public class BallAsyncTask  extends AsyncTask<Void, Integer, String> {
     @Override
     protected void onProgressUpdate(Integer... progress) {
         super.onProgressUpdate(progress);
-        try {
+/*        try {
             gameView.moveBall();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }
