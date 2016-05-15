@@ -150,12 +150,15 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
             //initial position and speed
             x_ball = y_ball = 0;
-            dx_ball = dy_ball = 4;
+            dx_ball = dy_ball = 4; //attention si vitesse trop grande (rebonds joueur non detectés)
         }
 
 
         public String getPositions() {
-            return Float.toString(opp.getX() / screenWidth) + " " + Float.toString(player.getX() / screenWidth);
+            return Float.toString(opp.getX() / screenWidth) + " "
+                    + Float.toString(player.getX() / screenWidth) + " "
+                    + Float.toString(x_ball / screenWidth) + " "
+                    + Float.toString(y_ball / screenHeight);
         }
 
 
@@ -207,6 +210,8 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                     dy_ball = 0 - dy_ball;
                     lastTouch = 1;
                 }
+
+                comAT.setDirection(getPositions());
 
                 //lock Before painting
                 Canvas c = holder.lockCanvas();

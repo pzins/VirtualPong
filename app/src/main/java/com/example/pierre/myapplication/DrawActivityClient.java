@@ -130,9 +130,9 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             this.screenWidth = _width;
 
             this.playerBTM = BitmapFactory.decodeResource(getResources(), R.drawable.player);
-            this.playerBTM = Bitmap.createScaledBitmap(playerBTM, 200, 50, false);
+            this.playerBTM = Bitmap.createScaledBitmap(playerBTM, player.getWidth(), player.getHeight(), false);
             this.oppBTM= BitmapFactory.decodeResource(getResources(), R.drawable.opp);
-            this.oppBTM = Bitmap.createScaledBitmap(oppBTM, 200, 50, false);
+            this.oppBTM = Bitmap.createScaledBitmap(oppBTM, opp.getWidth(), opp.getHeight(), false);
             holder = getHolder();
 
             //Get screen size
@@ -153,7 +153,9 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             String[] array = str.split(" ");
             player.setX(Float.parseFloat(array[0]) * screenWidth);
             opp.setX(Float.parseFloat(array[1]) * screenWidth);
-            invalidate();
+            x_ball = Float.parseFloat(array[2]) * screenWidth;
+            y_ball = Float.parseFloat(array[3]) * screenHeight;
+//            invalidate();
         }
 
 
@@ -162,15 +164,6 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             while (status){
                 if (!holder.getSurface().isValid()){
                     continue;
-                }
-
-                x_ball += dx_ball;
-                if (x_ball <= 0 || x_ball > screenSize.x - ball.getWidth()){
-                    dx_ball = 0 - dx_ball;
-                }
-                y_ball += dy_ball;
-                if (y_ball <= 0 || y_ball > screenSize.y - ball.getHeight()){
-                    dy_ball = 0 - dy_ball;
                 }
 
                 //lock Before painting

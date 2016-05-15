@@ -99,7 +99,7 @@ public class ServerComAsyncTask extends AsyncTask<Void, Integer, String> {
         super.onProgressUpdate(progress);
         if(this.gameView != null) {
             this.gameView.moveOpponent(recDirection);
-            setDirection(this.gameView.getPositions());
+//            setDirection(this.gameView.getPositions());
         }
     }
 }
