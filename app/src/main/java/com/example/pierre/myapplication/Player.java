@@ -11,12 +11,12 @@ public class Player {
 
     private float x;
     private float  y;
-    private float  width;
-    private float  height;
+    private int width;
+    private int height;
     private int color;
     private int speed;
 
-    public Player(float _x, float _y, float _width, float _height, int _color){
+    public Player(float _x, float _y, int _width, int _height, int _color){
         this.x =    _x;
         this.y = _y;
         this.width = _width;
@@ -36,23 +36,22 @@ public class Player {
         Paint paint = new Paint();
         paint.setColor(color);
         canvas.drawBitmap(bitmap, x, y, null);
-
 //        canvas.drawRect(x - 100, y - 52, x + width * 0.5f, y + height * 0.5f, paint);
     }
 
-    public float getWidth() {
+    public int getWidth() {
         return width;
     }
 
-    public void setWidth(float width) {
+    public void setWidth(int width) {
         this.width = width;
     }
 
-    public float getHeight() {
+    public int getHeight() {
         return height;
     }
 
-    public void setHeight(float height) {
+    public void setHeight(int height) {
         this.height = height;
     }
 

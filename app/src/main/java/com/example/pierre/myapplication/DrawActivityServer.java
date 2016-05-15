@@ -50,8 +50,8 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
         int screenWidth = screenSize.getWidth();
         int screenHeight = screenSize.getHeight();
-        player = new Player(screenWidth * 0.5f, screenHeight * 0.8f, 100, 10, Color.BLUE);
-        opp = new Player(screenWidth * 0.5f, screenHeight * 0.2f, 100, 10, Color.RED);
+        player = new Player(screenWidth * 0.5f, screenHeight * 0.8f, 200, 50, Color.BLUE);
+        opp = new Player(screenWidth * 0.5f, screenHeight * 0.2f, 200, 50, Color.RED);
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
 
         setContentView(gameView);
@@ -122,6 +122,9 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         private int screenWidth;
         private int screenHeight;
 
+        //0 : mur, 1 : player, -1 : opp
+        private int lastTouch;
+
         public GameView(Context context, Player _player, Player _opp, int _width, int _height) {
             super(context);
             this.player = _player;
@@ -130,9 +133,10 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             this.screenWidth = _width;
 
             this.playerBTM = BitmapFactory.decodeResource(getResources(), R.drawable.player);
-            this.playerBTM = Bitmap.createScaledBitmap(playerBTM, 200, 50, false);
+            this.playerBTM = Bitmap.createScaledBitmap(playerBTM, player.getWidth(), player.getHeight(), false);
             this.oppBTM= BitmapFactory.decodeResource(getResources(), R.drawable.opp);
-            this.oppBTM = Bitmap.createScaledBitmap(oppBTM, 200, 50, false);
+            this.oppBTM = Bitmap.createScaledBitmap(oppBTM, opp.getWidth(), opp.getHeight(), false);
+
             holder = getHolder();
 
             //Get screen size
@@ -182,10 +186,26 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                 x_ball += dx_ball;
                 if (x_ball <= 0 || x_ball > screenSize.x - ball.getWidth()){
                     dx_ball = 0 - dx_ball;
+                    lastTouch = 0;
                 }
                 y_ball += dy_ball;
                 if (y_ball <= 0 || y_ball > screenSize.y - ball.getHeight()){
                     dy_ball = 0 - dy_ball;
+                    lastTouch = 0;
+                }else if(lastTouch != -1 &&
+                        y_ball <= opp.getY() + oppBTM.getHeight() &&
+                        y_ball >= opp.getY() + oppBTM.getHeight() - 10 &&
+                        x_ball + ball.getWidth() <= opp.getX() + oppBTM.getWidth() &&
+                        x_ball >= opp.getX()){
+                    dy_ball = 0 - dy_ball;
+                    lastTouch = -1;
+                }else if(lastTouch != 1 &&
+                        y_ball + ball.getHeight() >= player.getY() &&
+                        y_ball + ball.getHeight() <= player.getY() + 10 &&
+                        x_ball + ball.getWidth() <= player.getX() + playerBTM.getWidth() &&
+                        x_ball >= player.getX()){
+                    dy_ball = 0 - dy_ball;
+                    lastTouch = 1;
                 }
 
                 //lock Before painting
