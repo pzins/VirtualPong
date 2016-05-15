@@ -50,8 +50,10 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
         int screenWidth = screenSize.getWidth();
         int screenHeight = screenSize.getHeight();
-        player = new Player(screenWidth * 0.5f, screenHeight * 0.8f, 200, 50, Color.BLUE);
-        opp = new Player(screenWidth * 0.5f, screenHeight * 0.2f, 200, 50, Color.RED);
+        player = new Player(screenWidth * 0.5f, screenHeight * 0.8f, (int)(screenWidth * 0.2f),
+                (int)(screenHeight * 0.02f), Color.BLUE);
+        opp = new Player(screenWidth * 0.5f, screenHeight * 0.2f, (int)(screenWidth * 0.2f),
+                (int)(screenHeight * 0.02f), Color.RED);
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
 
         setContentView(gameView);
@@ -90,10 +92,10 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             float x = event.values[0];
             if (x > 1) {
                 gameView.movePlayer("g");
-                comAT.setDirection(gameView.getPositions());
+//                comAT.setDirection(gameView.getPositions());
             } else if (x < -1) {
                 gameView.movePlayer("d");
-                comAT.setDirection(gameView.getPositions());
+//                comAT.setDirection(gameView.getPositions());
             }
         }
     }
@@ -163,21 +165,22 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
 
         public void moveOpponent(String str) {
-            if (str.equals("d")) {
+
+            if (str.equals("d") && opp.getX() + oppBTM.getWidth() < screenWidth) {
                 opp.moveRight();
-            } else if (str.equals("g")) {
+            } else if (str.equals("g") && opp.getX() > 0) {
                 opp.moveLeft();
             }
-            invalidate();
+//            invalidate();
         }
 
         public void movePlayer(String str){
-            if(str.equals("d")){
+            if(str.equals("d") && player.getX() + playerBTM.getWidth() < screenWidth){
                 player.moveRight();
-            } else if(str.equals("g")){
+            } else if(str.equals("g") && player.getX() > 0){
                 player.moveLeft();
             }
-            invalidate();
+//            invalidate();
         }
         public void run(){
 

@@ -49,8 +49,10 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
 
         int screenWidth = screenSize.getWidth();
         int screenHeight = screenSize.getHeight();
-        player = new Player(screenWidth * 0.5f, screenHeight * 0.2f, 100, 10, Color.BLUE);
-        opp = new Player(screenWidth * 0.5f, screenHeight * 0.8f, 100, 10, Color.RED);
+        player = new Player(screenWidth * 0.5f, screenHeight * 0.2f, (int)(screenWidth * 0.2f),
+                (int)(screenHeight * 0.02f), Color.BLUE);
+        opp = new Player(screenWidth * 0.5f, screenHeight * 0.8f, (int)(screenWidth * 0.2f),
+                (int)(screenHeight * 0.02f), Color.RED);
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
 
         setContentView(gameView);
