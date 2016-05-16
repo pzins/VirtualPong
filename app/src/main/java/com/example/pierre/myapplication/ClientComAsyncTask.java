@@ -2,6 +2,7 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -70,6 +71,7 @@ public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
             e.printStackTrace();
         }
 
+        String str;
         while (true)
         {
             if(shouldSend){
@@ -79,7 +81,7 @@ public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
 
             try {
                 if(soc.getInputStream().available() > 0) {
-                    String str = reader.readLine();
+                    str = reader.readLine();
                     if (str.equals("END")) break;
                     direction = str;
                     publishProgress();
@@ -115,3 +117,4 @@ public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
     }
 
 }
+

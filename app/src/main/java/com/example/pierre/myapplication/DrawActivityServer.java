@@ -183,7 +183,8 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 //            invalidate();
         }
         public void run(){
-
+            double ref = System.nanoTime();
+            double tmp = 0;
             while (status){
                 if (!holder.getSurface().isValid()){
                     continue;
@@ -213,7 +214,9 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                     dy_ball = 0 - dy_ball;
                     lastTouch = 1;
                 }
-
+                tmp = System.nanoTime();
+                Log.w("DIFF", Double.toString((tmp - ref) / 1000000f));
+                ref = tmp;
                 comAT.setDirection(getPositions());
 
                 //lock Before painting
@@ -223,6 +226,11 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                 opp.draw(c, oppBTM);
                 c.drawBitmap(ball, x_ball, y_ball, null);
                 holder.unlockCanvasAndPost(c);
+                try {
+                    Thread.sleep(0, 100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

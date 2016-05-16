@@ -13,7 +13,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -162,14 +161,14 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
 
 
         public void run(){
-
+            Canvas c;
             while (status){
                 if (!holder.getSurface().isValid()){
                     continue;
                 }
 
                 //lock Before painting
-                Canvas c = holder.lockCanvas();
+                c = holder.lockCanvas();
                 c.drawARGB(255, 150, 200, 250);
                 player.draw(c, playerBTM);
                 opp.draw(c, oppBTM);
