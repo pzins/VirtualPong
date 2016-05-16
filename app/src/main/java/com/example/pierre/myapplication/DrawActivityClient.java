@@ -182,15 +182,25 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             }
 //            invalidate();
         }
+
+
+
         public void run(){
 
             while (status){
+
                 if (!holder.getSurface().isValid()){
                     continue;
                 }
 
-//                Log.w("SPEEDBALLX", Float.toString(dx_ball));
-//                Log.w("SPEEDBALLY", Float.toString(dy_ball));
+//                Log.w("WITDH SCREEN", Float.toString(screenWidth));
+//                Log.w("WITDH SCREEN", Float.toString(screenHeight));
+//                Log.w("X player", Float.toString(player.getX()));
+//                Log.w("Y player", Float.toString(player.getY()));
+//                Log.w("X opp", Float.toString(opp.getX()));
+//                Log.w("Y opp", Float.toString(opp.getY()));
+//                Log.w("BALL SIZE", Float.toString(ball.getWidth()));
+//                Log.w("BALL SIZE", Float.toString(ball.getHeight()));
                 x_ball += dx_ball;
                 if (x_ball <= 0 || x_ball > screenSize.x - ball.getWidth()){
                     dx_ball = 0 - dx_ball;
@@ -200,7 +210,8 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
                 if (y_ball <= 0 || y_ball > screenSize.y - ball.getHeight()){
                     dy_ball = 0 - dy_ball;
                     lastTouch = 0;
-                }else if(lastTouch != -1 &&
+                }
+/*                else if(lastTouch != -1 &&
                         y_ball <= opp.getY() + oppBTM.getHeight() &&
                         y_ball >= opp.getY() + oppBTM.getHeight() - 10 &&
                         x_ball + ball.getWidth() <= opp.getX() + oppBTM.getWidth() &&
@@ -214,7 +225,7 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
                         x_ball >= player.getX()){
                     dy_ball = 0 - dy_ball;
                     lastTouch = 1;
-                }
+                }*/
 
                 //lock Before painting
                 Canvas c = holder.lockCanvas();
@@ -227,6 +238,8 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
                 c.drawCircle(player.getX(), player.getY(), 2, ol);
                 c.drawCircle(opp.getX(), opp.getY(), 2, ol);
                 holder.unlockCanvasAndPost(c);
+
+
             }
         }
 

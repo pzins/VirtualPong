@@ -144,6 +144,7 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             this.oppBTM = Bitmap.createScaledBitmap(oppBTM, opp.getWidth(), opp.getHeight(), false);
 
             holder = getHolder();
+            holder.setFixedSize(1600,2464);
 
             //Get screen size
             WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -188,6 +189,7 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             }
 //            invalidate();
         }
+
         public void run(){
 
             while (status){
@@ -198,17 +200,33 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                         || comAT.getOtherScreenHeight() == 0)
                     continue;
                 if(!isSpeedSet){
-                    player.setSpeed(player.getSpeed() * screenWidth / comAT.getOtherScreenWidth());
-                    opp.setSpeed(opp.getSpeed() * screenWidth / comAT.getOtherScreenWidth());
-
-                    dx_ball = 4f * screenWidth / comAT.getOtherScreenWidth();
-                    dy_ball = 4f * screenHeight / comAT.getOtherScreenHeight();
+//                    player.setSpeed(player.getSpeed() * screenWidth / comAT.getOtherScreenWidth());
+//                    opp.setSpeed(opp.getSpeed() * screenWidth / comAT.getOtherScreenWidth());
+//
+//                    dx_ball = 4f * screenWidth / comAT.getOtherScreenWidth();
+//                    dy_ball = 4f * screenHeight / comAT.getOtherScreenHeight();
+                    player.setY(0.8f * comAT.getOtherScreenHeight());
+                    player.setX(0.5f * comAT.getOtherScreenWidth());
+                    opp.setY(0.2f * comAT.getOtherScreenHeight());
+                    opp.setX(0.5f * comAT.getOtherScreenWidth());
                     isSpeedSet = true;
                 }
 
-//                Log.w("SPEEDBALLX", Float.toString(dx_ball));
-//                Log.w("SPEEDBALLY", Float.toString(dy_ball)); 
                 x_ball += dx_ball;
+                screenSize.x = comAT.getOtherScreenWidth();
+                screenSize.y = comAT.getOtherScreenHeight();
+                screenWidth = comAT.getOtherScreenWidth();
+                screenHeight = comAT.getOtherScreenHeight();
+
+//                Log.w("WITDH SCREEN", Float.toString(screenWidth));
+//                Log.w("WITDH SCREEN", Float.toString(screenHeight));
+//                Log.w("X player", Float.toString(player.getX()));
+//                Log.w("Y player", Float.toString(player.getY()));
+//                Log.w("X opp", Float.toString(opp.getX()));
+//                Log.w("Y opp", Float.toString(opp.getY()));
+//                Log.w("BALL SIZE", Float.toString(ball.getWidth()));
+//                Log.w("BALL SIZE", Float.toString(ball.getHeight()));
+
                 if (x_ball <= 0 || x_ball > screenSize.x - ball.getWidth()){
                     dx_ball = 0 - dx_ball;
                     lastTouch = 0;
@@ -217,7 +235,8 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                 if (y_ball <= 0 || y_ball > screenSize.y - ball.getHeight()){
                     dy_ball = 0 - dy_ball;
                     lastTouch = 0;
-                }else if(lastTouch != -1 &&
+                }
+/*                else if(lastTouch != -1 &&
                         y_ball <= opp.getY() + oppBTM.getHeight() &&
                         y_ball >= opp.getY() + oppBTM.getHeight() - 10 &&
                         x_ball + ball.getWidth() <= opp.getX() + oppBTM.getWidth() &&
@@ -231,7 +250,7 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                         x_ball >= player.getX()){
                     dy_ball = 0 - dy_ball;
                     lastTouch = 1;
-                }
+                }*/
 
 //                comAT.setDirection(getPositions());
 
@@ -246,6 +265,7 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                 c.drawCircle(player.getX(), player.getY(), 2, ol);
                 c.drawCircle(opp.getX(), opp.getY(), 2, ol);
                 holder.unlockCanvasAndPost(c);
+
             }
         }
 
