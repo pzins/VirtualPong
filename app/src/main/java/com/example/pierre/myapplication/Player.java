@@ -14,17 +14,20 @@ public class Player {
     private int width;
     private int height;
     private int color;
-    private int speed;
+    private float speed;
 
-    public Player(float _x, float _y, int _width, int _height, int _color){
+    public Player(float _x, float _y, int _width, int _height, float _speed, int _color){
         this.x =    _x;
         this.y = _y;
         this.width = _width;
         this.height = _height;
-        this.speed = 10;
+        this.speed = _speed;
         this.color = _color;
     }
-
+    public void setSpeed(float _speed){
+        speed = _speed;
+    }
+    public float getSpeed(){return speed;}
     public void moveLeft(){
         x -= speed;
     }

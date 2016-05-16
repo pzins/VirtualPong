@@ -50,14 +50,15 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         int screenWidth = screenSize.getWidth();
         int screenHeight = screenSize.getHeight();
         player = new Player(screenWidth * 0.5f, screenHeight * 0.2f, (int)(screenWidth * 0.2f),
-                (int)(screenHeight * 0.02f), Color.BLUE);
+                (int)(screenHeight * 0.02f),10, Color.BLUE);
         opp = new Player(screenWidth * 0.5f, screenHeight * 0.8f, (int)(screenWidth * 0.2f),
-                (int)(screenHeight * 0.02f), Color.RED);
+                (int)(screenHeight * 0.02f),10, Color.RED);
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
 
         setContentView(gameView);
 //        gameView.setWillNotDraw(false);
-
+        Log.w("width", Float.toString(screenWidth));
+        Log.w("height", Float.toString(screenHeight));
         Bundle b = getIntent().getExtras();
 
 
@@ -67,7 +68,7 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
-        comAT = new ClientComAsyncTask(this, goIpAddr, gameView);
+        comAT = new ClientComAsyncTask(this, goIpAddr, gameView, screenWidth, screenHeight);
         comAT.execute();
     }
 
@@ -94,8 +95,10 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             float x = event.values[0];
             if(x > 1) {
                 comAT.setDirection("g");
+                gameView.movePlayer("g");
             }else if (x < -1) {
                 comAT.setDirection("d");
+                gameView.movePlayer("d");
             }
         }
     }
@@ -123,6 +126,8 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         private int screenHeight;
         private Bitmap playerBTM;
         private Bitmap oppBTM;
+        //0 : mur, 1 : player, -1 : opp
+        private int lastTouch;
 
         public GameView(Context context, Player _player, Player _opp, int _width, int _height) {
             super(context);
@@ -147,8 +152,8 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             ball = Bitmap.createScaledBitmap(ball, 50, 50, false);
 
             //initial position and speed
-            x_ball = y_ball = 0;
-            dx_ball = dy_ball = 4;
+            dx_ball = 4;
+            dy_ball = 4; //attention si vitesse trop grande (rebonds joueur non detectés)
         }
 
         public void setPositions(String str){
@@ -160,12 +165,55 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
 //            invalidate();
         }
 
+        public void movePlayer(String str){
+            if(str.equals("d") && player.getX() + playerBTM.getWidth() < screenWidth){
+                player.moveRight();
+            } else if(str.equals("g") && player.getX() > 0){
+                player.moveLeft();
+            }
+//            invalidate();
+        }
 
+        public void moveOpp(String str){
+            if(str.equals("d") && opp.getX() + oppBTM.getWidth() < screenWidth){
+                opp.moveRight();
+            } else if(str.equals("g") && opp.getX() > 0){
+                opp.moveLeft();
+            }
+//            invalidate();
+        }
         public void run(){
 
             while (status){
                 if (!holder.getSurface().isValid()){
                     continue;
+                }
+
+//                Log.w("SPEEDBALLX", Float.toString(dx_ball));
+//                Log.w("SPEEDBALLY", Float.toString(dy_ball));
+                x_ball += dx_ball;
+                if (x_ball <= 0 || x_ball > screenSize.x - ball.getWidth()){
+                    dx_ball = 0 - dx_ball;
+                    lastTouch = 0;
+                }
+                y_ball += dy_ball;
+                if (y_ball <= 0 || y_ball > screenSize.y - ball.getHeight()){
+                    dy_ball = 0 - dy_ball;
+                    lastTouch = 0;
+                }else if(lastTouch != -1 &&
+                        y_ball <= opp.getY() + oppBTM.getHeight() &&
+                        y_ball >= opp.getY() + oppBTM.getHeight() - 10 &&
+                        x_ball + ball.getWidth() <= opp.getX() + oppBTM.getWidth() &&
+                        x_ball >= opp.getX()){
+                    dy_ball = 0 - dy_ball;
+                    lastTouch = -1;
+                }else if(lastTouch != 1 &&
+                        y_ball + ball.getHeight() >= player.getY() &&
+                        y_ball + ball.getHeight() <= player.getY() + 10 &&
+                        x_ball + ball.getWidth() <= player.getX() + playerBTM.getWidth() &&
+                        x_ball >= player.getX()){
+                    dy_ball = 0 - dy_ball;
+                    lastTouch = 1;
                 }
 
                 //lock Before painting
@@ -174,6 +222,10 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
                 player.draw(c, playerBTM);
                 opp.draw(c, oppBTM);
                 c.drawBitmap(ball, x_ball, y_ball, null);
+                Paint ol = new Paint();
+                ol.setColor(Color.BLACK);
+                c.drawCircle(player.getX(), player.getY(), 2, ol);
+                c.drawCircle(opp.getX(), opp.getY(), 2, ol);
                 holder.unlockCanvasAndPost(c);
             }
         }

@@ -51,14 +51,16 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         int screenWidth = screenSize.getWidth();
         int screenHeight = screenSize.getHeight();
         player = new Player(screenWidth * 0.5f, screenHeight * 0.8f, (int)(screenWidth * 0.2f),
-                (int)(screenHeight * 0.02f), Color.BLUE);
+                (int)(screenHeight * 0.02f), 10, Color.BLUE);
         opp = new Player(screenWidth * 0.5f, screenHeight * 0.2f, (int)(screenWidth * 0.2f),
-                (int)(screenHeight * 0.02f), Color.RED);
+                (int)(screenHeight * 0.02f), 10, Color.RED);
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
 
         setContentView(gameView);
 //        gameView.setWillNotDraw(false);
 
+        Log.w("width", Float.toString(screenWidth));
+        Log.w("height", Float.toString(screenHeight));
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
@@ -91,11 +93,11 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         if (mySensor.getType() == Sensor.TYPE_GRAVITY) {
             float x = event.values[0];
             if (x > 1) {
+                comAT.setDirection("g");
                 gameView.movePlayer("g");
-//                comAT.setDirection(gameView.getPositions());
             } else if (x < -1) {
+                comAT.setDirection("d");
                 gameView.movePlayer("d");
-//                comAT.setDirection(gameView.getPositions());
             }
         }
     }
@@ -127,6 +129,8 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         //0 : mur, 1 : player, -1 : opp
         private int lastTouch;
 
+        private boolean isSpeedSet;
+
         public GameView(Context context, Player _player, Player _opp, int _width, int _height) {
             super(context);
             this.player = _player;
@@ -152,7 +156,9 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
             //initial position and speed
             x_ball = y_ball = 0;
-            dx_ball = dy_ball = 4; //attention si vitesse trop grande (rebonds joueur non detectés)
+            dx_ball = 4;
+            dy_ball = 4;
+            isSpeedSet  = false;
         }
 
 
@@ -188,7 +194,20 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                 if (!holder.getSurface().isValid()){
                     continue;
                 }
+                if(comAT.isAdresseIp() || comAT.getOtherScreenWidth() == 0
+                        || comAT.getOtherScreenHeight() == 0)
+                    continue;
+                if(!isSpeedSet){
+                    player.setSpeed(player.getSpeed() * screenWidth / comAT.getOtherScreenWidth());
+                    opp.setSpeed(opp.getSpeed() * screenWidth / comAT.getOtherScreenWidth());
 
+                    dx_ball = 4f * screenWidth / comAT.getOtherScreenWidth();
+                    dy_ball = 4f * screenHeight / comAT.getOtherScreenHeight();
+                    isSpeedSet = true;
+                }
+
+//                Log.w("SPEEDBALLX", Float.toString(dx_ball));
+//                Log.w("SPEEDBALLY", Float.toString(dy_ball)); 
                 x_ball += dx_ball;
                 if (x_ball <= 0 || x_ball > screenSize.x - ball.getWidth()){
                     dx_ball = 0 - dx_ball;
@@ -214,7 +233,7 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                     lastTouch = 1;
                 }
 
-                comAT.setDirection(getPositions());
+//                comAT.setDirection(getPositions());
 
                 //lock Before painting
                 Canvas c = holder.lockCanvas();
@@ -222,6 +241,10 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                 player.draw(c, playerBTM);
                 opp.draw(c, oppBTM);
                 c.drawBitmap(ball, x_ball, y_ball, null);
+                Paint ol = new Paint();
+                ol.setColor(Color.BLACK);
+                c.drawCircle(player.getX(), player.getY(), 2, ol);
+                c.drawCircle(opp.getX(), opp.getY(), 2, ol);
                 holder.unlockCanvasAndPost(c);
             }
         }

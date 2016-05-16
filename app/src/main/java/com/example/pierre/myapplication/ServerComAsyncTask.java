@@ -6,6 +6,7 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -30,11 +31,16 @@ public class ServerComAsyncTask extends AsyncTask<Void, Integer, String> {
     private String direction = "";
     private  String recDirection = "";
 
+    private int screenWidth;
+    private int screenHeight;
+
     private String groupOwnerIP;
     private Boolean shouldSend = false;
     public ServerComAsyncTask(Context context, DrawActivityServer.GameView game) {
         this.context = context;
         this.gameView = game;
+        this.screenWidth = 0;
+        this.screenWidth = 0;
     }
 
 
@@ -42,6 +48,10 @@ public class ServerComAsyncTask extends AsyncTask<Void, Integer, String> {
     public void setAdresseIp(String ip){
         this.groupOwnerIP = ip;
     }
+    public boolean isAdresseIp(){return (adr == "");}
+
+    public int getOtherScreenWidth(){return screenWidth;}
+    public int getOtherScreenHeight(){return screenHeight;}
 
     public void setDirection(String str){
         this.direction = str;
@@ -53,6 +63,15 @@ public class ServerComAsyncTask extends AsyncTask<Void, Integer, String> {
             ServerSocket s = new ServerSocket(8988);
             Socket soc = s.accept();
             adr = soc.getInetAddress().toString().substring(1);
+            // Un BufferedReader permet de lire par ligne.
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(soc.getInputStream())
+            );
+            String screen = reader.readLine();
+            String[] tmp = screen.split(" ");
+            screenWidth  = Integer.parseInt(tmp[0]);
+            screenHeight = Integer.parseInt(tmp[1]);
+
 
             Socket socket = null;
             try {
@@ -61,10 +80,7 @@ public class ServerComAsyncTask extends AsyncTask<Void, Integer, String> {
                 e.printStackTrace();
             }
 
-            // Un BufferedReader permet de lire par ligne.
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(soc.getInputStream())
-            );
+
             PrintWriter pred = null;
             try {
                 pred = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);

@@ -25,11 +25,16 @@ public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
     private String sendDirection = "";
 
     private DrawActivityClient.GameView gameView;
+    private int screenWidth;
+    private int screenHeight;
 
-    public ClientComAsyncTask (Context context, String ip, DrawActivityClient.GameView gameView) {
+    public ClientComAsyncTask (Context context, String ip, DrawActivityClient.GameView gameView,
+                               int _screenWidth, int _screenHeight) {
         this.context = context;
         this.groupOwnerIP = ip;
         this.gameView = gameView;
+        this.screenHeight = _screenHeight;
+        this.screenWidth = _screenWidth;
     }
 
     public void setAdresseIp(String ip){
@@ -56,7 +61,7 @@ public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
             e.printStackTrace();
         }
 
-
+        pred.println(Integer.toString(screenWidth) + " " + Integer.toString(screenHeight));
         ServerSocket s = null;
         BufferedReader reader = null;
         Socket soc = null;
@@ -109,8 +114,8 @@ public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
         super.onProgressUpdate(progress);
 
         if(this.gameView != null) {
-//            this.clientGameView.move(direction);
-            this.gameView.setPositions(direction);
+            this.gameView.moveOpp(direction);
+//            this.gameView.setPositions(direction);
         }
     }
 
