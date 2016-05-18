@@ -183,8 +183,8 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 //            invalidate();
         }
         public void run(){
-            double ref = System.nanoTime();
-            double tmp = 0;
+            int counter = 0;
+
             while (status){
                 if (!holder.getSurface().isValid()){
                     continue;
@@ -210,13 +210,11 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                         y_ball + ball.getHeight() >= player.getY() &&
                         y_ball + ball.getHeight() <= player.getY() + 10 &&
                         x_ball + ball.getWidth() <= player.getX() + playerBTM.getWidth() &&
-                        x_ball >= player.getX()){
+                        x_ball >= player.getX()) {
                     dy_ball = 0 - dy_ball;
                     lastTouch = 1;
                 }
-                tmp = System.nanoTime();
-                Log.w("DIFF", Double.toString((tmp - ref) / 1000000f));
-                ref = tmp;
+                counter++;
                 comAT.setDirection(getPositions());
 
                 //lock Before painting
@@ -224,13 +222,16 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                 c.drawARGB(255, 150, 200, 250);
                 player.draw(c, playerBTM);
                 opp.draw(c, oppBTM);
+                Paint p = new Paint();
+                p.setTextSize(88);
+                c.drawText(Integer.toString(counter),200,200, p);
                 c.drawBitmap(ball, x_ball, y_ball, null);
                 holder.unlockCanvasAndPost(c);
-                try {
-                    Thread.sleep(0, 100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    Thread.sleep(0, 100);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
             }
         }
 

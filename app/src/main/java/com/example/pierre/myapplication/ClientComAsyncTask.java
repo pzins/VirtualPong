@@ -72,6 +72,7 @@ public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
         }
 
         String str;
+        int counter = 0;
         while (true)
         {
             if(shouldSend){
@@ -85,6 +86,8 @@ public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
                     if (str.equals("END")) break;
                     direction = str;
                     publishProgress();
+                    Log.w("COUNTER", Integer.toString(counter));
+                    counter++;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
