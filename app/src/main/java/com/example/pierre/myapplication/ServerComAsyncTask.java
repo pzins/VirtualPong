@@ -57,7 +57,7 @@ public class ServerComAsyncTask extends AsyncTask<Void, Integer, String> {
 
             Socket socket = null;
             try {
-                socket = new Socket(adr, 8989);
+                socket = new Socket("172.25.45.142", 8989);
             } catch (IOException e) {
                 e.printStackTrace();
             }
