@@ -57,7 +57,7 @@ public class ServerComAsyncTask extends AsyncTask<Void, Integer, String> {
 
             Socket socket = null;
             try {
-                socket = new Socket("172.25.45.142", 8989);
+                socket = new Socket("192.168.0.12", 8989);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -74,24 +74,29 @@ public class ServerComAsyncTask extends AsyncTask<Void, Integer, String> {
             }
             String str;
             while (true) {
-                if(soc.getInputStream().available() > 0) {
-                    str = reader.readLine();
-                    if (str.equals("END")) break;
-                    recDirection = str;
-                    publishProgress();
+                pred.print(direction);
+                Thread.sleep(100);
+//                if(shouldSend){
+//                    pred.println(direction);
+//                    shouldSend = true;
+//                }
 
-                }
-                if(shouldSend){
-                    pred.println(direction);
-                    shouldSend = false;
-                }
-                if(false){break;}
+//                if(soc.getInputStream().available() > 0) {
+//                    str = reader.readLine();
+//                    if (str.equals("END")) break;
+//                    recDirection = str;
+//                    publishProgress();
+//
+//                }
+//                if(false){break;}
             }
-            reader.close();
-            pred.close();
-            soc.close();
-            s.close();
+//            reader.close();
+//            pred.close();
+//            soc.close();
+//            s.close();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return "OL";

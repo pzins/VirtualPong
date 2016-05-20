@@ -157,10 +157,14 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
 
         public String getPositions() {
-            return Float.toString(opp.getX() / screenWidth) + " "
-                    + Float.toString(player.getX() / screenWidth) + " "
-                    + Float.toString(x_ball / screenWidth) + " "
-                    + Float.toString(y_ball / screenHeight);
+//            return Float.toString(opp.getX() / screenWidth) + " "
+//                    + Float.toString(player.getX() / screenWidth) + " "
+//                    + Float.toString(x_ball / screenWidth) + " "
+//                    + Float.toString(y_ball / screenHeight);
+            return Integer.toString((int)(opp.getX() / screenWidth)) + " "
+                    + Integer.toString((int)(player.getX() / screenWidth)) + " "
+                    + Integer.toString((int)(x_ball / screenWidth)) + " "
+                    + Integer.toString((int)(y_ball / screenHeight));
         }
 
 

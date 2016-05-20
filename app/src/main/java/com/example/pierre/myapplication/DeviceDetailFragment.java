@@ -45,7 +45,7 @@ public class DeviceDetailFragment extends Fragment implements WifiP2pManager.Con
                 WifiP2pConfig config = new WifiP2pConfig();
                 config.deviceAddress = device.deviceAddress;
                 config.wps.setup = WpsInfo.PBC;
-                config.groupOwnerIntent = 15; // I want this device to become the owner
+                config.groupOwnerIntent = 0; // I want this device to become the owner
 
                 if (progressDialog != null && progressDialog.isShowing()) {
                     progressDialog.dismiss();

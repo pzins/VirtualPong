@@ -82,6 +82,7 @@ public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
 
             try {
                 if(soc.getInputStream().available() > 0) {
+                    Log.w("--------","---------");
                     str = reader.readLine();
                     if (str.equals("END")) break;
                     direction = str;

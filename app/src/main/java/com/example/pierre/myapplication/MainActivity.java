@@ -135,7 +135,8 @@ public class MainActivity extends AppCompatActivity implements
             DeviceDetailFragment frag = (DeviceDetailFragment) getFragmentManager()
                     .findFragmentById(R.id.frag_detail);
 //            b.putBoolean("go", frag.isGroupOwner());
-            b.putString("ip", frag.getIp());
+//            b.putString("ip", frag.getIp());
+            b.putString("ip", "192.168.0.10");
             intent.putExtras(b);
             startActivity(intent);
         }
