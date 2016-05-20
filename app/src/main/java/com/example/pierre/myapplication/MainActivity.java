@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements
 //            b.putBoolean("go", frag.isGroupOwner());
 //            b.putString("ip", frag.getIp());
             b.putString("ip", "192.168.0.10");
+
             intent.putExtras(b);
             startActivity(intent);
         }
