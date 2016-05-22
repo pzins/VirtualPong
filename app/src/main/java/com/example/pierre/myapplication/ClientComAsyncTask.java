@@ -32,7 +32,10 @@ class SendClientTask extends Thread
             socket = new Socket(goIp, port);
         } catch (IOException e) {
             e.printStackTrace();
+            run();
         }
+
+
         DataOutputStream dos = null;
         try {
             dos = new DataOutputStream(socket.getOutputStream());
