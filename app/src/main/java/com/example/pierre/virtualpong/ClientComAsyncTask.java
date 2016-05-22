@@ -1,4 +1,4 @@
-package com.example.pierre.myapplication;
+package com.example.pierre.virtualpong;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

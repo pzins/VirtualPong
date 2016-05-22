@@ -1,4 +1,4 @@
-package com.example.pierre.myapplication;
+package com.example.pierre.virtualpong;
 
 /**
  * Created by pierre on 01/04/16.
@@ -6,12 +6,9 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import java.io.BufferedReader;
-import java.io.DataInput;
+
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
