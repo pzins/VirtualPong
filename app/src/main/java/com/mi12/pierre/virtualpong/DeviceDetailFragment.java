@@ -1,4 +1,4 @@
-package com.example.pierre.virtualpong;
+package com.mi12.pierre.virtualpong;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.R;
+import com.mi12.R;
 
 
 /**

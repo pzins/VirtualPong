@@ -1,4 +1,4 @@
-package com.example.pierre.virtualpong;
+package com.mi12.pierre.virtualpong;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.R;
+import com.mi12.R;
 
 /**
  * Created by pierre on 03/04/16.
