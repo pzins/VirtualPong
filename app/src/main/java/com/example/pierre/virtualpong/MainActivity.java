@@ -1,4 +1,4 @@
-package com.example.pierre.myapplication;
+package com.example.pierre.virtualpong;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.R;
-import com.example.florian.android_bouncingball.BallActivity;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -122,10 +121,6 @@ public class MainActivity extends AppCompatActivity implements
         }
         else if(id == R.id.atn_direct_enable){
             Intent intent = new Intent(MainActivity.this, DrawActivityServer.class);
-            startActivity(intent);
-        }
-        else if(id == R.id.atn_direct_ball){
-            Intent intent = new Intent(MainActivity.this, BallActivity.class);
             startActivity(intent);
         }
         else if(id == R.id.client){

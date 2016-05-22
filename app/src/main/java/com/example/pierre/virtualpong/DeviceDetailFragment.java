@@ -1,4 +1,4 @@
-package com.example.pierre.myapplication;
+package com.example.pierre.virtualpong;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
