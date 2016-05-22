@@ -6,12 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Display;
@@ -19,20 +13,12 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
+
 import com.example.R;
-import java.io.Serializable;
 
 public class DrawActivityServer extends Activity  {
 
-    private ServerComAsyncTask comOppAT;
-    private ServerComAsyncTask comPlayerAT;
-
-    private Player player;
-    private Player opp;
     private GameView gameView;
-
-
-    private Display screenSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,28 +26,26 @@ public class DrawActivityServer extends Activity  {
         //FullScreen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        screenSize = getWindowManager().getDefaultDisplay();
+        Display screenSize = getWindowManager().getDefaultDisplay();
 
         setContentView(R.layout.activity_bouncing_ball);
 
 
         int screenWidth = screenSize.getWidth();
         int screenHeight = screenSize.getHeight();
-        player = new Player(screenWidth * 0.5f, screenHeight * 0.8f, (int)(screenWidth * 0.2f),
-                (int)(screenHeight * 0.02f), Color.BLUE);
-        opp = new Player(screenWidth * 0.5f, screenHeight * 0.2f, (int)(screenWidth * 0.2f),
-                (int)(screenHeight * 0.02f), Color.RED);
+        Player player = new Player(screenWidth * 0.5f, screenHeight * 0.8f, (int) (screenWidth * 0.2f),
+                (int) (screenHeight * 0.02f), Color.BLUE);
+        Player opp = new Player(screenWidth * 0.5f, screenHeight * 0.2f, (int) (screenWidth * 0.2f),
+                (int) (screenHeight * 0.02f), Color.RED);
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
 
         setContentView(gameView);
 
 
-
-        comOppAT = new ServerComAsyncTask(this, gameView, 8988);
-        comPlayerAT = new ServerComAsyncTask(this, gameView, 8989);
+        ServerComAsyncTask comOppAT = new ServerComAsyncTask(this, gameView, 8988);
+        ServerComAsyncTask comPlayerAT = new ServerComAsyncTask(this, gameView, 8989);
         comOppAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         comPlayerAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     protected void onPause() {
@@ -74,19 +58,15 @@ public class DrawActivityServer extends Activity  {
         gameView.resume();
     }
 
-
-
     class GameView extends SurfaceView implements  Runnable {
         private Thread thread = null;
         private SurfaceHolder holder;
         private boolean status = false;
 
-        Point screenSize = new Point();
 
-        Bitmap ball;
-        float x_ball, y_ball;
-        float dx_ball, dy_ball;
-
+        private Bitmap ball;
+        private float x_ball, y_ball;
+        private float dx_ball, dy_ball;
 
         private Player player;
         private Player opp;
@@ -108,15 +88,12 @@ public class DrawActivityServer extends Activity  {
 
             this.playerBTM = BitmapFactory.decodeResource(getResources(), R.drawable.player);
             this.playerBTM = Bitmap.createScaledBitmap(playerBTM, player.getWidth(), player.getHeight(), false);
+
             this.oppBTM= BitmapFactory.decodeResource(getResources(), R.drawable.opp);
             this.oppBTM = Bitmap.createScaledBitmap(oppBTM, opp.getWidth(), opp.getHeight(), false);
 
             holder = getHolder();
 
-            //Get screen size
-            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            Display display = wm.getDefaultDisplay();
-            display.getSize(screenSize);
 
             //get ball
             ball = BitmapFactory.decodeResource(getResources(), R.drawable.blueball);
@@ -125,7 +102,6 @@ public class DrawActivityServer extends Activity  {
             //initial position and speed
             x_ball = y_ball = 0;
             dx_ball = dy_ball = 4;
-
         }
 
 
@@ -154,12 +130,12 @@ public class DrawActivityServer extends Activity  {
 
                 //deplacement balle + rebonds mur/joueur
                 x_ball += dx_ball;
-                if (x_ball <= 0 || x_ball > screenSize.x - ball.getWidth()){
+                if (x_ball <= 0 || x_ball > screenWidth - ball.getWidth()){
                     dx_ball = 0 - dx_ball;
                     lastTouch = 0;
                 }
                 y_ball += dy_ball;
-                if (y_ball <= 0 || y_ball > screenSize.y - ball.getHeight()){
+                if (y_ball <= 0 || y_ball > screenHeight - ball.getHeight()){
                     dy_ball = 0 - dy_ball;
                     lastTouch = 0;
                 }else if(lastTouch != -1 &&
