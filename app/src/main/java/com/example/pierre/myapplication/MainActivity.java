@@ -129,13 +129,25 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(MainActivity.this, BallActivity.class);
             startActivity(intent);
         }
-        else if(id == R.id.client){
+        else if(id == R.id.client) {
             Intent intent = new Intent(MainActivity.this, DrawActivityClient.class);
             Bundle b = new Bundle();
             DeviceDetailFragment frag = (DeviceDetailFragment) getFragmentManager()
                     .findFragmentById(R.id.frag_detail);
             b.putBoolean("go", frag.isGroupOwner());
             b.putString("ip", frag.getIp());
+            b.putInt("port", 8988);
+
+            intent.putExtras(b);
+            startActivity(intent);
+        }else if(id == R.id.client2){
+            Intent intent = new Intent(MainActivity.this, DrawActivityClient.class);
+            Bundle b = new Bundle();
+            DeviceDetailFragment frag = (DeviceDetailFragment) getFragmentManager()
+                    .findFragmentById(R.id.frag_detail);
+            b.putBoolean("go", frag.isGroupOwner());
+            b.putString("ip", frag.getIp());
+            b.putInt("port", 8989);
 
             intent.putExtras(b);
             startActivity(intent);

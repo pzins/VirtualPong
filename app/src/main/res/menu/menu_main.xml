@@ -18,6 +18,11 @@ tools:context="com.example.pierre.myapplication.MainActivity">
         android:icon="@drawable/plus"
         android:title="@string/client_button"
         android:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/client2"
+        android:icon="@drawable/plus"
+        android:title="@string/client_button2"
+        android:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/atn_direct_discover"

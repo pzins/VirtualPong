@@ -12,6 +12,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.SurfaceHolder;
@@ -21,17 +22,16 @@ import android.view.WindowManager;
 import com.example.R;
 import java.io.Serializable;
 
-public class DrawActivityServer extends Activity implements SensorEventListener {
+public class DrawActivityServer extends Activity  {
 
-    private ServerComAsyncTask comAT;
+    private ServerComAsyncTask comOppAT;
+    private ServerComAsyncTask comPlayerAT;
 
     private Player player;
     private Player opp;
     private GameView gameView;
 
 
-    private SensorManager sensorManager;
-    private Sensor gravity;
     private Display screenSize;
 
     @Override
@@ -56,46 +56,25 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         setContentView(gameView);
 
 
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
-        comAT = new ServerComAsyncTask(this, gameView);
-        comAT.execute();
+        comOppAT = new ServerComAsyncTask(this, gameView, 8988);
+        comPlayerAT = new ServerComAsyncTask(this, gameView, 8989);
+        comOppAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        comPlayerAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
     protected void onPause() {
         super.onPause();
         gameView.pause();
-        if (sensorManager != null) {
-            sensorManager.unregisterListener(this);
-        }
     }
 
     protected void onResume() {
         super.onResume();
         gameView.resume();
-        if (sensorManager != null) {
-            sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_GAME);
-        }
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        Sensor mySensor = event.sensor;
-        if (mySensor.getType() == Sensor.TYPE_GRAVITY) {
-            float x = event.values[0];
-            if (x > 1) {
-                gameView.movePlayer("g");
-            } else if (x < -1) {
-                gameView.movePlayer("d");
-            }
-        }
-    }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    }
 
     class GameView extends SurfaceView implements  Runnable {
         private Thread thread = null;
@@ -149,12 +128,6 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
         }
 
-
-        public GamePositions getPositions() {
-            GamePositions gp = new GamePositions(opp.getX() / screenWidth, player.getX() / screenWidth,
-                    x_ball / screenWidth, y_ball / screenHeight);
-            return  gp;
-        }
 
 
         public void moveOpponent(String str) {
@@ -234,23 +207,5 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             thread = new Thread(this);
             thread.start();
         }
-    }
-}
-
-
-//Objet contenant les poisitons du jeu
-//il est envoyé par les sockets
-class GamePositions implements Serializable
-{
-    float player_x;
-    float opp_x;
-    float ball_x;
-    float ball_y;
-
-    GamePositions(float _player_x, float _opp_x, float _ball_x, float _ball_y){
-        player_x = _player_x;
-        opp_x = _opp_x;
-        ball_x = _ball_x;
-        ball_y = _ball_y;
     }
 }

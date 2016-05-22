@@ -26,13 +26,14 @@ public class ServerComAsyncTask extends AsyncTask<Void, Byte, String> {
 
     private DrawActivityServer.GameView gameView = null;
 
-    private GamePositions direction;
 
     private String groupOwnerIP;
     private Boolean shouldSend = false;
-    public ServerComAsyncTask(Context context, DrawActivityServer.GameView game) {
+    private int port;
+    public ServerComAsyncTask(Context context, DrawActivityServer.GameView game, int _port) {
         this.context = context;
         this.gameView = game;
+        this.port = _port;
     }
 
 
@@ -41,22 +42,13 @@ public class ServerComAsyncTask extends AsyncTask<Void, Byte, String> {
         this.groupOwnerIP = ip;
     }
 
-    public void setDirection(GamePositions str){
-        this.direction = str;
-        shouldSend = true;
-    }
+
     @Override
     protected String doInBackground(Void... params) {
         try
         {
-            ServerSocket s = new ServerSocket(8988);
+            ServerSocket s = new ServerSocket(port);
             Socket soc = s.accept();
-            adr = soc.getInetAddress().toString().substring(1);
-
-            //thread d'envoi des données
-            SendServerTask st = new SendServerTask(gameView, adr);
-            st.setPriority(Thread.MAX_PRIORITY);
-            st.start();
 
             //levture des données
             DataInputStream dis = new DataInputStream(soc.getInputStream());
@@ -80,51 +72,18 @@ public class ServerComAsyncTask extends AsyncTask<Void, Byte, String> {
     protected void onProgressUpdate(Byte... progress) {
         super.onProgressUpdate(progress);
         if(this.gameView != null) {
-            if(progress[0] == 0x0)
-                this.gameView.moveOpponent("g");
-            else
-                this.gameView.moveOpponent("d");
-        }
-    }
-}
+            if(port == 8988){
+                if(progress[0] == 0x0)
+                    this.gameView.moveOpponent("g");
+                else
+                    this.gameView.moveOpponent("d");
 
-//pour l'envoi des données (positions du jeu)
-class SendServerTask extends Thread
-{
-    private DrawActivityServer.GameView gameView;
-    private String clientIp;
-    public SendServerTask(DrawActivityServer.GameView _gw, String _ip){
-        gameView = _gw;
-        clientIp = _ip;
-    }
-
-    public void run() {
-        Socket socket = null;
-        try {
-            socket = new Socket(clientIp, 8989);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ObjectOutputStream ois = null;
-        try {
-            ois = new ObjectOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String str;
-
-        while (true) {
-            try {
-                Thread.sleep(4);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            try {
-                ois.writeObject(gameView.getPositions());
-            } catch (IOException e) {
-                e.printStackTrace();
+            }else{
+                if(progress[0] == 0x0)
+                    this.gameView.movePlayer("g");
+                else
+                    this.gameView.movePlayer("d");
             }
         }
     }
-
 }

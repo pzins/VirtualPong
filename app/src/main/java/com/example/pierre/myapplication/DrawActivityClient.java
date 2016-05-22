@@ -31,64 +31,50 @@ import java.net.Socket;
  * Created by pierre on 08/05/16.
  */
 public class DrawActivityClient  extends AppCompatActivity implements SensorEventListener {
-    private ClientComAsyncTask comAT;
     private SendClientTask sendTask;
 
     private Player player;
     private Player opp;
 
-    private GameView gameView;
 
     private SensorManager sensorManager;
     private Sensor gravity;
 
     private String goIpAddr;
+    private int port;
     private Display screenSize;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        screenSize = getWindowManager().getDefaultDisplay();
-
-        int screenWidth = screenSize.getWidth();
-        int screenHeight = screenSize.getHeight();
-        player = new Player(screenWidth * 0.5f, screenHeight * 0.2f, (int)(screenWidth * 0.2f),
-                (int)(screenHeight * 0.02f), Color.BLUE);
-        opp = new Player(screenWidth * 0.5f, screenHeight * 0.8f, (int)(screenWidth * 0.2f),
-                (int)(screenHeight * 0.02f), Color.RED);
-        gameView = new GameView(this, player, opp, screenWidth, screenHeight);
-
-        setContentView(gameView);
-
         Bundle b = getIntent().getExtras();
 
 
-        if(b != null) {
+        if (b != null) {
             goIpAddr = b.getString("ip");
+            port = b.getInt("port");
         }
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
-        sendTask = new SendClientTask(goIpAddr);
+        sendTask = new SendClientTask(goIpAddr, port);
         sendTask.start();
-        comAT = new ClientComAsyncTask(this, gameView);
-        comAT.execute();
+
     }
 
     protected void onPause() {
         super.onPause();
-        gameView.pause();
-        if(sensorManager != null) {
+        if (sensorManager != null) {
             sensorManager.unregisterListener(this);
         }
     }
 
     protected void onResume() {
         super.onResume();
-        gameView.resume();
-        if(sensorManager != null) {
+        if (sensorManager != null) {
             sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_GAME);
         }
     }
@@ -96,11 +82,11 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor mySensor = event.sensor;
-        if(mySensor.getType() == Sensor.TYPE_GRAVITY){
+        if (mySensor.getType() == Sensor.TYPE_GRAVITY) {
             float x = event.values[0];
-            if(x > 1) {
+            if (x > 1) {
                 sendTask.setDirection((byte) 0x0);
-            }else if (x < -1) {
+            } else if (x < -1) {
                 sendTask.setDirection((byte) 0x1);
             }
         }
@@ -110,7 +96,8 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
-
+}
+/*
     class GameView extends SurfaceView implements  Runnable
     {
 
@@ -157,12 +144,6 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             dx_ball = dy_ball = 4;
         }
 
-        public void setPositions(GamePositions str){
-            player.setX(str.player_x * screenWidth);
-            opp.setX(str.opp_x * screenWidth);
-            x_ball = str.ball_x * screenWidth;
-            y_ball = str.ball_y * screenHeight;
-        }
 
 
         public void run(){
@@ -201,7 +182,6 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             thread = new Thread(this);
             thread.start();
         }
-    }
-}
+    }*/
 
 
