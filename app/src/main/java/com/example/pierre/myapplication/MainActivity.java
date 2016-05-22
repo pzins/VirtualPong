@@ -115,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements
                             pred.println(dire);
                         }
                     }
-                    //open socket
                 }
             }).start();
 

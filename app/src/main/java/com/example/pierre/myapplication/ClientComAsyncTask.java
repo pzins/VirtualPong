@@ -80,9 +80,10 @@ class SendClientTask extends Thread
     public void run() {
         Socket socket = null;
         try {
-            socket = new Socket(goIp, 8988);
+           socket = new Socket(goIp, 8988);
         } catch (IOException e) {
             e.printStackTrace();
+            run();
         }
         DataOutputStream dos = null;
 
@@ -91,20 +92,15 @@ class SendClientTask extends Thread
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        while (true) {
-            try {
-                if(shouldSend){
+        synchronized (this){
+            while (true) {
+                try {
                     dos.writeByte(dir);
-                    dos.flush();
-                    shouldSend = false;
+                    wait();
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
             }
         }
     }

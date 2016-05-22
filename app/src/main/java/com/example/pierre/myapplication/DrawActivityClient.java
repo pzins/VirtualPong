@@ -83,12 +83,16 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor mySensor = event.sensor;
-        if(mySensor.getType() == Sensor.TYPE_GRAVITY){
-            float x = event.values[0];
-            if(x > 1) {
-                sendTask.setDirection((byte) 0x0);
-            }else if (x < -1) {
-                sendTask.setDirection((byte) 0x1);
+        synchronized (sendTask){
+            if(mySensor.getType() == Sensor.TYPE_GRAVITY){
+                float x = event.values[0];
+                if(x > 1) {
+                    sendTask.setDirection((byte) 0x0);
+                    sendTask.notify();
+                }else if (x < -1) {
+                    sendTask.setDirection((byte) 0x1);
+                    sendTask.notify();
+                }
             }
         }
     }
