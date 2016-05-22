@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements
             Bundle b = new Bundle();
             DeviceDetailFragment frag = (DeviceDetailFragment) getFragmentManager()
                     .findFragmentById(R.id.frag_detail);
-            b.putString("ip", frag.getIp());
+            b.putString("ip", "192.168.0.10");
 
             intent.putExtras(b);
             startActivity(intent);
