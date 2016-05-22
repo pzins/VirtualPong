@@ -2,17 +2,10 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -20,29 +13,20 @@ import java.net.Socket;
  * A simple server socket that accepts connection and writes some data on
  * the stream.
  */
-public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
+public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
 
-    private Context context;
-    private Boolean shouldSend = false;
     private GamePositions direction;
-    private String sendDirection = "";
-
     private DrawActivityClient.GameView gameView;
 
     public ClientComAsyncTask (Context context, DrawActivityClient.GameView gameView) {
-        this.context = context;
         this.gameView = gameView;
     }
 
-     public void setDirection(String str){
-        this.sendDirection = str;
-        shouldSend = true;
-    }
     @Override
     protected String doInBackground(Void... params) {
-        ServerSocket s = null;
+        ServerSocket s;
         ObjectInputStream ois=  null;
-        Socket soc = null;
+        Socket soc;
         try {
             s = new ServerSocket(8989);
             soc = s.accept();
@@ -53,12 +37,8 @@ public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
         while (true)
         {
             try {
-                GamePositions tmp = (GamePositions) ois.readObject();
-                direction = tmp;
-                    publishProgress();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+                publishProgress((GamePositions) ois.readObject());
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
             if(false){break;}
@@ -72,11 +52,11 @@ public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
         return "";
     }
     @Override
-    protected void onProgressUpdate(Integer... progress) {
+    protected void onProgressUpdate(GamePositions... progress) {
         super.onProgressUpdate(progress);
 
         if(this.gameView != null) {
-            this.gameView.setPositions(direction);
+            this.gameView.setPositions(progress[0]);
         }
     }
 
@@ -91,9 +71,13 @@ class SendClientTask extends Thread
     private String goIp;
 
     public SendClientTask(String _ip){goIp = _ip;}
-    public void setDirection(byte _d){dir = _d;shouldSend = true;}
-    public void run() {
 
+    public void setDirection(byte _d){
+        dir = _d;
+        shouldSend = true;
+    }
+
+    public void run() {
         Socket socket = null;
         try {
             socket = new Socket(goIp, 8988);

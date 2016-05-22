@@ -6,11 +6,9 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import java.io.BufferedReader;
-import java.io.DataInput;
+
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -26,25 +24,13 @@ public class ServerComAsyncTask extends AsyncTask<Void, Byte, String> {
 
     private DrawActivityServer.GameView gameView = null;
 
-    private GamePositions direction;
 
-    private String groupOwnerIP;
-    private Boolean shouldSend = false;
     public ServerComAsyncTask(Context context, DrawActivityServer.GameView game) {
         this.context = context;
         this.gameView = game;
     }
 
 
-
-    public void setAdresseIp(String ip){
-        this.groupOwnerIP = ip;
-    }
-
-    public void setDirection(GamePositions str){
-        this.direction = str;
-        shouldSend = true;
-    }
     @Override
     protected String doInBackground(Void... params) {
         try
@@ -58,14 +44,12 @@ public class ServerComAsyncTask extends AsyncTask<Void, Byte, String> {
             st.setPriority(Thread.MAX_PRIORITY);
             st.start();
 
-            //levture des données
+            //lecture des données
             DataInputStream dis = new DataInputStream(soc.getInputStream());
-            String str;
+
             while (true) {
                 publishProgress(dis.readByte());
-                if (false) {
-                    break;
-                }
+                if (false) {break;}
             }
             soc.close();
             s.close();
@@ -93,6 +77,7 @@ class SendServerTask extends Thread
 {
     private DrawActivityServer.GameView gameView;
     private String clientIp;
+
     public SendServerTask(DrawActivityServer.GameView _gw, String _ip){
         gameView = _gw;
         clientIp = _ip;
@@ -111,7 +96,6 @@ class SendServerTask extends Thread
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String str;
 
         while (true) {
             try {
