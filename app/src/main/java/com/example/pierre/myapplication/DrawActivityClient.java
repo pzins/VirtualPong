@@ -71,9 +71,9 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
-        sendTask = new SendClientTask();
+        sendTask = new SendClientTask(goIpAddr);
         sendTask.start();
-        comAT = new ClientComAsyncTask(this, goIpAddr, gameView);
+        comAT = new ClientComAsyncTask(this, gameView);
         comAT.execute();
     }
 

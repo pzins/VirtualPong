@@ -23,21 +23,15 @@ import java.net.Socket;
 public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
 
     private Context context;
-    private String groupOwnerIP;
     private Boolean shouldSend = false;
     private GamePositions direction;
     private String sendDirection = "";
 
     private DrawActivityClient.GameView gameView;
 
-    public ClientComAsyncTask (Context context, String ip, DrawActivityClient.GameView gameView) {
+    public ClientComAsyncTask (Context context, DrawActivityClient.GameView gameView) {
         this.context = context;
-        this.groupOwnerIP = ip;
         this.gameView = gameView;
-    }
-
-    public void setAdresseIp(String ip){
-        this.groupOwnerIP = ip;
     }
 
      public void setDirection(String str){
@@ -94,12 +88,15 @@ class SendClientTask extends Thread
 {
     private byte dir = 0x0;
     private boolean shouldSend = false;
+    private String goIp;
+
+    public SendClientTask(String _ip){goIp = _ip;}
     public void setDirection(byte _d){dir = _d;shouldSend = true;}
     public void run() {
 
         Socket socket = null;
         try {
-            socket = new Socket("192.168.0.10", 8988);
+            socket = new Socket(goIp, 8988);
         } catch (IOException e) {
             e.printStackTrace();
         }

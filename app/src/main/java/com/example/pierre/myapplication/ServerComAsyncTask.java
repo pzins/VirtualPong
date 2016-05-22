@@ -54,7 +54,7 @@ public class ServerComAsyncTask extends AsyncTask<Void, Byte, String> {
             adr = soc.getInetAddress().toString().substring(1);
 
             //thread d'envoi des données
-            SendServerTask st = new SendServerTask(gameView);
+            SendServerTask st = new SendServerTask(gameView, adr);
             st.setPriority(Thread.MAX_PRIORITY);
             st.start();
 
@@ -92,15 +92,16 @@ public class ServerComAsyncTask extends AsyncTask<Void, Byte, String> {
 class SendServerTask extends Thread
 {
     private DrawActivityServer.GameView gameView;
-
-    public SendServerTask(DrawActivityServer.GameView _gw){
+    private String clientIp;
+    public SendServerTask(DrawActivityServer.GameView _gw, String _ip){
         gameView = _gw;
+        clientIp = _ip;
     }
 
     public void run() {
         Socket socket = null;
         try {
-            socket = new Socket("192.168.0.12", 8989);
+            socket = new Socket(clientIp, 8989);
         } catch (IOException e) {
             e.printStackTrace();
         }
