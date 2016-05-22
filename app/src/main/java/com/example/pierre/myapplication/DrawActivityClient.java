@@ -22,12 +22,17 @@ import android.view.WindowManager;
 
 import com.example.R;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
 /**
  * Created by pierre on 08/05/16.
  */
 public class DrawActivityClient  extends AppCompatActivity implements SensorEventListener {
-    private Paint paint;
     private ClientComAsyncTask comAT;
+    private SendClientTask sendTask;
 
     private Player player;
     private Player opp;
@@ -56,7 +61,6 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
 
         setContentView(gameView);
-//        gameView.setWillNotDraw(false);
 
         Bundle b = getIntent().getExtras();
 
@@ -67,6 +71,8 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
+        sendTask = new SendClientTask();
+        sendTask.start();
         comAT = new ClientComAsyncTask(this, goIpAddr, gameView);
         comAT.execute();
     }
@@ -93,9 +99,9 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         if(mySensor.getType() == Sensor.TYPE_GRAVITY){
             float x = event.values[0];
             if(x > 1) {
-                comAT.setDirection("g");
+                sendTask.setDirection((byte) 0x0);
             }else if (x < -1) {
-                comAT.setDirection("d");
+                sendTask.setDirection((byte) 0x1);
             }
         }
     }
@@ -151,13 +157,11 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             dx_ball = dy_ball = 4;
         }
 
-        public void setPositions(String str){
-            String[] array = str.split(" ");
-            player.setX(Float.parseFloat(array[0]) * screenWidth);
-            opp.setX(Float.parseFloat(array[1]) * screenWidth);
-            x_ball = Float.parseFloat(array[2]) * screenWidth;
-            y_ball = Float.parseFloat(array[3]) * screenHeight;
-//            invalidate();
+        public void setPositions(GamePositions str){
+            player.setX(str.player_x * screenWidth);
+            opp.setX(str.opp_x * screenWidth);
+            x_ball = str.ball_x * screenWidth;
+            y_ball = str.ball_y * screenHeight;
         }
 
 
@@ -168,6 +172,7 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
                     continue;
                 }
 
+                //dessin du jeu
                 //lock Before painting
                 c = holder.lockCanvas();
                 c.drawARGB(255, 150, 200, 250);
@@ -196,16 +201,6 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             thread = new Thread(this);
             thread.start();
         }
-/*        @Override
-        protected void onDraw(Canvas canvas)
-        {
-            super.onDraw(canvas);
-            Paint p=new Paint();
-            p.setColor(Color.BLUE);
-            player.draw(canvas);
-            p.setColor(Color.RED);
-            opp.draw(canvas);
-        }*/
     }
 }
 

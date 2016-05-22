@@ -6,14 +6,12 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
-
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -21,15 +19,14 @@ import java.net.Socket;
  * A simple server socket that accepts connection and writes some data on
  * the stream.
  */
-public class ServerComAsyncTask extends AsyncTask<Void, Integer, String> {
+public class ServerComAsyncTask extends AsyncTask<Void, Byte, String> {
 
     private Context context;
     private String adr = "";
 
     private DrawActivityServer.GameView gameView = null;
 
-    private String direction = "";
-    private  String recDirection = "";
+    private GamePositions direction;
 
     private String groupOwnerIP;
     private Boolean shouldSend = false;
@@ -44,69 +41,89 @@ public class ServerComAsyncTask extends AsyncTask<Void, Integer, String> {
         this.groupOwnerIP = ip;
     }
 
-    public void setDirection(String str){
+    public void setDirection(GamePositions str){
         this.direction = str;
         shouldSend = true;
     }
     @Override
     protected String doInBackground(Void... params) {
-        try {
+        try
+        {
             ServerSocket s = new ServerSocket(8988);
             Socket soc = s.accept();
             adr = soc.getInetAddress().toString().substring(1);
 
-            Socket socket = null;
-            try {
-                socket = new Socket("192.168.0.12", 8989);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            //thread d'envoi des données
+            SendServerTask st = new SendServerTask(gameView);
+            st.setPriority(Thread.MAX_PRIORITY);
+            st.start();
 
-            // Un BufferedReader permet de lire par ligne.
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(soc.getInputStream())
-            );
-            PrintWriter pred = null;
-            try {
-                pred = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            //levture des données
+            DataInputStream dis = new DataInputStream(soc.getInputStream());
             String str;
             while (true) {
-                pred.print(direction);
-                Thread.sleep(100);
-//                if(shouldSend){
-//                    pred.println(direction);
-//                    shouldSend = true;
-//                }
-
-//                if(soc.getInputStream().available() > 0) {
-//                    str = reader.readLine();
-//                    if (str.equals("END")) break;
-//                    recDirection = str;
-//                    publishProgress();
-//
-//                }
-//                if(false){break;}
+                publishProgress(dis.readByte());
+                if (false) {
+                    break;
+                }
             }
-//            reader.close();
-//            pred.close();
-//            soc.close();
-//            s.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+            soc.close();
+            s.close();
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
-        return "OL";
+        return "";
     }
     @Override
-    protected void onProgressUpdate(Integer... progress) {
+    protected void onProgressUpdate(Byte... progress) {
         super.onProgressUpdate(progress);
         if(this.gameView != null) {
-            this.gameView.moveOpponent(recDirection);
-//            setDirection(this.gameView.getPositions());
+            if(progress[0] == 0x0)
+                this.gameView.moveOpponent("g");
+            else
+                this.gameView.moveOpponent("d");
         }
     }
+}
+
+//pour l'envoi des données (positions du jeu)
+class SendServerTask extends Thread
+{
+    private DrawActivityServer.GameView gameView;
+
+    public SendServerTask(DrawActivityServer.GameView _gw){
+        gameView = _gw;
+    }
+
+    public void run() {
+        Socket socket = null;
+        try {
+            socket = new Socket("192.168.0.12", 8989);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ObjectOutputStream ois = null;
+        try {
+            ois = new ObjectOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String str;
+
+        while (true) {
+            try {
+                Thread.sleep(4);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                ois.writeObject(gameView.getPositions());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

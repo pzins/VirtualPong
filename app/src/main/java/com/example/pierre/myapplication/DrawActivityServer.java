@@ -13,19 +13,16 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
-
 import com.example.R;
+import java.io.Serializable;
 
 public class DrawActivityServer extends Activity implements SensorEventListener {
 
-    private Paint paint = new Paint();
     private ServerComAsyncTask comAT;
 
     private Player player;
@@ -57,7 +54,6 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
 
         setContentView(gameView);
-//        gameView.setWillNotDraw(false);
 
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -65,7 +61,6 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
         comAT = new ServerComAsyncTask(this, gameView);
         comAT.execute();
-
 
     }
 
@@ -92,10 +87,8 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             float x = event.values[0];
             if (x > 1) {
                 gameView.movePlayer("g");
-//                comAT.setDirection(gameView.getPositions());
             } else if (x < -1) {
                 gameView.movePlayer("d");
-//                comAT.setDirection(gameView.getPositions());
             }
         }
     }
@@ -152,30 +145,24 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
             //initial position and speed
             x_ball = y_ball = 0;
-            dx_ball = dy_ball = 4; //attention si vitesse trop grande (rebonds joueur non detectés)
+            dx_ball = dy_ball = 4;
+
         }
 
 
-        public String getPositions() {
-//            return Float.toString(opp.getX() / screenWidth) + " "
-//                    + Float.toString(player.getX() / screenWidth) + " "
-//                    + Float.toString(x_ball / screenWidth) + " "
-//                    + Float.toString(y_ball / screenHeight);
-            return Integer.toString((int)(opp.getX() / screenWidth)) + " "
-                    + Integer.toString((int)(player.getX() / screenWidth)) + " "
-                    + Integer.toString((int)(x_ball / screenWidth)) + " "
-                    + Integer.toString((int)(y_ball / screenHeight));
+        public GamePositions getPositions() {
+            GamePositions gp = new GamePositions(opp.getX() / screenWidth, player.getX() / screenWidth,
+                    x_ball / screenWidth, y_ball / screenHeight);
+            return  gp;
         }
 
 
         public void moveOpponent(String str) {
-
             if (str.equals("d") && opp.getX() + oppBTM.getWidth() < screenWidth) {
                 opp.moveRight();
             } else if (str.equals("g") && opp.getX() > 0) {
                 opp.moveLeft();
             }
-//            invalidate();
         }
 
         public void movePlayer(String str){
@@ -184,16 +171,15 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             } else if(str.equals("g") && player.getX() > 0){
                 player.moveLeft();
             }
-//            invalidate();
         }
-        public void run(){
-            int counter = 0;
 
+        public void run(){
             while (status){
                 if (!holder.getSurface().isValid()){
                     continue;
                 }
 
+                //deplacement balle + rebonds mur/joueur
                 x_ball += dx_ball;
                 if (x_ball <= 0 || x_ball > screenSize.x - ball.getWidth()){
                     dx_ball = 0 - dx_ball;
@@ -218,24 +204,15 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                     dy_ball = 0 - dy_ball;
                     lastTouch = 1;
                 }
-                counter++;
-                comAT.setDirection(getPositions());
 
+                //dessin du jeu
                 //lock Before painting
                 Canvas c = holder.lockCanvas();
                 c.drawARGB(255, 150, 200, 250);
                 player.draw(c, playerBTM);
                 opp.draw(c, oppBTM);
-                Paint p = new Paint();
-                p.setTextSize(88);
-                c.drawText(Integer.toString(counter),200,200, p);
                 c.drawBitmap(ball, x_ball, y_ball, null);
                 holder.unlockCanvasAndPost(c);
-//                try {
-//                    Thread.sleep(0, 100);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
             }
         }
 
@@ -257,18 +234,23 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             thread = new Thread(this);
             thread.start();
         }
-
-/*        @Override
-        protected void onDraw(Canvas canvas) {
-            super.onDraw(canvas);
-            int radius = 40;
-            Paint p = new Paint();
-            p.setColor(Color.BLUE);
-            player.draw(canvas, p);
-            p.setColor(Color.RED);
-            opp.draw(canvas, p);
-        }*/
-
     }
+}
 
+
+//Objet contenant les poisitons du jeu
+//il est envoyé par les sockets
+class GamePositions implements Serializable
+{
+    float player_x;
+    float opp_x;
+    float ball_x;
+    float ball_y;
+
+    GamePositions(float _player_x, float _opp_x, float _ball_x, float _ball_y){
+        player_x = _player_x;
+        opp_x = _opp_x;
+        ball_x = _ball_x;
+        ball_y = _ball_y;
+    }
 }

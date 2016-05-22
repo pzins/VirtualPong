@@ -6,8 +6,11 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -22,7 +25,7 @@ public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
     private Context context;
     private String groupOwnerIP;
     private Boolean shouldSend = false;
-    private String direction = "";
+    private GamePositions direction;
     private String sendDirection = "";
 
     private DrawActivityClient.GameView gameView;
@@ -43,82 +46,86 @@ public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
     }
     @Override
     protected String doInBackground(Void... params) {
-
-        Socket socket = null;
-        try {
-            socket = new Socket(groupOwnerIP, 8988);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        PrintWriter pred = null;
-        try {
-            pred = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
         ServerSocket s = null;
-        BufferedReader reader = null;
+        ObjectInputStream ois=  null;
         Socket soc = null;
         try {
             s = new ServerSocket(8989);
             soc = s.accept();
-            reader = new BufferedReader(
-                new InputStreamReader(soc.getInputStream())
-            );
+            ois = new ObjectInputStream(soc.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        String str;
-        int counter = 0;
         while (true)
         {
-            if(shouldSend){
-                pred.println(sendDirection);
-                shouldSend = false;
-            }
-
             try {
-                if(soc.getInputStream().available() > 0) {
-                    Log.w("--------","---------");
-                    str = reader.readLine();
-                    if (str.equals("END")) break;
-                    direction = str;
+                GamePositions tmp = (GamePositions) ois.readObject();
+                direction = tmp;
                     publishProgress();
-                    Log.w("COUNTER", Integer.toString(counter));
-                    counter++;
-                }
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
-
             if(false){break;}
         }
-        pred.println("END");
-
-
-        pred.close();
-        try {
-            reader.close();
+        try{
             s.close();
             soc.close();
-            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "OL";
+        return "";
     }
     @Override
     protected void onProgressUpdate(Integer... progress) {
         super.onProgressUpdate(progress);
 
         if(this.gameView != null) {
-//            this.clientGameView.move(direction);
             this.gameView.setPositions(direction);
         }
     }
 
 }
 
+
+//pour l'envoi des données (positions du jeu)
+class SendClientTask extends Thread
+{
+    private byte dir = 0x0;
+    private boolean shouldSend = false;
+    public void setDirection(byte _d){dir = _d;shouldSend = true;}
+    public void run() {
+
+        Socket socket = null;
+        try {
+            socket = new Socket("192.168.0.10", 8988);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        DataOutputStream dos = null;
+
+        try {
+            dos = new DataOutputStream(socket.getOutputStream());
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        while (true) {
+            try {
+                if(shouldSend){
+                    dos.writeByte(dir);
+                    dos.flush();
+                    shouldSend = false;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+}
