@@ -59,7 +59,6 @@ public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
             this.gameView.setPositions(progress[0]);
         }
     }
-
 }
 
 
