@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.pierre.virtualpong.MainActivity"
+    tools:context="com.mi12.pierre.virtualpong.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <LinearLayout
@@ -20,7 +20,7 @@
         android:layout_gravity="right"
         android:weightSum="1">
         <fragment
-            class="com.example.pierre.virtualpong.DeviceListFragment"
+            class="com.mi12.pierre.virtualpong.DeviceListFragment"
             android:id="@+id/frag_list"
             android:layout_width="match_parent"
             android:layout_height="113dp"
@@ -29,7 +29,7 @@
         </fragment>
 
         <fragment
-            class="com.example.pierre.virtualpong.DeviceDetailFragment"
+            class="com.mi12.pierre.virtualpong.DeviceDetailFragment"
             android:id="@+id/frag_detail"
             android:layout_width="match_parent"
             android:layout_height="134dp"
@@ -38,7 +38,7 @@
         </fragment>
 
         <fragment
-            class="com.example.pierre.virtualpong.SensorFragment"
+            class="com.mi12.pierre.virtualpong.SensorFragment"
             android:id="@+id/frag_sensor"
             android:layout_width="match_parent"
             android:layout_height="40dp"

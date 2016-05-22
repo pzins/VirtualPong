@@ -1,4 +1,4 @@
-package com.example.pierre.virtualpong;
+package com.mi12.pierre.virtualpong;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,7 +14,7 @@ import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.example.R;
+import com.mi12.R;
 
 public class DrawActivityServer extends Activity  {
 
