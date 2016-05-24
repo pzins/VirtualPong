@@ -10,8 +10,9 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.pierre.myapplication.Main2Activity"
-    tools:showIn="@layout/activity_main2">
+    tools:context="com.example.pierre.myapplication.JoinGameActivity"
+    tools:showIn="@layout/activity_join_game">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,25 +29,33 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Virtual Pong"
+            android:text="Rejoindre une partie :"
             android:id="@+id/textView"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.55"
             android:textSize="30dp"/>
 
-        <Button
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Veuillez entrer l&apos;adresse IP renseignée sur le smartphone serveur. "
+            android:id="@+id/textView2"
+            android:textSize="18dp"
+            />
+
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Créer une partie"
-            android:id="@+id/button"
-            android:layout_gravity="center"/>
+            android:id="@+id/editText"
+            />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rejoindre une partie"
+            android:text="Rejoindre"
             android:id="@+id/button2"
             android:layout_gravity="center"/>
 
     </LinearLayout>
+
 </RelativeLayout>
