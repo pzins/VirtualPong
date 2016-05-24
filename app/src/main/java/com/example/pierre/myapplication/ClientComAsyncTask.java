@@ -2,14 +2,10 @@ package com.example.pierre.myapplication;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -17,107 +13,96 @@ import java.net.Socket;
  * A simple server socket that accepts connection and writes some data on
  * the stream.
  */
-public class ClientComAsyncTask extends AsyncTask<Void, Integer, String> {
+public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
 
-    private Context context;
-    private String groupOwnerIP;
-    private Boolean shouldSend = false;
-    private String direction = "";
-    private String sendDirection = "";
-
+    private GamePositions direction;
     private DrawActivityClient.GameView gameView;
 
-    public ClientComAsyncTask (Context context, String ip, DrawActivityClient.GameView gameView) {
-        this.context = context;
-        this.groupOwnerIP = ip;
+    public ClientComAsyncTask (Context context, DrawActivityClient.GameView gameView) {
         this.gameView = gameView;
     }
 
-    public void setAdresseIp(String ip){
-        this.groupOwnerIP = ip;
-    }
-
-     public void setDirection(String str){
-        this.sendDirection = str;
-        shouldSend = true;
-    }
     @Override
     protected String doInBackground(Void... params) {
-
-        Socket socket = null;
-        try {
-            socket = new Socket(groupOwnerIP, 8988);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        PrintWriter pred = null;
-        try {
-            pred = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        ServerSocket s = null;
-        BufferedReader reader = null;
-        Socket soc = null;
+        ServerSocket s;
+        ObjectInputStream ois=  null;
+        Socket soc;
         try {
             s = new ServerSocket(8989);
             soc = s.accept();
-            reader = new BufferedReader(
-                new InputStreamReader(soc.getInputStream())
-            );
+            ois = new ObjectInputStream(soc.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        String str;
-        int counter = 0;
         while (true)
         {
-            if(shouldSend){
-                pred.println(sendDirection);
-                shouldSend = false;
-            }
-
             try {
-                if(soc.getInputStream().available() > 0) {
-                    str = reader.readLine();
-                    if (str.equals("END")) break;
-                    direction = str;
-                    publishProgress();
-                    Log.w("COUNTER", Integer.toString(counter));
-                    counter++;
-                }
-            } catch (IOException e) {
+                publishProgress((GamePositions) ois.readObject());
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
-
             if(false){break;}
         }
-        pred.println("END");
-
-
-        pred.close();
-        try {
-            reader.close();
+        try{
             s.close();
             soc.close();
-            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "OL";
+        return "";
     }
     @Override
-    protected void onProgressUpdate(Integer... progress) {
+    protected void onProgressUpdate(GamePositions... progress) {
         super.onProgressUpdate(progress);
 
         if(this.gameView != null) {
-//            this.clientGameView.move(direction);
-            this.gameView.setPositions(direction);
+            this.gameView.setPositions(progress[0]);
         }
     }
 
 }
 
+
+//pour l'envoi des données (positions du jeu)
+class SendClientTask extends Thread
+{
+    private byte dir = 0x0;
+    private boolean shouldSend = false;
+    private String goIp;
+
+    public SendClientTask(String _ip){goIp = _ip;}
+
+    public void setDirection(byte _d){
+        dir = _d;
+        shouldSend = true;
+    }
+
+    public void run() {
+        Socket socket = null;
+        try {
+           socket = new Socket(goIp, 8988);
+        } catch (IOException e) {
+            e.printStackTrace();
+            run();
+        }
+        DataOutputStream dos = null;
+
+        try {
+            dos = new DataOutputStream(socket.getOutputStream());
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        synchronized (this){
+            while (true) {
+                try {
+                    dos.writeByte(dir);
+                    wait();
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+
+}
