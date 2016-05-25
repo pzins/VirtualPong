@@ -6,10 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.SurfaceHolder;
@@ -19,13 +16,9 @@ import android.view.WindowManager;
 
 import com.mi12.R;
 
-import java.io.Serializable;
-
-public class DrawActivityServer extends Activity implements SensorEventListener {
+public class DrawActivityScreen extends Activity  {
 
     private GameView gameView;
-    private SensorManager sensorManager;
-    private Sensor gravity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,44 +41,21 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
         setContentView(gameView);
 
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
-        ServerComAsyncTask comAT = new ServerComAsyncTask(this, gameView);
-        comAT.execute();
+        ScreenAsyncTask comOppAT = new ScreenAsyncTask(this, gameView, 8988);
+        ScreenAsyncTask comPlayerAT = new ScreenAsyncTask(this, gameView, 8989);
+        comOppAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        comPlayerAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     protected void onPause() {
         super.onPause();
         gameView.pause();
-        if (sensorManager != null) {
-            sensorManager.unregisterListener(this);
-        }
     }
 
     protected void onResume() {
         super.onResume();
         gameView.resume();
-        if (sensorManager != null) {
-            sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_GAME);
-        }
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        Sensor mySensor = event.sensor;
-        if (mySensor.getType() == Sensor.TYPE_GRAVITY) {
-            float x = event.values[0];
-            if (x > 1) {
-                gameView.movePlayer("g");
-            } else if (x < -1) {
-                gameView.movePlayer("d");
-            }
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
     class GameView extends SurfaceView implements  Runnable {
@@ -97,7 +67,6 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         private Bitmap ball;
         private float x_ball, y_ball;
         private float dx_ball, dy_ball;
-
 
         private Player player;
         private Player opp;
@@ -119,10 +88,12 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
             this.playerBTM = BitmapFactory.decodeResource(getResources(), R.drawable.player);
             this.playerBTM = Bitmap.createScaledBitmap(playerBTM, player.getWidth(), player.getHeight(), false);
+
             this.oppBTM= BitmapFactory.decodeResource(getResources(), R.drawable.opp);
             this.oppBTM = Bitmap.createScaledBitmap(oppBTM, opp.getWidth(), opp.getHeight(), false);
 
             holder = getHolder();
+
 
             //get ball
             ball = BitmapFactory.decodeResource(getResources(), R.drawable.blueball);
@@ -131,15 +102,8 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             //initial position and speed
             x_ball = y_ball = 0;
             dx_ball = dy_ball = 4;
-
         }
 
-
-        public GamePositions getPositions() {
-            GamePositions gp = new GamePositions(opp.getX() / screenWidth, player.getX() / screenWidth,
-                    x_ball / screenWidth, y_ball / screenHeight);
-            return  gp;
-        }
 
 
         public void moveOpponent(String str) {
@@ -221,4 +185,3 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         }
     }
 }
-
