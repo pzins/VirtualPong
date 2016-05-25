@@ -1,4 +1,4 @@
-package com.mi12.pierre.virtualpong;
+package com.example.pierre.virtualpong;
 
 import android.app.ListFragment;
 import android.app.ProgressDialog;
@@ -17,7 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.mi12.R;
+import com.example.R;
 
 import java.util.ArrayList;
 import java.util.List;

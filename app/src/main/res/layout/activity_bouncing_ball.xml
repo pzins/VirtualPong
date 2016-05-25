@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.mi12.florian.android_bouncingball.BallActivity">
+    tools:context="com.example.florian.android_bouncingball.BallActivity">
 
     <TextView
         android:layout_width="wrap_content"

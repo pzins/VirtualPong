@@ -1,4 +1,4 @@
-package com.mi12.pierre.virtualpong;
+package com.example.pierre.virtualpong;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,7 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mi12.R;
+import com.example.R;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

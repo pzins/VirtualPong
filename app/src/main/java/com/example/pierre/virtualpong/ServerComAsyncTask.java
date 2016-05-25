@@ -1,4 +1,4 @@
-package com.mi12.pierre.virtualpong;
+package com.example.pierre.virtualpong;
 
 /**
  * Created by pierre on 01/04/16.

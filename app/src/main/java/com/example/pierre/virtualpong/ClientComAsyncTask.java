@@ -1,4 +1,4 @@
-package com.mi12.pierre.virtualpong;
+package com.example.pierre.virtualpong;
 
 import android.content.Context;
 import android.os.AsyncTask;
