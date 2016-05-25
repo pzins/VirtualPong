@@ -19,6 +19,9 @@ import android.view.WindowManager;
 
 import com.mi12.R;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+
 /**
  * Created by pierre on 08/05/16.
  */
@@ -30,7 +33,7 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
     private SensorManager sensorManager;
     private Sensor gravity;
 
-    private String goIpAddr;
+    private InetAddress goIpAddr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
 
         Bundle b = getIntent().getExtras();
         if(b != null) {
-            goIpAddr = b.getString("ip");
+            goIpAddr = (InetAddress) b.getSerializable("ip");
         }
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);

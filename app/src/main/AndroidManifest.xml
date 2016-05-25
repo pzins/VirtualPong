@@ -36,7 +36,10 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".pierre.virtualpong.DrawActivityScreen" />
-        <activity android:name=".pierre.virtualpong.DrawActivityController"></activity>
+        <activity android:name=".pierre.virtualpong.DrawActivityController" />
+        <activity android:name=".pierre.virtualpong.WifiDirect3Activity" />
+        <activity android:name=".pierre.virtualpong.WifiDirect2Activity" />
+        <activity android:name=".pierre.virtualpong.ReseauLocalActivity"></activity>
     </application>
 
 </manifest>

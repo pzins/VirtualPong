@@ -20,12 +20,6 @@ import android.widget.Toast;
 
 import com.mi12.R;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.Socket;
-
 
 public class MainActivity extends AppCompatActivity implements
         WifiP2pManager.ChannelListener, DeviceListFragment.DeviceActionListener{
@@ -63,13 +57,13 @@ public class MainActivity extends AppCompatActivity implements
 
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(receiver);
+//        unregisterReceiver(receiver);
     }
 
     protected void onResume() {
         super.onResume();
-        receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
-        registerReceiver(receiver, intentFilter);
+//        receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
+//        registerReceiver(receiver, intentFilter);
     }
 
     @Override
@@ -87,43 +81,19 @@ public class MainActivity extends AppCompatActivity implements
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.atn_direct_discover){
-            new Thread(new Runnable(){
-                public void run(){
-                    Socket socket = null;
-                    try {
-//                        socket = new Socket("10.42.0.71", 8988);
-//                        socket = new Socket("172.25.33.184", 8988);
-                        socket = new Socket("192.168.0.11", 8988);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    PrintWriter pred = null;
-                    try {
-                        pred = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        if (id == R.id.reseau_local){
 
-
-                    String tmp = "0";
-                    while(true){
-                        if(tmp != dire)
-                        {
-                            tmp = dire;
-                            pred.println(dire);
-                        }
-                    }
-                }
-            }).start();
-
-
-        }
-        else if(id == R.id.atn_direct_enable){
-            Intent intent = new Intent(MainActivity.this, DrawActivityServer.class);
+            Intent intent = new Intent(MainActivity.this, ReseauLocalActivity.class);
             startActivity(intent);
         }
-        else if(id == R.id.client){
+        else if(id == R.id.wifidirect2){
+            Intent intent = new Intent(MainActivity.this, WifiDirect2Activity.class);
+            startActivity(intent);
+        } else if(id == R.id.wifidirect3){
+            Intent intent = new Intent(MainActivity.this, WifiDirect3Activity.class);
+            startActivity(intent);
+        }
+       /* else if(id == R.id.client){
             Intent intent = new Intent(MainActivity.this, DrawActivityClient.class);
             Bundle b = new Bundle();
             DeviceDetailFragment frag = (DeviceDetailFragment) getFragmentManager()
@@ -153,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
             });
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 

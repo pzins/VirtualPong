@@ -11,7 +11,7 @@ import java.net.Socket;
  */
 
 
-class SendControllerTask extends Thread
+public class SendControllerTask extends Thread
 {
     private byte dir = 0x0;
     private boolean shouldSend = false;
