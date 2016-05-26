@@ -12,6 +12,7 @@ import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -92,11 +93,9 @@ public class WifiDirect2Activity extends WifiDirectActivity {
                                                     config.wps.setup = WpsInfo.PBC;
                                                     config.groupOwnerIntent = 0; // I want this device to become the owner
 
-                                                    if (progressDialog != null && progressDialog.isShowing()) {
-                                                        progressDialog.dismiss();
-                                                    }
+                                                    //start progress dialog
                                                     progressDialog = ProgressDialog.show(WifiDirect2Activity.this, "Press back to cancel",
-                                                            "Connecting to :" + config.deviceAddress, true, true
+                                                            "Starting game with :" + config.deviceAddress, true, true
                                                     );
                                                     connect(config);
                                                 }
@@ -144,7 +143,6 @@ public class WifiDirect2Activity extends WifiDirectActivity {
                 @Override
                 public void onSuccess() {
                     //WifiBroadcastReceiver will notify us
-                    Log.w("FEKIR ", "FEKIR");
                 }
 
                 @Override
@@ -166,10 +164,6 @@ public class WifiDirect2Activity extends WifiDirectActivity {
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peers) {
             adapter.clear();
-            if (progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
             Iterator<WifiP2pDevice> i = peers.getDeviceList().iterator();
             while (i.hasNext()) {
                 WifiP2pDevice device = i.next();
@@ -180,8 +174,6 @@ public class WifiDirect2Activity extends WifiDirectActivity {
 
         @Override
         public void onConnectionInfoAvailable(WifiP2pInfo info) {
-            Log.w("+++", "connection available");
-            Log.w("GO", Boolean.toString(info.isGroupOwner));
             if(info.isGroupOwner){
                 Intent intent = new Intent(WifiDirect2Activity.this, DrawActivityServer.class);
                 startActivity(intent);
@@ -191,6 +183,7 @@ public class WifiDirect2Activity extends WifiDirectActivity {
                 b.putSerializable("ip", info.groupOwnerAddress);
 
                 intent.putExtras(b);
+                progressDialog.dismiss(); //stop Dialog progress
                 startActivity(intent);
             }
         }
@@ -203,9 +196,7 @@ public class WifiDirect2Activity extends WifiDirectActivity {
             @Override
             public void onFailure(int reasonCode) {
                 Log.d("My app", "Disconnect failed. Reason :" + reasonCode);
-
             }
-
             @Override
             public void onSuccess() {
                 Log.d("My app", "Disconnect succeed");

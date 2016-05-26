@@ -19,8 +19,8 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rejoindre"
-            android:id="@+id/rejoindre" />
+            android:text="Créer"
+            android:id="@+id/creer" />
 
         <EditText
             android:layout_width="match_parent"
@@ -31,8 +31,8 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="créer"
-            android:id="@+id/creer" />
+            android:text="Rejoindre"
+            android:id="@+id/rejoindre" />
 
         <TextView
             android:layout_width="match_parent"

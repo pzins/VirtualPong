@@ -12,7 +12,6 @@ import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -82,11 +81,9 @@ public class WifiDirect3Activity extends WifiDirectActivity {
                                       config.wps.setup = WpsInfo.PBC;
                                       config.groupOwnerIntent = 0; // I want this device to become the owner
 
-                                      if (progressDialog != null && progressDialog.isShowing()) {
-                                          progressDialog.dismiss();
-                                      }
+                                      //start progress dialog
                                       progressDialog = ProgressDialog.show(WifiDirect3Activity.this, "Press back to cancel",
-                                              "Connecting to :" + config.deviceAddress, true, true
+                                              "Starting game with :" + config.deviceAddress, true, true
                                       );
                                       connect(config);
                                   }
@@ -121,7 +118,7 @@ public class WifiDirect3Activity extends WifiDirectActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
-        /** Setting the adapter to the ListView */
+
     }
 
     @Override
@@ -140,7 +137,6 @@ public class WifiDirect3Activity extends WifiDirectActivity {
             @Override
             public void onSuccess() {
                 //WifiBroadcastReceiver will notify us
-                Log.w("FEKIR ", "FEKIR");
             }
 
             @Override
@@ -162,7 +158,7 @@ public class WifiDirect3Activity extends WifiDirectActivity {
     }
     protected void onResume() {
         super.onResume();
-//        receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
+        receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
         registerReceiver(receiver, intentFilter);
     }
     @Override
@@ -187,6 +183,7 @@ public class WifiDirect3Activity extends WifiDirectActivity {
         b.putSerializable("ip", info.groupOwnerAddress);
         b.putInt("port", 8988);
         intent.putExtras(b);
+        progressDialog.dismiss(); //stop Dialog progress
         startActivity(intent);
     }
 

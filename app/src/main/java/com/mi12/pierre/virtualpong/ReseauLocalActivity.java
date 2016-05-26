@@ -21,8 +21,8 @@ public class ReseauLocalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reseau_local);
-        Button bt_rejoindre = (Button) findViewById(R.id.rejoindre);
-        bt_rejoindre.setOnClickListener(new View.OnClickListener() {
+        Button bt_creer = (Button) findViewById(R.id.creer);
+        bt_creer.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 Intent intent = new Intent(ReseauLocalActivity.this, DrawActivityServer.class);
@@ -31,8 +31,8 @@ public class ReseauLocalActivity extends AppCompatActivity {
                                         }
         );
         final EditText mEdit   = (EditText)findViewById(R.id.editText);
-        Button bt_creer = (Button) findViewById(R.id.creer);
-        bt_creer.setOnClickListener(new View.OnClickListener() {
+        Button bt_rejoindre = (Button) findViewById(R.id.rejoindre);
+        bt_rejoindre.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 Intent intent = new Intent(ReseauLocalActivity.this, DrawActivityClient.class);
