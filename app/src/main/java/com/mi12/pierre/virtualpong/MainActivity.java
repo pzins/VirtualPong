@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements
 //        registerReceiver(receiver, intentFilter);
     }
 
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -93,37 +96,6 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(MainActivity.this, WifiDirect3Activity.class);
             startActivity(intent);
         }
-       /* else if(id == R.id.client){
-            Intent intent = new Intent(MainActivity.this, DrawActivityClient.class);
-            Bundle b = new Bundle();
-            DeviceDetailFragment frag = (DeviceDetailFragment) getFragmentManager()
-                    .findFragmentById(R.id.frag_detail);
-            b.putString("ip", frag.getIp());
-
-            intent.putExtras(b);
-            startActivity(intent);
-        }
-        else if (id == R.id.action_settings) {
-            if(!isWifiP2pEnabled){
-                Toast.makeText(MainActivity.this, "P2P Wifi is not enabled",
-                        Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
-                @Override
-                public void onSuccess() {
-                    Toast.makeText(MainActivity.this, "Discovery initiated",
-                            Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onFailure(int reason) {
-                    Toast.makeText(MainActivity.this, "Discovery failed",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
-            return true;
-        }*/
         return super.onOptionsItemSelected(item);
     }
 
@@ -242,24 +214,4 @@ public class MainActivity extends AppCompatActivity implements
             fragmentDetails.resetViews();
         }
     }
-
-
-
-
- /*   @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-    }*/
-
-
-
-
-
 }

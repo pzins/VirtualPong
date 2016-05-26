@@ -26,7 +26,15 @@ import com.mi12.R;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class WifiDirect2Activity extends AppCompatActivity implements WifiP2pManager.PeerListListener, WifiP2pManager.ConnectionInfoListener, DeviceListFragment.DeviceActionListener {
+abstract class WifiDirectActivity extends AppCompatActivity implements WifiP2pManager.PeerListListener, WifiP2pManager.ConnectionInfoListener, DeviceListFragment.DeviceActionListener
+{
+
+    public abstract void setIsWifiP2pEnabled(boolean state);
+
+
+}
+
+public class WifiDirect2Activity extends WifiDirectActivity {
         private WifiP2pManager manager;
         private boolean isWifiP2pEnabled = false;
         private boolean retryChannel = false;
@@ -46,6 +54,7 @@ public class WifiDirect2Activity extends AppCompatActivity implements WifiP2pMan
         ArrayAdapter<WifiP2pDevice> adapter;
 
         private String currentAdr = "";
+
 
         public void setIsWifiP2pEnabled(boolean state) {
             isWifiP2pEnabled = state;
@@ -151,7 +160,7 @@ public class WifiDirect2Activity extends AppCompatActivity implements WifiP2pMan
         }
         protected void onResume() {
             super.onResume();
-            receiver = new Broadcaster(manager, channel, this);
+            receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
             registerReceiver(receiver, intentFilter);
         }
         @Override
@@ -204,5 +213,6 @@ public class WifiDirect2Activity extends AppCompatActivity implements WifiP2pMan
 
         });
     }
+
 
 }

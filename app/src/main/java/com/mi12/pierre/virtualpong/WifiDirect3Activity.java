@@ -27,7 +27,7 @@ import com.mi12.R;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class WifiDirect3Activity extends AppCompatActivity implements WifiP2pManager.PeerListListener, WifiP2pManager.ConnectionInfoListener {
+public class WifiDirect3Activity extends WifiDirectActivity {
     private WifiP2pManager manager;
     private boolean isWifiP2pEnabled = false;
     private boolean retryChannel = false;
@@ -126,6 +126,16 @@ public class WifiDirect3Activity extends AppCompatActivity implements WifiP2pMan
         /** Setting the adapter to the ListView */
     }
 
+    @Override
+    public void showDetails(WifiP2pDevice device) {
+
+    }
+
+    @Override
+    public void cancelDisconnect() {
+
+    }
+
     public void connect(WifiP2pConfig config)
     {
         manager.connect(channel, config, new WifiP2pManager.ActionListener() {
@@ -142,13 +152,19 @@ public class WifiDirect3Activity extends AppCompatActivity implements WifiP2pMan
             }
         });
     }
+
+    @Override
+    public void disconnect() {
+
+    }
+
     protected void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
     }
     protected void onResume() {
         super.onResume();
-//        receiver = new Broadcaster(manager, channel, this);
+//        receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
         registerReceiver(receiver, intentFilter);
     }
     @Override
@@ -175,81 +191,10 @@ public class WifiDirect3Activity extends AppCompatActivity implements WifiP2pMan
         intent.putExtras(b);
         startActivity(intent);
     }
-}
-
-
-
-
-
-/**
- * Created by pierre on 24/03/16.
- */
- class Broadcaster extends BroadcastReceiver{
-
-    private WifiP2pManager manager;
-    private WifiP2pManager.Channel channel;
-    private WifiDirect2Activity activity;
-
-
-    public Broadcaster(WifiP2pManager manager, WifiP2pManager.Channel channel,
-                       WifiDirect2Activity activity){
-        super();
-        this.manager = manager;
-        this.channel = channel;
-        this.activity = activity;
-    }
-
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-
-        String action = intent.getAction();
-        if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
-            // UI update to indicate wifi p2p status.
-            int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
-            if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-                // Wifi Direct mode is enabled
-                activity.setIsWifiP2pEnabled(true);
-            } else {
-                activity.setIsWifiP2pEnabled(false);
-//                activity.resetData();
-            }
-        } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-            // request available peers from the wifi p2p manager. This is an
-            // asynchronous call and the calling activity is notified with a
-            // callback on PeerListListener.onPeersAvailable()
-            if (manager != null) {
-                manager.requestPeers(channel, activity);
-                Log.w("WIFI P2P PEERS CHANGED", "requestPeers()");
-            }
-        } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-            Log.w("WIFI P2P CONNECTION ", "CHANGED");
-            if (manager == null) {
-                return;
-            }
-            NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-            if (networkInfo.isConnected())
-            {
-                // we are connected with the other device, request connection
-                // info to find group owner IP
-                manager.requestConnectionInfo(channel, activity);
-            }
-            else
-            {
-                // It's a disconnect
-//                activity.resetData();
-            }
-        } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-            Log.w("WIFI P2P THIS", " DEVICE CHANGED");
-//            DeviceListFragment fragment = (DeviceListFragment) activity.getFragmentManager()
-//                    .findFragmentById(R.id.frag_list);
-//            fragment.updateThisDevice((WifiP2pDevice) intent.getParcelableExtra(
-//                    WifiP2pManager.EXTRA_WIFI_P2P_DEVICE));
-
-        }
-    }
 
 
 }
+
+
 
 
