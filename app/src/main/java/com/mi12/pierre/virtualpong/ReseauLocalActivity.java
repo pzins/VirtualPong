@@ -1,11 +1,14 @@
 package com.mi12.pierre.virtualpong;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.text.format.Formatter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.mi12.R;
 
@@ -45,5 +48,10 @@ public class ReseauLocalActivity extends AppCompatActivity {
                                             }
                                         }
         );
+
+        TextView myIp = (TextView) findViewById(R.id.myIp);
+        WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
+        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+        myIp.setText(ip);
     }
 }

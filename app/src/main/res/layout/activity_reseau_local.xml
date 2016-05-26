@@ -33,5 +33,12 @@
             android:layout_height="wrap_content"
             android:text="créer"
             android:id="@+id/creer" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="myIp"
+            android:id="@+id/myIp" />
     </LinearLayout>
 </RelativeLayout>
