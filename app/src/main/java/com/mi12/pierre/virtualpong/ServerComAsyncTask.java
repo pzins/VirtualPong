@@ -31,11 +31,8 @@ public class ServerComAsyncTask extends AsyncTask<Void, Byte, String> {
         this.context = context;
         this.gameView = game;
     }
-    public ServerComAsyncTask(Context context, DrawActivityServer.GameView game, ProgressDialog pd) {
-        this.context = context;
-        this.gameView = game;
-        this.progress = pd;
-    }
+
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();

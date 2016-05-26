@@ -15,6 +15,7 @@ public class Player {
     private int height;
     private int color;
     private int speed;
+    private int score;
 
     public Player(float _x, float _y, int _width, int _height, int _color){
         this.x =    _x;
@@ -23,8 +24,14 @@ public class Player {
         this.height = _height;
         this.speed = 10;
         this.color = _color;
+        this.score = 0;
+    }
+    public void addOnePoint(){
+        score += 1;
     }
 
+    public int getScore(){return score;}
+    public void setScore(int _score){score = _score;}
     public void moveLeft(){
         x -= speed;
     }

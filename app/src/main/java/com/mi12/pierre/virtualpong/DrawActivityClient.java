@@ -5,12 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -45,9 +47,9 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         int screenWidth = screenSize.getWidth();
         int screenHeight = screenSize.getHeight();
 
-        Player player = new Player(screenWidth * 0.5f, screenHeight * 0.2f, (int) (screenWidth * 0.2f),
+        Player player = new Player(screenWidth * 0.5f, screenHeight * 0.05f, (int) (screenWidth * 0.2f),
                 (int) (screenHeight * 0.02f), Color.BLUE);
-        Player opp = new Player(screenWidth * 0.5f, screenHeight * 0.8f, (int) (screenWidth * 0.2f),
+        Player opp = new Player(screenWidth * 0.5f, screenHeight * 0.95f, (int) (screenWidth * 0.2f),
                 (int) (screenHeight * 0.02f), Color.RED);
 
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
@@ -136,7 +138,7 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             holder = getHolder();
 
             //get ball
-            ball = BitmapFactory.decodeResource(getResources(), R.drawable.blueball);
+            ball = BitmapFactory.decodeResource(getResources(), R.drawable.yellowball);
             ball = Bitmap.createScaledBitmap(ball, 50, 50, false);
 
             x_ball = y_ball = 0;
@@ -147,6 +149,9 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             opp.setX(str.opp_x * screenWidth);
             x_ball = str.ball_x * screenWidth;
             y_ball = str.ball_y * screenHeight;
+            //set score en pensant à inverser Opp/Player
+            player.setScore(str.scoreOpp);
+            opp.setScore(str.scorePlayer);
         }
 
 
@@ -160,9 +165,22 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
                 //dessin du jeu
                 //lock Before painting
                 c = holder.lockCanvas();
-                c.drawARGB(255, 150, 200, 250);
+                c.drawARGB(255, 0, 0, 0);
+
                 player.draw(c, playerBTM);
                 opp.draw(c, oppBTM);
+
+                Paint paint = new Paint();
+                paint.setColor(Color.BLUE);
+                paint.setStyle(Paint.Style.FILL);
+                paint.setTextSize(100);
+                c.drawText(Integer.toString(player.getScore()), 100, screenHeight * 0.8f, paint);
+                paint.setColor(Color.RED);
+                c.drawText(Integer.toString(opp.getScore()), 100, screenHeight * 0.2f, paint);
+                paint.setColor(Color.WHITE);
+                paint.setStrokeWidth(50);
+                c.drawLine(0, screenHeight / 2f, screenWidth, screenHeight / 2f, paint);
+
                 c.drawBitmap(ball, x_ball, y_ball, null);
                 holder.unlockCanvasAndPost(c);
             }

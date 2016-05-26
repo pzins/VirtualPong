@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -18,8 +19,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.mi12.R;
-
-import java.io.Serializable;
 
 public class DrawActivityServer extends Activity implements SensorEventListener {
 
@@ -40,10 +39,10 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
         int screenWidth = screenSize.getWidth();
         int screenHeight = screenSize.getHeight();
-        Player player = new Player(screenWidth * 0.5f, screenHeight * 0.8f, (int) (screenWidth * 0.2f),
-                (int) (screenHeight * 0.02f), Color.BLUE);
-        Player opp = new Player(screenWidth * 0.5f, screenHeight * 0.2f, (int) (screenWidth * 0.2f),
-                (int) (screenHeight * 0.02f), Color.RED);
+        Player player = new Player(screenWidth * 0.5f, screenHeight * 0.95f, (int) (screenWidth * 0.2f),
+        (int) (screenHeight * 0.02f), Color.BLUE);
+        Player opp = new Player(screenWidth * 0.5f, screenHeight * 0.05f, (int) (screenWidth * 0.2f),
+        (int) (screenHeight * 0.02f), Color.RED);
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
 
         setContentView(gameView);
@@ -107,9 +106,11 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         private int screenWidth;
         private int screenHeight;
 
-        //0 : mur, 1 : player, -1 : opp
+        //player = 1 // opp = -1
         private int lastTouch;
         private Boolean isFirstLaunch;
+
+
         public GameView(Context context, Player _player, Player _opp, int _width, int _height) {
             super(context);
             this.player = _player;
@@ -125,19 +126,18 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             holder = getHolder();
 
             //get ball
-            ball = BitmapFactory.decodeResource(getResources(), R.drawable.blueball);
+            ball = BitmapFactory.decodeResource(getResources(), R.drawable.yellowball);
             ball = Bitmap.createScaledBitmap(ball, 50, 50, false);
 
-            //initial position and speed
-            x_ball = y_ball = 0;
-            dx_ball = dy_ball = 4;
+            //initial position and speed and lastTouch
+            initBall(0,0,4,4);
 
         }
 
 
         public GamePositions getPositions() {
             GamePositions gp = new GamePositions(opp.getX() / screenWidth, player.getX() / screenWidth,
-                    x_ball / screenWidth, y_ball / screenHeight);
+            x_ball / screenWidth, y_ball / screenHeight, player.getScore(), opp.getScore());
             return  gp;
         }
 
@@ -158,7 +158,17 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             }
         }
 
+        public void initBall(int x, int y, int dx, int dy){
+            x_ball = x;
+            y_ball = y;
+
+            dx_ball = 3 + (int)(Math.random() * ((6 - 3) + 1));
+            dy_ball = 3 + (int)(Math.random() * ((6 - 3) + 1));
+            lastTouch = 0;
+        }
+
         public void run(){
+            Canvas c;
             while (status){
                 if (!holder.getSurface().isValid()){
                     continue;
@@ -168,22 +178,31 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
                 x_ball += dx_ball;
                 if (x_ball <= 0 || x_ball > screenWidth - ball.getWidth()){
                     dx_ball = 0 - dx_ball;
-                    lastTouch = 0;
                 }
                 y_ball += dy_ball;
-                if (y_ball <= 0 || y_ball > screenHeight - ball.getHeight()){
-                    dy_ball = 0 - dy_ball;
-                    lastTouch = 0;
-                }else if(lastTouch != -1 &&
+
+                //balle sort en haut => point player
+                if (y_ball <= 0 ){
+                    initBall(0,0,4,4);
+                    player.addOnePoint();
+                }
+                //balle sort en bas => point opp
+                if(y_ball > screenHeight - ball.getHeight()){
+                    initBall(0,0,4,4);
+                    opp.addOnePoint();
+                }
+
+                //rebond sur opp (joueur en haut)
+                if(lastTouch != -1 &&
                         y_ball <= opp.getY() + oppBTM.getHeight() &&
-                        y_ball >= opp.getY() + oppBTM.getHeight() - 10 &&
                         x_ball + ball.getWidth() <= opp.getX() + oppBTM.getWidth() &&
                         x_ball >= opp.getX()){
                     dy_ball = 0 - dy_ball;
                     lastTouch = -1;
-                }else if(lastTouch != 1 &&
+                }
+                //rebond sur player (joueur en bas)
+                if(lastTouch != 1 &&
                         y_ball + ball.getHeight() >= player.getY() &&
-                        y_ball + ball.getHeight() <= player.getY() + 10 &&
                         x_ball + ball.getWidth() <= player.getX() + playerBTM.getWidth() &&
                         x_ball >= player.getX()) {
                     dy_ball = 0 - dy_ball;
@@ -192,10 +211,24 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
                 //dessin du jeu
                 //lock Before painting
-                Canvas c = holder.lockCanvas();
-                c.drawARGB(255, 150, 200, 250);
+                c = holder.lockCanvas();
+                c.drawARGB(255, 0, 0, 0);
+
                 player.draw(c, playerBTM);
                 opp.draw(c, oppBTM);
+
+                Paint paint = new Paint();
+                paint.setColor(Color.BLUE);
+                paint.setStyle(Paint.Style.FILL);
+                paint.setTextSize(100);
+                c.drawText(Integer.toString(player.getScore()), 100, screenHeight * 0.8f, paint);
+                paint.setColor(Color.RED);
+                c.drawText(Integer.toString(opp.getScore()), 100, screenHeight * 0.2f, paint);
+                paint.setColor(Color.WHITE);
+                paint.setStrokeWidth(50);
+                c.drawLine(0, screenHeight / 2f, screenWidth, screenHeight / 2f, paint);
+
+
                 c.drawBitmap(ball, x_ball, y_ball, null);
                 holder.unlockCanvasAndPost(c);
             }

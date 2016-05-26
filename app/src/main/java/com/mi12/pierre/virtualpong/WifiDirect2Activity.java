@@ -27,13 +27,6 @@ import com.mi12.R;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-abstract class WifiDirectActivity extends AppCompatActivity implements WifiP2pManager.PeerListListener, WifiP2pManager.ConnectionInfoListener, DeviceListFragment.DeviceActionListener
-{
-
-    public abstract void setIsWifiP2pEnabled(boolean state);
-
-
-}
 
 public class WifiDirect2Activity extends WifiDirectActivity {
         private WifiP2pManager manager;
@@ -183,7 +176,9 @@ public class WifiDirect2Activity extends WifiDirectActivity {
                 b.putSerializable("ip", info.groupOwnerAddress);
 
                 intent.putExtras(b);
-                progressDialog.dismiss(); //stop Dialog progress
+                if (progressDialog != null) {
+                    progressDialog.dismiss(); //stop Dialog progress
+                }
                 startActivity(intent);
             }
         }
