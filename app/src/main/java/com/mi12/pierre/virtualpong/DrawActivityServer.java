@@ -89,7 +89,7 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
     }
 
     class GameView extends SurfaceView implements  Runnable {
-        private Thread thread = null;
+        public Thread thread = null;
         private SurfaceHolder holder;
         private boolean status = false;
 
@@ -109,14 +109,14 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
 
         //0 : mur, 1 : player, -1 : opp
         private int lastTouch;
-
+        private Boolean isFirstLaunch;
         public GameView(Context context, Player _player, Player _opp, int _width, int _height) {
             super(context);
             this.player = _player;
             this.opp = _opp;
             this.screenHeight = _height;
             this.screenWidth = _width;
-
+            this.isFirstLaunch = true;
             this.playerBTM = BitmapFactory.decodeResource(getResources(), R.drawable.player);
             this.playerBTM = Bitmap.createScaledBitmap(playerBTM, player.getWidth(), player.getHeight(), false);
             this.oppBTM= BitmapFactory.decodeResource(getResources(), R.drawable.opp);
@@ -217,7 +217,9 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         public void resume(){
             status = true;
             thread = new Thread(this);
-            thread.start();
+            if(!isFirstLaunch) {
+                thread.start();
+            }
         }
     }
 }
