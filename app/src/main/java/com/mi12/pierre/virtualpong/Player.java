@@ -43,7 +43,6 @@ public class Player {
         Paint paint = new Paint();
         paint.setColor(color);
         canvas.drawBitmap(bitmap, x, y, null);
-//        canvas.drawRect(x - 100, y - 52, x + width * 0.5f, y + height * 0.5f, paint);
     }
 
     public int getWidth() {

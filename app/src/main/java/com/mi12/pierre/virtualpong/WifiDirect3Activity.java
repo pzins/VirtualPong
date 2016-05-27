@@ -12,6 +12,7 @@ import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -101,6 +102,7 @@ public class WifiDirect3Activity extends WifiDirectActivity {
         );
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
+        disconnect();
         if (!isWifiP2pEnabled) {
             Toast.makeText(WifiDirect3Activity.this, "P2P Wifi is not enabled",
                     Toast.LENGTH_SHORT).show();
@@ -149,7 +151,18 @@ public class WifiDirect3Activity extends WifiDirectActivity {
 
     @Override
     public void disconnect() {
+        manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
 
+            @Override
+            public void onFailure(int reasonCode) {
+                Log.d("My app", "Disconnect failed. Reason :" + reasonCode);
+            }
+            @Override
+            public void onSuccess() {
+                Log.d("My app", "Disconnect succeed");
+            }
+
+        });
     }
 
     protected void onPause() {
@@ -164,9 +177,6 @@ public class WifiDirect3Activity extends WifiDirectActivity {
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peers) {
         adapter.clear();
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
 
         Iterator<WifiP2pDevice> i = peers.getDeviceList().iterator();
         while (i.hasNext()) {
@@ -187,6 +197,7 @@ public class WifiDirect3Activity extends WifiDirectActivity {
         startActivity(intent);
     }
 
+    public void resetData(){}
 
 }
 

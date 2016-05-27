@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mi12.R;
@@ -39,6 +40,8 @@ public class WifiDirect2Activity extends WifiDirectActivity {
 
 
         private ProgressDialog progressDialog = null;
+
+        private boolean isStart;
 
 
         /** Items entered by the user is stored in this ArrayList variable */
@@ -77,8 +80,10 @@ public class WifiDirect2Activity extends WifiDirectActivity {
                 }
             });
 
-            Button bt_rejoindre = (Button) findViewById(R.id.debutPartie);
-            bt_rejoindre.setOnClickListener(new View.OnClickListener() {
+            isStart = false;
+
+            final Button bt_start = (Button) findViewById(R.id.debutPartie);
+            bt_start.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
                                                     WifiP2pConfig config = new WifiP2pConfig();
@@ -90,36 +95,63 @@ public class WifiDirect2Activity extends WifiDirectActivity {
                                                     progressDialog = ProgressDialog.show(WifiDirect2Activity.this, "Press back to cancel",
                                                             "Starting game with :" + config.deviceAddress, true, true
                                                     );
+                                                    isStart = true;
+                                                    bt_start.setEnabled(false);
+                                                    ((Button) findViewById(R.id.disconnect)).setEnabled(true);
                                                     connect(config);
                                                 }
                                             }
             );
+            Button bt_join = (Button) findViewById(R.id.join);
+            bt_join.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    isStart = true;
 
-
-            manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-            channel = manager.initialize(this, getMainLooper(), null);
-            disconnect();
-
-            if (!isWifiP2pEnabled) {
-                Toast.makeText(WifiDirect2Activity.this, "P2P Wifi is not enabled",
-                        Toast.LENGTH_SHORT).show();
-            }
-            manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
+                                                    //start progress dialog
+                                                    progressDialog = ProgressDialog.show(WifiDirect2Activity.this, "Press back to cancel",
+                                                            "Joining a game", true, true
+                                                    );
+                                                }
+                                            }
+            );
+            Button bt_disconnect = (Button) findViewById(R.id.disconnect);
+            bt_disconnect.setEnabled(false);
+            bt_disconnect.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onSuccess() {
-                    Toast.makeText(WifiDirect2Activity.this, "Discovery initiated",
-                            Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onFailure(int reason) {
-                    Toast.makeText(WifiDirect2Activity.this, "Discovery failed",
-                            Toast.LENGTH_SHORT).show();
+                public void onClick(View v) {
+                    disconnect();
                 }
             });
+
+            beginDiscovery();
+
+
             /** Setting the adapter to the ListView */
         }
 
+    public void beginDiscovery(){
+        manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        channel = manager.initialize(this, getMainLooper(), null);
+
+        if (!isWifiP2pEnabled) {
+            Toast.makeText(WifiDirect2Activity.this, "P2P Wifi is not enabled",
+                    Toast.LENGTH_SHORT).show();
+        }
+        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(WifiDirect2Activity.this, "Discovery initiated",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Toast.makeText(WifiDirect2Activity.this, "Discovery failed",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     @Override
     public void showDetails(WifiP2pDevice device) {
 
@@ -167,19 +199,26 @@ public class WifiDirect2Activity extends WifiDirectActivity {
 
         @Override
         public void onConnectionInfoAvailable(WifiP2pInfo info) {
-            if(info.isGroupOwner){
-                Intent intent = new Intent(WifiDirect2Activity.this, DrawActivityServer.class);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(WifiDirect2Activity.this, DrawActivityClient.class);
-                Bundle b = new Bundle();
-                b.putSerializable("ip", info.groupOwnerAddress);
+            TextView tv = (TextView) findViewById(R.id.connected_to);
+            tv.setText(info.toString());
 
-                intent.putExtras(b);
-                if (progressDialog != null) {
-                    progressDialog.dismiss(); //stop Dialog progress
+            ((Button) findViewById(R.id.disconnect)).setEnabled(true);
+
+            if(isStart) {
+                if (info.isGroupOwner) {
+                    Intent intent = new Intent(WifiDirect2Activity.this, DrawActivityServer.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(WifiDirect2Activity.this, DrawActivityClient.class);
+                    Bundle b = new Bundle();
+                    b.putSerializable("ip", info.groupOwnerAddress);
+
+                    intent.putExtras(b);
+                    if (progressDialog != null) {
+                        progressDialog.dismiss(); //stop Dialog progress
+                    }
+                    startActivity(intent);
                 }
-                startActivity(intent);
             }
         }
 
@@ -192,12 +231,22 @@ public class WifiDirect2Activity extends WifiDirectActivity {
             public void onFailure(int reasonCode) {
                 Log.d("My app", "Disconnect failed. Reason :" + reasonCode);
             }
+
             @Override
             public void onSuccess() {
                 Log.d("My app", "Disconnect succeed");
             }
 
         });
+    }
+
+    @Override
+    public void resetData(){
+        TextView tv = (TextView) findViewById(R.id.connected_to);
+        tv.setText("Not connected");
+        tv.setEnabled(false);
+        ((Button) findViewById(R.id.debutPartie)).setEnabled(true);
+        beginDiscovery();
     }
 
 

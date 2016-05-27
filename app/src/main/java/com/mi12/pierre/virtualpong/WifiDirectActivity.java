@@ -11,6 +11,6 @@ abstract class WifiDirectActivity extends AppCompatActivity implements WifiP2pMa
 {
 
     public abstract void setIsWifiP2pEnabled(boolean state);
-
+    public abstract void resetData();
 
 }

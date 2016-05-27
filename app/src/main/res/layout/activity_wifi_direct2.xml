@@ -17,7 +17,7 @@
 
         <ListView
             android:layout_width="wrap_content"
-            android:layout_height="406dp"
+            android:layout_height="295dp"
             android:id="@+id/listView"
             android:layout_alignParentEnd="true" />
 
@@ -32,7 +32,26 @@
                 android:text="Start"
                 android:id="@+id/debutPartie" />
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Join"
+                android:id="@+id/join" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Disconnect"
+                android:id="@+id/disconnect" />
+
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Connected to"
+            android:id="@+id/connected_to" />
 
     </LinearLayout>
 </RelativeLayout>

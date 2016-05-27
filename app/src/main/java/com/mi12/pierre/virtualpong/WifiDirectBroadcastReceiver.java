@@ -68,7 +68,7 @@ class WifiDirectBroadcastReceiver extends BroadcastReceiver{
             else
             {
                 // It's a disconnect
-//                activity.resetData();
+                activity.resetData();
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
             Log.w("WIFI P2P THIS", " DEVICE CHANGED");
