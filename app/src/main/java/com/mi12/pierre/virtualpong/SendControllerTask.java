@@ -4,6 +4,8 @@ package com.mi12.pierre.virtualpong;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 /**
  * A simple server socket that accepts connection and writes some data on
@@ -30,11 +32,34 @@ public class SendControllerTask extends Thread
     public void run() {
         Socket socket = null;
         try {
+            socket = new Socket();
+            socket.connect(new InetSocketAddress(goIp, 8988), 100);
+            socket.close();
+        }
+        catch(ConnectException ce){
+            ce.printStackTrace();
+            try {
+                socket.connect(new InetSocketAddress(goIp, 8988), 100);
+            } catch (IOException e) {
+                e.printStackTrace();
+                run();
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            try {
+                socket.connect(new InetSocketAddress(goIp, 8988), 100);
+            } catch (IOException e) {
+                e.printStackTrace();
+                run();
+            }
+        }
+       /* try {
             socket = new Socket(goIp, port);
         } catch (IOException e) {
             e.printStackTrace();
             run();
-        }
+        }*/
 
 
         DataOutputStream dos = null;

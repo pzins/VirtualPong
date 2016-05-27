@@ -32,7 +32,6 @@ import java.util.Iterator;
 public class WifiDirect2Activity extends WifiDirectActivity {
         private WifiP2pManager manager;
         private boolean isWifiP2pEnabled = false;
-        private boolean retryChannel = false;
 
         private final IntentFilter intentFilter = new IntentFilter();
         private WifiP2pManager.Channel channel;
@@ -82,7 +81,7 @@ public class WifiDirect2Activity extends WifiDirectActivity {
 
             isStart = false;
 
-            final Button bt_start = (Button) findViewById(R.id.debutPartie);
+            final Button bt_start = (Button) findViewById(R.id.start);
             bt_start.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
@@ -244,8 +243,8 @@ public class WifiDirect2Activity extends WifiDirectActivity {
     public void resetData(){
         TextView tv = (TextView) findViewById(R.id.connected_to);
         tv.setText("Not connected");
-        tv.setEnabled(false);
-        ((Button) findViewById(R.id.debutPartie)).setEnabled(true);
+        ((Button) findViewById(R.id.disconnect)).setEnabled(false);
+        ((Button) findViewById(R.id.start)).setEnabled(true);
         beginDiscovery();
     }
 
