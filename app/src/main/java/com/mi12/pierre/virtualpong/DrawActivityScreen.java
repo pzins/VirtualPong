@@ -84,6 +84,7 @@ public class DrawActivityScreen extends AppCompatActivity {
         private int lastTouch;
         private Boolean isFirstLaunch;
 
+        private int nbConnectedPlayer;
 
         public GameView(Context context, Player _player, Player _opp, int _width, int _height) {
             super(context);
@@ -96,7 +97,7 @@ public class DrawActivityScreen extends AppCompatActivity {
             this.playerBTM = Bitmap.createScaledBitmap(playerBTM, player.getWidth(), player.getHeight(), false);
             this.oppBTM= BitmapFactory.decodeResource(getResources(), R.drawable.opp);
             this.oppBTM = Bitmap.createScaledBitmap(oppBTM, opp.getWidth(), opp.getHeight(), false);
-
+            this.nbConnectedPlayer = 0;
             holder = getHolder();
 
             //get ball
@@ -133,6 +134,13 @@ public class DrawActivityScreen extends AppCompatActivity {
             lastTouch = 0;
         }
 
+        public void readyToStart(){
+            nbConnectedPlayer++;
+            if(nbConnectedPlayer == 2){
+                nbConnectedPlayer = 0;
+                this.thread.start();
+            }
+        }
         public void run(){
             Canvas c;
             while (status){
@@ -217,7 +225,9 @@ public class DrawActivityScreen extends AppCompatActivity {
         public void resume(){
             status = true;
             thread = new Thread(this);
-            thread.start();
+            if(!isFirstLaunch) {
+                thread.start();
+            }
         }
     }
 }

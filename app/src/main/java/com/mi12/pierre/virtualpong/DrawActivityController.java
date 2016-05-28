@@ -8,6 +8,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import java.net.InetAddress;
 
 
 /**
@@ -19,7 +20,7 @@ public class DrawActivityController  extends AppCompatActivity implements Sensor
     private SensorManager sensorManager;
     private Sensor gravity;
 
-    private String goIpAddr;
+    private InetAddress goIpAddr;
     private int port;
 
     @Override
@@ -30,7 +31,7 @@ public class DrawActivityController  extends AppCompatActivity implements Sensor
 
         Bundle b = getIntent().getExtras();
         if (b != null) {
-            goIpAddr = b.getString("ip");
+            goIpAddr = (InetAddress) b.getSerializable("ip");
             port = b.getInt("port");
         }
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);

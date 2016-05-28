@@ -5,6 +5,7 @@ package com.mi12.pierre.virtualpong;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 /**
@@ -17,10 +18,10 @@ public class SendControllerTask extends Thread
 {
     private byte dir = 0x0;
     private boolean shouldSend = false;
-    private String goIp;
+    private InetAddress goIp;
     private int port;
 
-    public SendControllerTask(String _ip, int _port){
+    public SendControllerTask(InetAddress _ip, int _port){
         goIp = _ip;
         port = _port;
     }
@@ -32,14 +33,12 @@ public class SendControllerTask extends Thread
     public void run() {
         Socket socket = null;
         try {
-            socket = new Socket();
-            socket.connect(new InetSocketAddress(goIp, 8988), 100);
-            socket.close();
+            socket = new Socket(goIp, 8988);
         }
         catch(ConnectException ce){
             ce.printStackTrace();
             try {
-                socket.connect(new InetSocketAddress(goIp, 8988), 100);
+                socket = new Socket(goIp, 8989);
             } catch (IOException e) {
                 e.printStackTrace();
                 run();
@@ -48,7 +47,7 @@ public class SendControllerTask extends Thread
         catch (Exception ex) {
             ex.printStackTrace();
             try {
-                socket.connect(new InetSocketAddress(goIp, 8988), 100);
+                socket.connect(new InetSocketAddress(goIp, 8989), 100);
             } catch (IOException e) {
                 e.printStackTrace();
                 run();

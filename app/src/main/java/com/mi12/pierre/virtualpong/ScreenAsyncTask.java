@@ -42,6 +42,8 @@ public class ScreenAsyncTask extends AsyncTask<Void, Byte, String> {
         {
             ServerSocket s = new ServerSocket(port);
             Socket soc = s.accept();
+            //noinspection ResourceType
+            gameView.readyToStart();
 
             //levture des données
             DataInputStream dis = new DataInputStream(soc.getInputStream());
