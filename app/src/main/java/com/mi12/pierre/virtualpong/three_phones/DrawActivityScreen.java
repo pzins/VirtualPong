@@ -30,23 +30,23 @@ public class DrawActivityScreen extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Display screenSize = getWindowManager().getDefaultDisplay();
+        int screenWidth = screenSize.getWidth();
+        int screenHeight = screenSize.getHeight();
 
         setContentView(R.layout.activity_draw_screen);
 
-
-        int screenWidth = screenSize.getWidth();
-        int screenHeight = screenSize.getHeight();
-        Player player = new Player(screenWidth * 0.5f, screenHeight * 0.8f, (int) (screenWidth * 0.2f),
+        //creation of the players
+        Player player = new Player(screenWidth * 0.5f, screenHeight * 0.95f, (int) (screenWidth * 0.2f),
                 (int) (screenHeight * 0.02f), Color.BLUE);
-        Player opp = new Player(screenWidth * 0.5f, screenHeight * 0.2f, (int) (screenWidth * 0.2f),
+        Player opp = new Player(screenWidth * 0.5f, screenHeight * 0.05f, (int) (screenWidth * 0.2f),
                 (int) (screenHeight * 0.02f), Color.RED);
-        gameView = new GameView(this, player, opp, screenWidth, screenHeight);
 
+        gameView = new GameView(this, player, opp, screenWidth, screenHeight);
         setContentView(gameView);
 
-
-        ScreenAsyncTask comOppAT = new ScreenAsyncTask(this, gameView, 8988);
-        ScreenAsyncTask comPlayerAT = new ScreenAsyncTask(this, gameView, 8989);
+        //2 asynctaks to receive data from 2 players
+        ScreenAsyncTask comOppAT = new ScreenAsyncTask(gameView, 8988);
+        ScreenAsyncTask comPlayerAT = new ScreenAsyncTask(gameView, 8989);
         comOppAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         comPlayerAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -67,12 +67,12 @@ public class DrawActivityScreen extends AppCompatActivity {
         private SurfaceHolder holder;
         private boolean status = false;
 
-
+        //ball
         private Bitmap ball;
         private float x_ball, y_ball;
         private float dx_ball, dy_ball;
 
-
+        //ball
         private Player player;
         private Player opp;
         private Bitmap playerBTM;
@@ -83,8 +83,12 @@ public class DrawActivityScreen extends AppCompatActivity {
 
         //player = 1 // opp = -1
         private int lastTouch;
+
+        //boolean for the beginning of the activity
+        //the game should not start directly
         private Boolean isFirstLaunch;
 
+        //to count connected player => start only if ==2
         private int nbConnectedPlayer;
 
         public GameView(Context context, Player _player, Player _opp, int _width, int _height) {
@@ -109,6 +113,8 @@ public class DrawActivityScreen extends AppCompatActivity {
             initBall(0,0,4,4);
 
         }
+        public void setIsFirstLaunch(boolean state){isFirstLaunch = state;}
+
 
         public void moveOpponent(String str) {
             if (str.equals("d") && opp.getX() + oppBTM.getWidth() < screenWidth) {
@@ -129,17 +135,20 @@ public class DrawActivityScreen extends AppCompatActivity {
         public void initBall(int x, int y, int dx, int dy){
             x_ball = x;
             y_ball = y;
-
-            dx_ball = 3 + (int)(Math.random() * ((6 - 3) + 1));
-            dy_ball = 3 + (int)(Math.random() * ((6 - 3) + 1));
-            lastTouch = 0;
+            //dx_ball random [dx-2 ; dx+2]
+            //dy_ball random [dy-2 ; dy+2]
+            dx_ball = dx-2 + (int)(Math.random() * ((4) + 1));
+            dy_ball = dy-2 + (int)(Math.random() * ((4) + 1));
+            lastTouch = -1; //server : last_touch == opp at the beginning (opp on top)
         }
 
         public void readyToStart(){
             nbConnectedPlayer++;
             if(nbConnectedPlayer == 2){
                 nbConnectedPlayer = 0;
+                isFirstLaunch = false;
                 this.thread.start();
+
             }
         }
         public void run(){
@@ -203,7 +212,6 @@ public class DrawActivityScreen extends AppCompatActivity {
                 paint.setStrokeWidth(50);
                 c.drawLine(0, screenHeight / 2f, screenWidth, screenHeight / 2f, paint);
 
-
                 c.drawBitmap(ball, x_ball, y_ball, null);
                 holder.unlockCanvasAndPost(c);
             }
@@ -226,6 +234,8 @@ public class DrawActivityScreen extends AppCompatActivity {
         public void resume(){
             status = true;
             thread = new Thread(this);
+            //we don't start game if the activity is created
+            //the server thread should get message from the other player before
             if(!isFirstLaunch) {
                 thread.start();
             }

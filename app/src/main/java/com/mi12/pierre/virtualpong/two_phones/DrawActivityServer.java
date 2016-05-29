@@ -114,7 +114,8 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         //player = 1 | opp = -1 | 0 : other
         private int lastTouch;
 
-        //
+        //boolean for the beginning of the activity
+        //the game should not start directly
         private Boolean isFirstLaunch;
 
 
@@ -142,6 +143,7 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         }
 
         public void setIsFirstLaunch(boolean state){isFirstLaunch = state;}
+
         public GamePositions getPositions() {
             GamePositions gp = new GamePositions(opp.getX() / screenWidth, player.getX() / screenWidth,
             x_ball / screenWidth, y_ball / screenHeight, player.getScore(), opp.getScore());

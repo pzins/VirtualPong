@@ -17,49 +17,32 @@ import java.net.Socket;
 public class SendControllerTask extends Thread
 {
     private byte dir = 0x0;
-    private boolean shouldSend = false;
     private InetAddress goIp;
-    private int port;
 
-    public SendControllerTask(InetAddress _ip, int _port){
+    public SendControllerTask(InetAddress _ip){
         goIp = _ip;
-        port = _port;
     }
     public void setDirection(byte _d){
         dir = _d;
-        shouldSend = true;
-
     }
     public void run() {
         Socket socket = null;
+        //try goIp:  port 8988
         try {
             socket = new Socket(goIp, 8988);
         }
         catch(ConnectException ce){
-            ce.printStackTrace();
+            //if connection failed : try a second port : 8989
             try {
                 socket = new Socket(goIp, 8989);
             } catch (IOException e) {
-                e.printStackTrace();
+                //if connection failed loop to run
+                // => wait until the controller is connected to the screen)
                 run();
             }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            try {
-                socket.connect(new InetSocketAddress(goIp, 8989), 100);
-            } catch (IOException e) {
-                e.printStackTrace();
-                run();
-            }
-        }
-       /* try {
-            socket = new Socket(goIp, port);
         } catch (IOException e) {
             e.printStackTrace();
-            run();
-        }*/
-
+        }
 
         DataOutputStream dos = null;
         try {
@@ -68,20 +51,16 @@ public class SendControllerTask extends Thread
             e1.printStackTrace();
         }
 
-        while (true) {
-            try {
-                if(shouldSend){
+        //should be synchro, for : wait() and notify()
+        synchronized (this){
+            while (true) {
+                try {
                     dos.writeByte(dir);
-                    dos.flush();
-                    shouldSend = false;
+                    wait(); //the thread sleep, it will wake up when sensor detect gravity change
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
             }
         }
     }

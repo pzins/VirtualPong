@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mi12.R;
 import com.mi12.pierre.virtualpong.two_phones.DrawActivityClient;
@@ -25,29 +26,34 @@ public class ReseauLocal2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_reseau_local2);
         final Button bt_create = (Button) findViewById(R.id.create);
         bt_create.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(ReseauLocal2Activity.this, DrawActivityServer.class);
-                    startActivity(intent);
-                }
-            });
-        final EditText mEdit   = (EditText)findViewById(R.id.editText);
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ReseauLocal2Activity.this, DrawActivityServer.class);
+                        startActivity(intent);
+                    }
+                });
+        final EditText mEdit   = (EditText)findViewById(R.id.ip);
         Button bt_join = (Button) findViewById(R.id.join);
         bt_join.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(ReseauLocal2Activity.this, DrawActivityClient.class);
-                        Bundle b = new Bundle();
-                        try {
-                            b.putSerializable("ip", InetAddress.getByName(mEdit.getText().toString()));
-                        } catch (UnknownHostException e) {
-                            e.printStackTrace();
+                        if (((EditText) findViewById(R.id.ip)).getText().toString().matches("")) {
+                            Toast.makeText(ReseauLocal2Activity.this, "Please fill the IP address",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Intent intent = new Intent(ReseauLocal2Activity.this, DrawActivityClient.class);
+                            Bundle b = new Bundle();
+                            try {
+                                b.putSerializable("ip", InetAddress.getByName(mEdit.getText().toString()));
+                            } catch (UnknownHostException e) {
+                                e.printStackTrace();
+                            }
+                            b.putInt("port", 8988);
+                            intent.putExtras(b);
+                            startActivity(intent);
                         }
-                        b.putInt("port", 8988);
-                        intent.putExtras(b);
-                        startActivity(intent);
                     }
                 });
 

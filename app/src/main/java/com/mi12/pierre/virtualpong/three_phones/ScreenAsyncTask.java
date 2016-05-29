@@ -14,28 +14,14 @@ import java.net.Socket;
  */
 public class ScreenAsyncTask extends AsyncTask<Void, Byte, String> {
 
-    private Context context;
-    private String adr = "";
-
     private DrawActivityScreen.GameView gameView = null;
 
-
-    private String groupOwnerIP;
     private Boolean shouldSend = false;
     private int port;
-    public ScreenAsyncTask(Context context, DrawActivityScreen.GameView game, int _port) {
-        this.context = context;
+    public ScreenAsyncTask(DrawActivityScreen.GameView game, int _port) {
         this.gameView = game;
         this.port = _port;
     }
-
-
-
-    public void setAdresseIp(String ip){
-        this.groupOwnerIP = ip;
-    }
-
-
     @Override
     protected String doInBackground(Void... params) {
         try
