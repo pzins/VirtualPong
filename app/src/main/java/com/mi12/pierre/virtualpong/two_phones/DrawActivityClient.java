@@ -1,4 +1,4 @@
-package com.mi12.pierre.virtualpong;
+package com.mi12.pierre.virtualpong.two_phones;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,7 +6,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.AsyncTask;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
@@ -16,75 +19,109 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.mi12.R;
+import com.mi12.pierre.virtualpong.Player;
 
+import java.net.InetAddress;
 
-public class DrawActivityScreen extends AppCompatActivity {
+/**
+ * Created by pierre on 08/05/16.
+ */
+public class DrawActivityClient  extends AppCompatActivity implements SensorEventListener {
 
+    private SendClientTask sendTask;
     private GameView gameView;
+
+    private SensorManager sensorManager;
+    private Sensor gravity;
+
+    private InetAddress goIpAddr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //FullScreen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         Display screenSize = getWindowManager().getDefaultDisplay();
-
-        setContentView(R.layout.activity_draw_screen);
-
-
         int screenWidth = screenSize.getWidth();
         int screenHeight = screenSize.getHeight();
-        Player player = new Player(screenWidth * 0.5f, screenHeight * 0.8f, (int) (screenWidth * 0.2f),
+
+        Player player = new Player(screenWidth * 0.5f, screenHeight * 0.05f, (int) (screenWidth * 0.2f),
                 (int) (screenHeight * 0.02f), Color.BLUE);
-        Player opp = new Player(screenWidth * 0.5f, screenHeight * 0.2f, (int) (screenWidth * 0.2f),
+        Player opp = new Player(screenWidth * 0.5f, screenHeight * 0.95f, (int) (screenWidth * 0.2f),
                 (int) (screenHeight * 0.02f), Color.RED);
+
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
 
         setContentView(gameView);
 
+        Bundle b = getIntent().getExtras();
+        if(b != null) {
+            goIpAddr = (InetAddress) b.getSerializable("ip");
+        }
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
-        ScreenAsyncTask comOppAT = new ScreenAsyncTask(this, gameView, 8988);
-        ScreenAsyncTask comPlayerAT = new ScreenAsyncTask(this, gameView, 8989);
-        comOppAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        comPlayerAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        sendTask = new SendClientTask(goIpAddr);
+        sendTask.start();
+
+        new ClientComAsyncTask(this, gameView).execute();
     }
 
     protected void onPause() {
         super.onPause();
         gameView.pause();
+        if(sensorManager != null) {
+            sensorManager.unregisterListener(this);
+        }
     }
 
     protected void onResume() {
         super.onResume();
         gameView.resume();
+        if(sensorManager != null) {
+            sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_GAME);
+        }
     }
 
-    class GameView extends SurfaceView implements  Runnable {
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        Sensor mySensor = event.sensor;
+        synchronized (sendTask){
+            if(mySensor.getType() == Sensor.TYPE_GRAVITY){
+                float x = event.values[0];
+                if(x > 1) {
+                    sendTask.setDirection((byte) 0x0);
+                    sendTask.notify();
+                }else if (x < -1) {
+                    sendTask.setDirection((byte) 0x1);
+                    sendTask.notify();
+                }
+            }
+        }
+    }
 
-        public Thread thread = null;
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+    class GameView extends SurfaceView implements  Runnable
+    {
+        private Thread thread = null;
         private SurfaceHolder holder;
         private boolean status = false;
 
 
         private Bitmap ball;
         private float x_ball, y_ball;
-        private float dx_ball, dy_ball;
-
 
         private Player player;
         private Player opp;
-        private Bitmap playerBTM;
-        private Bitmap oppBTM;
 
         private int screenWidth;
         private int screenHeight;
 
-        //player = 1 // opp = -1
-        private int lastTouch;
-        private Boolean isFirstLaunch;
-
-        private int nbConnectedPlayer;
+        private Bitmap playerBTM;
+        private Bitmap oppBTM;
 
         public GameView(Context context, Player _player, Player _opp, int _width, int _height) {
             super(context);
@@ -92,95 +129,36 @@ public class DrawActivityScreen extends AppCompatActivity {
             this.opp = _opp;
             this.screenHeight = _height;
             this.screenWidth = _width;
-            this.isFirstLaunch = true;
+
             this.playerBTM = BitmapFactory.decodeResource(getResources(), R.drawable.player);
             this.playerBTM = Bitmap.createScaledBitmap(playerBTM, player.getWidth(), player.getHeight(), false);
             this.oppBTM= BitmapFactory.decodeResource(getResources(), R.drawable.opp);
             this.oppBTM = Bitmap.createScaledBitmap(oppBTM, opp.getWidth(), opp.getHeight(), false);
-            this.nbConnectedPlayer = 0;
             holder = getHolder();
 
             //get ball
             ball = BitmapFactory.decodeResource(getResources(), R.drawable.yellowball);
             ball = Bitmap.createScaledBitmap(ball, 50, 50, false);
 
-            //initial position and speed and lastTouch
-            initBall(0,0,4,4);
-
+            x_ball = y_ball = 0;
         }
 
-        public void moveOpponent(String str) {
-            if (str.equals("d") && opp.getX() + oppBTM.getWidth() < screenWidth) {
-                opp.moveRight();
-            } else if (str.equals("g") && opp.getX() > 0) {
-                opp.moveLeft();
-            }
+        public void setPositions(GamePositions str){
+            player.setX(str.player_x * screenWidth);
+            opp.setX(str.opp_x * screenWidth);
+            x_ball = str.ball_x * screenWidth;
+            y_ball = str.ball_y * screenHeight;
+            //set score en pensant à inverser Opp/Player
+            player.setScore(str.scoreOpp);
+            opp.setScore(str.scorePlayer);
         }
 
-        public void movePlayer(String str){
-            if(str.equals("d") && player.getX() + playerBTM.getWidth() < screenWidth){
-                player.moveRight();
-            } else if(str.equals("g") && player.getX() > 0){
-                player.moveLeft();
-            }
-        }
 
-        public void initBall(int x, int y, int dx, int dy){
-            x_ball = x;
-            y_ball = y;
-
-            dx_ball = 3 + (int)(Math.random() * ((6 - 3) + 1));
-            dy_ball = 3 + (int)(Math.random() * ((6 - 3) + 1));
-            lastTouch = 0;
-        }
-
-        public void readyToStart(){
-            nbConnectedPlayer++;
-            if(nbConnectedPlayer == 2){
-                nbConnectedPlayer = 0;
-                this.thread.start();
-            }
-        }
         public void run(){
             Canvas c;
             while (status){
                 if (!holder.getSurface().isValid()){
                     continue;
-                }
-
-                //deplacement balle + rebonds mur/joueur
-                x_ball += dx_ball;
-                if (x_ball <= 0 || x_ball > screenWidth - ball.getWidth()){
-                    dx_ball = 0 - dx_ball;
-                }
-                y_ball += dy_ball;
-
-                //balle sort en haut => point player
-                if (y_ball <= 0 ){
-                    initBall(0,0,4,4);
-                    player.addOnePoint();
-                }
-                //balle sort en bas => point opp
-                if(y_ball > screenHeight - ball.getHeight()){
-                    initBall(0,0,4,4);
-                    opp.addOnePoint();
-                }
-
-                //rebond sur opp (joueur en haut)
-                if(lastTouch != -1 &&
-                        y_ball <= opp.getY() + oppBTM.getHeight() &&
-                        x_ball + ball.getWidth() <= opp.getX() + oppBTM.getWidth() &&
-                        x_ball >= opp.getX()){
-                    dy_ball = 0 - dy_ball;
-                    lastTouch = -1;
-                }
-                //rebond sur player (joueur en bas)
-                if(lastTouch != 1 &&
-                        y_ball + ball.getHeight() >= player.getY() &&
-                        x_ball + ball.getWidth() <= player.getX() + playerBTM.getWidth() &&
-                        x_ball >= player.getX()) {
-                    dy_ball = 0 - dy_ball;
-                    lastTouch = 1;
                 }
 
                 //dessin du jeu
@@ -202,12 +180,10 @@ public class DrawActivityScreen extends AppCompatActivity {
                 paint.setStrokeWidth(50);
                 c.drawLine(0, screenHeight / 2f, screenWidth, screenHeight / 2f, paint);
 
-
                 c.drawBitmap(ball, x_ball, y_ball, null);
                 holder.unlockCanvasAndPost(c);
             }
         }
-
 
         public void pause(){
             status = false;
@@ -225,9 +201,9 @@ public class DrawActivityScreen extends AppCompatActivity {
         public void resume(){
             status = true;
             thread = new Thread(this);
-            if(!isFirstLaunch) {
-                thread.start();
-            }
+            thread.start();
         }
     }
 }
+
+

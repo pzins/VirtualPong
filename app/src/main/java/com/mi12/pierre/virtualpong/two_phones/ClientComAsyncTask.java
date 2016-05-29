@@ -1,9 +1,8 @@
-package com.mi12.pierre.virtualpong;
+package com.mi12.pierre.virtualpong.two_phones;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;

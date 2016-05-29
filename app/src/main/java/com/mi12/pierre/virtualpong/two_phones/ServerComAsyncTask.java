@@ -1,4 +1,4 @@
-package com.mi12.pierre.virtualpong;
+package com.mi12.pierre.virtualpong.two_phones;
 
 /**
  * Created by pierre on 01/04/16.
@@ -8,9 +8,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.mi12.pierre.virtualpong.two_phones.DrawActivityServer;
+import com.mi12.pierre.virtualpong.two_phones.SendServerTask;
+
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 

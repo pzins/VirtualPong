@@ -4,18 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
-import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.WifiP2pManager.Channel;
-import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.util.Log;
-
-import com.mi12.R;
 
 /**
  * Created by pierre on 24/03/16.
  */
-class WifiDirectBroadcastReceiver extends BroadcastReceiver{
+public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
 
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;

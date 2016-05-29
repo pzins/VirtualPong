@@ -1,4 +1,4 @@
-package com.mi12.pierre.virtualpong;
+package com.mi12.pierre.virtualpong.two_phones;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;

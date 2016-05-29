@@ -10,7 +10,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.mi12.R;
-
+import com.mi12.pierre.virtualpong.three_phones.reseau_local.ReseauLocal3Activity;
+import com.mi12.pierre.virtualpong.three_phones.wifidirect.WifiDirect3Activity;
+import com.mi12.pierre.virtualpong.two_phones.reseau_local.ReseauLocal2Activity;
+import com.mi12.pierre.virtualpong.two_phones.wifidirect.WifiDirect2Activity;
 
 public class MainActivity extends AppCompatActivity {
 

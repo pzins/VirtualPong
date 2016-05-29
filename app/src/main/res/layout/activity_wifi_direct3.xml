@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".pierre.virtualpong.WifiDirect3Activity">
+    tools:context=".pierre.virtualpong.three_phones.wifidirect.WifiDirect3Activity">
 
     <LinearLayout
         android:orientation="vertical"

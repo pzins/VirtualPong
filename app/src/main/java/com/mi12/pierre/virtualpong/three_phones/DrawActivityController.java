@@ -1,4 +1,4 @@
-package com.mi12.pierre.virtualpong;
+package com.mi12.pierre.virtualpong.three_phones;
 
 import android.content.Context;
 import android.hardware.Sensor;

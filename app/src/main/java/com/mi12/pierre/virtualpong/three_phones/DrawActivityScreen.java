@@ -1,17 +1,14 @@
-package com.mi12.pierre.virtualpong;
+package com.mi12.pierre.virtualpong.three_phones;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -19,12 +16,12 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.mi12.R;
+import com.mi12.pierre.virtualpong.Player;
 
-public class DrawActivityServer extends Activity implements SensorEventListener {
+
+public class DrawActivityScreen extends AppCompatActivity {
 
     private GameView gameView;
-    private SensorManager sensorManager;
-    private Sensor gravity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,60 +31,38 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Display screenSize = getWindowManager().getDefaultDisplay();
 
-        setContentView(R.layout.activity_bouncing_ball);
+        setContentView(R.layout.activity_draw_screen);
 
 
         int screenWidth = screenSize.getWidth();
         int screenHeight = screenSize.getHeight();
-        Player player = new Player(screenWidth * 0.5f, screenHeight * 0.95f, (int) (screenWidth * 0.2f),
-        (int) (screenHeight * 0.02f), Color.BLUE);
-        Player opp = new Player(screenWidth * 0.5f, screenHeight * 0.05f, (int) (screenWidth * 0.2f),
-        (int) (screenHeight * 0.02f), Color.RED);
+        Player player = new Player(screenWidth * 0.5f, screenHeight * 0.8f, (int) (screenWidth * 0.2f),
+                (int) (screenHeight * 0.02f), Color.BLUE);
+        Player opp = new Player(screenWidth * 0.5f, screenHeight * 0.2f, (int) (screenWidth * 0.2f),
+                (int) (screenHeight * 0.02f), Color.RED);
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
 
         setContentView(gameView);
 
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
-        ServerComAsyncTask comAT = new ServerComAsyncTask(this, gameView);
-        comAT.execute();
+        ScreenAsyncTask comOppAT = new ScreenAsyncTask(this, gameView, 8988);
+        ScreenAsyncTask comPlayerAT = new ScreenAsyncTask(this, gameView, 8989);
+        comOppAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        comPlayerAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     protected void onPause() {
         super.onPause();
         gameView.pause();
-        if (sensorManager != null) {
-            sensorManager.unregisterListener(this);
-        }
     }
 
     protected void onResume() {
         super.onResume();
         gameView.resume();
-        if (sensorManager != null) {
-            sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_GAME);
-        }
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        Sensor mySensor = event.sensor;
-        if (mySensor.getType() == Sensor.TYPE_GRAVITY) {
-            float x = event.values[0];
-            if (x > 1) {
-                gameView.movePlayer("g");
-            } else if (x < -1) {
-                gameView.movePlayer("d");
-            }
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
     class GameView extends SurfaceView implements  Runnable {
+
         public Thread thread = null;
         private SurfaceHolder holder;
         private boolean status = false;
@@ -110,6 +85,7 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         private int lastTouch;
         private Boolean isFirstLaunch;
 
+        private int nbConnectedPlayer;
 
         public GameView(Context context, Player _player, Player _opp, int _width, int _height) {
             super(context);
@@ -122,7 +98,7 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             this.playerBTM = Bitmap.createScaledBitmap(playerBTM, player.getWidth(), player.getHeight(), false);
             this.oppBTM= BitmapFactory.decodeResource(getResources(), R.drawable.opp);
             this.oppBTM = Bitmap.createScaledBitmap(oppBTM, opp.getWidth(), opp.getHeight(), false);
-
+            this.nbConnectedPlayer = 0;
             holder = getHolder();
 
             //get ball
@@ -133,14 +109,6 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             initBall(0,0,4,4);
 
         }
-
-
-        public GamePositions getPositions() {
-            GamePositions gp = new GamePositions(opp.getX() / screenWidth, player.getX() / screenWidth,
-            x_ball / screenWidth, y_ball / screenHeight, player.getScore(), opp.getScore());
-            return  gp;
-        }
-
 
         public void moveOpponent(String str) {
             if (str.equals("d") && opp.getX() + oppBTM.getWidth() < screenWidth) {
@@ -167,6 +135,13 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             lastTouch = 0;
         }
 
+        public void readyToStart(){
+            nbConnectedPlayer++;
+            if(nbConnectedPlayer == 2){
+                nbConnectedPlayer = 0;
+                this.thread.start();
+            }
+        }
         public void run(){
             Canvas c;
             while (status){
@@ -234,6 +209,7 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             }
         }
 
+
         public void pause(){
             status = false;
             while(true){
@@ -256,5 +232,3 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         }
     }
 }
-
-
