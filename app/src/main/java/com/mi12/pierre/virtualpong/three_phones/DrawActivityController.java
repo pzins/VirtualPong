@@ -1,5 +1,6 @@
 package com.mi12.pierre.virtualpong.three_phones;
 
+import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -7,6 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.mi12.R;
 
@@ -28,6 +30,7 @@ public class DrawActivityController  extends AppCompatActivity implements Sensor
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw_controller);
+        this.findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
         Bundle b = getIntent().getExtras();
         if (b != null) {

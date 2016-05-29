@@ -58,6 +58,7 @@ public class WifiDirect2Activity extends WifiDirectActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_direct2);
+
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
@@ -93,7 +94,7 @@ public class WifiDirect2Activity extends WifiDirectActivity
                         //start progress dialog
                         progressDialog = ProgressDialog.show(WifiDirect2Activity.this,
                                 "Press back to cancel",
-                                "Starting game with :" + config.deviceAddress, true, true);
+                                "Starting game", true, true);
                         isStart = true;
                         bt_start.setEnabled(false);
                         ((Button) findViewById(R.id.disconnect)).setEnabled(true);

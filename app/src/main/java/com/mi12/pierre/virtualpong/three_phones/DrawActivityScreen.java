@@ -12,8 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 
 import com.mi12.R;
 import com.mi12.pierre.virtualpong.Player;
@@ -28,7 +28,7 @@ public class DrawActivityScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //FullScreen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
         Display screenSize = getWindowManager().getDefaultDisplay();
         int screenWidth = screenSize.getWidth();
         int screenHeight = screenSize.getHeight();

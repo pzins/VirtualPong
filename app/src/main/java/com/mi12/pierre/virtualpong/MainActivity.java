@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import com.mi12.R;
 import com.mi12.pierre.virtualpong.three_phones.reseau_local.ReseauLocal3Activity;

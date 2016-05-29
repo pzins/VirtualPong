@@ -15,8 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 
 import com.mi12.R;
 import com.mi12.pierre.virtualpong.Player;
@@ -40,7 +40,8 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
 
         //get screen size
         Display screenSize = getWindowManager().getDefaultDisplay();

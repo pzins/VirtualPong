@@ -1,6 +1,5 @@
 package com.mi12.pierre.virtualpong.two_phones;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,15 +11,17 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
+
 import com.mi12.R;
 import com.mi12.pierre.virtualpong.Player;
 
-public class DrawActivityServer extends Activity implements SensorEventListener {
+public class DrawActivityServer extends AppCompatActivity implements SensorEventListener {
 
     private GameView gameView;
     private SensorManager sensorManager;
@@ -31,7 +32,8 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
         super.onCreate(savedInstanceState);
         //FullScreen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
 
         setContentView(R.layout.activity_bouncing_ball);
 
