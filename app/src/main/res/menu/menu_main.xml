@@ -12,9 +12,12 @@ tools:context="com.mi12.pierre.virtualpong.MainActivity">
         android:title="@string/wifi_direct_3"
         android:showAsAction="ifRoom|withText" />
     <item
-        android:id="@+id/reseau_local"
-        android:title="@string/reseau_local"
+        android:id="@+id/reseau_local2"
+        android:title="@string/reseau_local_2"
         android:showAsAction="ifRoom|withText" />
-
+    <item
+        android:id="@+id/reseau_local3"
+        android:title="@string/reseau_local_3"
+        android:showAsAction="ifRoom|withText" />
 
 </menu>

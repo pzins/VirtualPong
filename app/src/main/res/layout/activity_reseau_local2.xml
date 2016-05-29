@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.mi12.pierre.virtualpong.ReseauLocalActivity">
+    tools:context=".pierre.virtualpong.two_phones.reseau_local.ReseauLocal2Activity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -19,20 +19,20 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Créer"
-            android:id="@+id/creer" />
+            android:text="Create"
+            android:id="@+id/create" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText"
+            android:id="@+id/ip"
             android:layout_gravity="center_horizontal" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rejoindre"
-            android:id="@+id/rejoindre" />
+            android:text="Join"
+            android:id="@+id/join" />
 
         <TextView
             android:layout_width="match_parent"

@@ -20,8 +20,8 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".pierre.virtualpong.DrawActivityServer"/>
-        <activity android:name=".pierre.virtualpong.DrawActivityClient"/>
+        <activity android:name=".pierre.virtualpong.two_phones.DrawActivityServer" />
+        <activity android:name=".pierre.virtualpong.two_phones.DrawActivityClient" />
         <!--
              ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -29,7 +29,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
-
         <activity android:name=".pierre.virtualpong.DrawActivityScreen"/>
         <activity android:name=".pierre.virtualpong.DrawActivityController"/>
         <activity android:name=".pierre.virtualpong.WifiDirect3Activity"/>
@@ -38,14 +37,20 @@
         <activity
             android:name=".pierre.virtualpong.Main2Activity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/FullscreenTheme">
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+           <!-- android:theme="@style/FullscreenTheme"-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".pierre.virtualpong.three_phones.DrawActivityScreen" />
+        <activity android:name=".pierre.virtualpong.three_phones.DrawActivityController" />
+        <activity android:name=".pierre.virtualpong.three_phones.wifidirect.WifiDirect3Activity" />
+        <activity android:name=".pierre.virtualpong.two_phones.wifidirect.WifiDirect2Activity" />
+        <activity android:name=".pierre.virtualpong.two_phones.reseau_local.ReseauLocal2Activity" />
+        <activity android:name=".pierre.virtualpong.three_phones.reseau_local.ReseauLocal3Activity"></activity>
     </application>
 
 </manifest>

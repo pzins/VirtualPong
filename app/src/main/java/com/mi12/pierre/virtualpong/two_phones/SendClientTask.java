@@ -1,4 +1,4 @@
-package com.mi12.pierre.virtualpong;
+package com.mi12.pierre.virtualpong.two_phones;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,18 +9,15 @@ import java.net.Socket;
  * Created by pierre on 25/05/16.
  */
 
-//pour l'envoi des données (positions du jeu)
 public class SendClientTask extends Thread
 {
     private byte dir = 0x0;
-    private boolean shouldSend = false;
     private InetAddress goIp;
 
     public SendClientTask(InetAddress _ip){goIp = _ip;}
 
     public void setDirection(byte _d){
         dir = _d;
-        shouldSend = true;
     }
 
     public void run() {
@@ -32,17 +29,17 @@ public class SendClientTask extends Thread
             run();
         }
         DataOutputStream dos = null;
-
         try {
             dos = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e1) {
             e1.printStackTrace();
         }
+        //should be synchro, for : wait() and notify()
         synchronized (this){
             while (true) {
                 try {
                     dos.writeByte(dir);
-                    wait();
+                    wait(); //the thread sleep, it will wake up when sensor detect gravity change
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }

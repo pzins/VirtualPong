@@ -10,7 +10,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.mi12.R;
-
+import com.mi12.pierre.virtualpong.three_phones.reseau_local.ReseauLocal3Activity;
+import com.mi12.pierre.virtualpong.three_phones.wifidirect.WifiDirect3Activity;
+import com.mi12.pierre.virtualpong.two_phones.reseau_local.ReseauLocal2Activity;
+import com.mi12.pierre.virtualpong.two_phones.wifidirect.WifiDirect2Activity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,9 +50,9 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.reseau_local){
+        if (id == R.id.reseau_local2){
 
-            Intent intent = new Intent(MainActivity.this, ReseauLocalActivity.class);
+            Intent intent = new Intent(MainActivity.this, ReseauLocal2Activity.class);
             startActivity(intent);
         }
         else if(id == R.id.wifidirect2){
@@ -57,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } else if(id == R.id.wifidirect3){
             Intent intent = new Intent(MainActivity.this, WifiDirect3Activity.class);
+            startActivity(intent);
+        } else if(id == R.id.reseau_local3){
+            Intent intent = new Intent(MainActivity.this, ReseauLocal3Activity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
