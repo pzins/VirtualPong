@@ -29,8 +29,8 @@
             android:id="@+id/textView"
             android:layout_weight="1"
             android:textSize="30dp"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="40dp"
+            android:gravity="center_horizontal"/>
 
         <TextView
             android:layout_width="match_parent"
