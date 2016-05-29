@@ -99,8 +99,8 @@ public class WifiDirect2Activity extends WifiDirectActivity
                         ((Button) findViewById(R.id.disconnect)).setEnabled(true);
                         connect(config);
                     }
-                }
-        );
+                });
+
         final Button bt_join = (Button) findViewById(R.id.join);
         bt_join.setOnClickListener(
                 new View.OnClickListener() {
@@ -133,7 +133,6 @@ public class WifiDirect2Activity extends WifiDirectActivity
     public void beginDiscovery(){
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
-
         if (!isWifiP2pEnabled) {
             Toast.makeText(WifiDirect2Activity.this, "P2P Wifi is not enabled",
                     Toast.LENGTH_SHORT).show();

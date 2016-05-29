@@ -18,22 +18,20 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mi12.R;
 import com.mi12.pierre.virtualpong.WifiDirectActivity;
 import com.mi12.pierre.virtualpong.WifiDirectBroadcastReceiver;
 import com.mi12.pierre.virtualpong.three_phones.DrawActivityController;
 import com.mi12.pierre.virtualpong.three_phones.DrawActivityScreen;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class WifiDirect3Activity extends WifiDirectActivity {
+
     private WifiP2pManager manager;
     private boolean isWifiP2pEnabled = false;
-    private boolean retryChannel = false;
-
     private final IntentFilter intentFilter = new IntentFilter();
     private WifiP2pManager.Channel channel;
     private BroadcastReceiver receiver = null;
@@ -41,16 +39,20 @@ public class WifiDirect3Activity extends WifiDirectActivity {
 
     private ProgressDialog progressDialog = null;
 
+    //to know if the user clicked on the button start or join
+    //prevent game launched directly if already connected in wifidirect (WifiDirectBroadcastReceiver)
     private boolean isStart;
+    //
     private int nbPlayer;
 
+    //for ListView
     /** Items entered by the user is stored in this ArrayList variable */
     ArrayList<WifiP2pDevice> list = new ArrayList<WifiP2pDevice>();
-
     /** Declaring an ArrayAdapter to set items to ListView */
     ArrayAdapter<WifiP2pDevice> adapter;
 
-    private String currentAdr = "";
+
+    private String currentAdr;
 
     public void setIsWifiP2pEnabled(boolean state) {
         isWifiP2pEnabled = state;
@@ -65,56 +67,57 @@ public class WifiDirect3Activity extends WifiDirectActivity {
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
+        isStart = false;
+        nbPlayer = 0;
+
         /** Defining the ArrayAdapter to set items to ListView */
         adapter = new ArrayAdapter<WifiP2pDevice>(this, android.R.layout.simple_list_item_single_choice, list);
         ListView lv = ((ListView) findViewById(R.id.listView));
         lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE); // Enables single selection
         lv.setClickable(true);
         lv.setAdapter(adapter);
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> myAdapter, View myView, int myItemInt, long mylng) {
                 WifiP2pDevice selectedDevice = (WifiP2pDevice) myAdapter.getItemAtPosition(myItemInt);
                 currentAdr = selectedDevice.deviceAddress;
+                ((Button) findViewById(R.id.join)).setEnabled(true);
             }
         });
-        nbPlayer = 0;
 
-        isStart = false;
         final Button bt_join = (Button) findViewById(R.id.join);
-        bt_join.setOnClickListener(new View.OnClickListener() {
-                                  @Override
-                                  public void onClick(View v) {
-                                      WifiP2pConfig config = new WifiP2pConfig();
-                                      config.deviceAddress = currentAdr;
-                                      config.wps.setup = WpsInfo.PBC;
-                                      config.groupOwnerIntent = 0;
+        bt_join.setEnabled(false);
+        bt_join.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        WifiP2pConfig config = new WifiP2pConfig();
+                        config.deviceAddress = currentAdr;
+                        config.wps.setup = WpsInfo.PBC;
+                        config.groupOwnerIntent = 0;
 
-                                      //start progress dialog
-                                      progressDialog = ProgressDialog.show(WifiDirect3Activity.this, "Press back to cancel",
-                                              "Starting game with :" + config.deviceAddress, true, true
-                                      );
-                                      isStart = true;
-                                      bt_join.setEnabled(false);
-                                      ((Button) findViewById(R.id.disconnect)).setEnabled(true);
-
-                                      connect(config);
-                                  }
-                              }
-        );
+                        //start progress dialog
+                        progressDialog = ProgressDialog.show(WifiDirect3Activity.this,
+                                "Press back to cancel",
+                                "Connecting to the server", true, true);
+                        isStart = true;
+                        bt_join.setEnabled(false);
+                        ((Button) findViewById(R.id.disconnect)).setEnabled(true);
+                        connect(config);
+                    }
+                });
 
         Button bt_create = (Button) findViewById(R.id.create);
-        bt_create.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
-                                             isStart = true;
-                                             //start progress dialog
-                                             progressDialog = ProgressDialog.show(WifiDirect3Activity.this, "Press back to cancel",
-                                                     "Creating a game", true, true
-                                             );
-                                         }
-                                     }
-        );
+        bt_create.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        isStart = true;
+                        //start progress dialog
+                        progressDialog = ProgressDialog.show(WifiDirect3Activity.this, "Press back to cancel",
+                             "Creating a game", true, true);
+                    }
+                });
+
         Button bt_disconnect = (Button) findViewById(R.id.disconnect);
         bt_disconnect.setEnabled(false);
         bt_disconnect.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +126,8 @@ public class WifiDirect3Activity extends WifiDirectActivity {
                 disconnect();
             }
         });
+
+        //start discovery : connection
         beginDiscovery();
     }
 
@@ -174,6 +179,52 @@ public class WifiDirect3Activity extends WifiDirectActivity {
         });
     }
 
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+    }
+    protected void onResume() {
+        super.onResume();
+        receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
+        registerReceiver(receiver, intentFilter);
+    }
+    @Override
+    public void onPeersAvailable(WifiP2pDeviceList peers) {
+        adapter.clear();
+        Iterator<WifiP2pDevice> i = peers.getDeviceList().iterator();
+        while (i.hasNext()) {
+            WifiP2pDevice device = i.next();
+            list.add(device);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onConnectionInfoAvailable(WifiP2pInfo info) {
+        //called when wifibroadcastreceiver detect a connection
+        final TextView tv = (TextView) findViewById(R.id.connected);
+        tv.setText(info.toString());
+        ((Button) findViewById(R.id.disconnect)).setEnabled(true);
+
+        //test : the game do not start automatically (it needs a click on join or start button)
+        if(isStart){
+            if(info.isGroupOwner == true){
+                nbPlayer++;
+                if(nbPlayer == 2){
+                    Intent intent = new Intent(WifiDirect3Activity.this, DrawActivityScreen.class);
+                    progressDialog.dismiss(); //stop Dialog progress
+                    startActivity(intent);
+                }
+            }else {
+                Intent intent = new Intent(WifiDirect3Activity.this, DrawActivityController.class);
+                Bundle b = new Bundle();
+                b.putSerializable("ip", info.groupOwnerAddress);
+                intent.putExtras(b);
+                progressDialog.dismiss(); //stop Dialog progress
+                startActivity(intent);
+            }
+        }
+    }
     @Override
     public void disconnect() {
         if(manager != null)
@@ -193,57 +244,13 @@ public class WifiDirect3Activity extends WifiDirectActivity {
             });
         }
     }
-
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(receiver);
-    }
-    protected void onResume() {
-        super.onResume();
-        receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
-        registerReceiver(receiver, intentFilter);
-    }
-    @Override
-    public void onPeersAvailable(WifiP2pDeviceList peers) {
-        adapter.clear();
-
-        Iterator<WifiP2pDevice> i = peers.getDeviceList().iterator();
-        while (i.hasNext()) {
-            WifiP2pDevice device = i.next();
-            list.add(device);
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void onConnectionInfoAvailable(WifiP2pInfo info) {
-        ((Button) findViewById(R.id.disconnect)).setEnabled(true);
-
-        if(isStart){
-            if(info.isGroupOwner == true){
-                nbPlayer++;
-                if(nbPlayer == 2){
-                    Intent intent = new Intent(WifiDirect3Activity.this, DrawActivityScreen.class);
-                    progressDialog.dismiss(); //stop Dialog progress
-                    startActivity(intent);
-                }
-                Log.w("Player connected", Integer.toString(nbPlayer));
-            }else {
-                Intent intent = new Intent(WifiDirect3Activity.this, DrawActivityController.class);
-                Bundle b = new Bundle();
-                b.putSerializable("ip", info.groupOwnerAddress);
-                b.putInt("port", 8988);
-                intent.putExtras(b);
-                progressDialog.dismiss(); //stop Dialog progress
-                startActivity(intent);
-            }
-        }
-    }
-
     public void resetData(){
-        ((Button) findViewById(R.id.create)).setEnabled(true);
+        //called when wifibroadastreceiver detects a disconnect
+        TextView tv = (TextView) findViewById(R.id.connected);
+        tv.setText("Not connected");
         ((Button) findViewById(R.id.disconnect)).setEnabled(false);
-        beginDiscovery();
+        ((Button) findViewById(R.id.join)).setEnabled(false);
+        beginDiscovery(); //we restart a new discovery of peers
     }
 
 }
