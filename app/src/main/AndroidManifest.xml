@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mi12">
+<manifest package="com.mi12"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -19,11 +19,6 @@
             android:name=".pierre.virtualpong.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".pierre.virtualpong.two_phones.DrawActivityServer" />
         <activity android:name=".pierre.virtualpong.two_phones.DrawActivityClient" />
@@ -33,14 +28,23 @@
         -->
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
+            android:value="@integer/google_play_services_version"/>
+        <activity
+            android:name=".pierre.virtualpong.Main2Activity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/FullscreenTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".pierre.virtualpong.three_phones.DrawActivityScreen" />
         <activity android:name=".pierre.virtualpong.three_phones.DrawActivityController" />
         <activity android:name=".pierre.virtualpong.three_phones.wifidirect.WifiDirect3Activity" />
         <activity android:name=".pierre.virtualpong.two_phones.wifidirect.WifiDirect2Activity" />
         <activity android:name=".pierre.virtualpong.two_phones.reseau_local.ReseauLocal2Activity" />
-        <activity android:name=".pierre.virtualpong.three_phones.reseau_local.ReseauLocal3Activity"></activity>
+        <activity android:name=".pierre.virtualpong.three_phones.reseau_local.ReseauLocal3Activity"/>
     </application>
 
 </manifest>
