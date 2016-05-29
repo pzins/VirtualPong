@@ -153,15 +153,7 @@ public class WifiDirect3Activity extends WifiDirectActivity {
         });
     }
 
-    @Override
-    public void showDetails(WifiP2pDevice device) {
 
-    }
-
-    @Override
-    public void cancelDisconnect() {
-
-    }
 
     public void connect(WifiP2pConfig config)
     {
@@ -225,7 +217,7 @@ public class WifiDirect3Activity extends WifiDirectActivity {
             }
         }
     }
-    @Override
+
     public void disconnect() {
         if(manager != null)
         {

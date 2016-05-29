@@ -151,15 +151,8 @@ public class WifiDirect2Activity extends WifiDirectActivity
             }
         });
     }
-    @Override
-    public void showDetails(WifiP2pDevice device) {
 
-    }
 
-    @Override
-    public void cancelDisconnect() {
-
-    }
 
     public void connect(WifiP2pConfig config)
     {
@@ -225,7 +218,6 @@ public class WifiDirect2Activity extends WifiDirectActivity
     }
 
 
-    @Override
     public void disconnect() {
         manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
             @Override
