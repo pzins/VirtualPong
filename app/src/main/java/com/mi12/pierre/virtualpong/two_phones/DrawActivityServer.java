@@ -172,7 +172,7 @@ public class DrawActivityServer extends Activity implements SensorEventListener 
             //dy_ball random [dy-2 ; dy+2]
             dx_ball = dx-2 + (int)(Math.random() * ((4) + 1));
             dy_ball = dy-2 + (int)(Math.random() * ((4) + 1));
-            lastTouch = 0;
+            lastTouch = -1; //server : last_touch == opp at the beginning (opp on top)
         }
 
         public void run(){

@@ -23,33 +23,33 @@ public class ReseauLocal2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reseau_local2);
-        Button bt_creer = (Button) findViewById(R.id.creer);
-        bt_creer.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                Intent intent = new Intent(ReseauLocal2Activity.this, DrawActivityServer.class);
-                                                startActivity(intent);
-                                            }
-                                        }
-        );
+        final Button bt_create = (Button) findViewById(R.id.create);
+        bt_create.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ReseauLocal2Activity.this, DrawActivityServer.class);
+                    startActivity(intent);
+                }
+            });
         final EditText mEdit   = (EditText)findViewById(R.id.editText);
-        Button bt_rejoindre = (Button) findViewById(R.id.rejoindre);
-        bt_rejoindre.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                Intent intent = new Intent(ReseauLocal2Activity.this, DrawActivityClient.class);
-                                                Bundle b = new Bundle();
-                                                try {
-                                                    b.putSerializable("ip", InetAddress.getByName(mEdit.getText().toString()));
-                                                } catch (UnknownHostException e) {
-                                                    e.printStackTrace();
-                                                }
-                                                b.putInt("port", 8988);
-                                                intent.putExtras(b);
-                                                startActivity(intent);
-                                            }
-                                        }
-        );
+        Button bt_join = (Button) findViewById(R.id.join);
+        bt_join.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ReseauLocal2Activity.this, DrawActivityClient.class);
+                        Bundle b = new Bundle();
+                        try {
+                            b.putSerializable("ip", InetAddress.getByName(mEdit.getText().toString()));
+                        } catch (UnknownHostException e) {
+                            e.printStackTrace();
+                        }
+                        b.putInt("port", 8988);
+                        intent.putExtras(b);
+                        startActivity(intent);
+                    }
+                });
 
         TextView myIp = (TextView) findViewById(R.id.myIp);
         WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);

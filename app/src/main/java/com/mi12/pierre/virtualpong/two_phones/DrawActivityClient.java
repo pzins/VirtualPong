@@ -177,9 +177,10 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
                 paint.setColor(Color.BLUE);
                 paint.setStyle(Paint.Style.FILL);
                 paint.setTextSize(100);
-                c.drawText(Integer.toString(player.getScore()), 100, screenHeight * 0.8f, paint);
                 paint.setColor(Color.RED);
-                c.drawText(Integer.toString(opp.getScore()), 100, screenHeight * 0.2f, paint);
+                c.drawText(Integer.toString(opp.getScore()), 100, screenHeight * 0.8f, paint);
+                paint.setColor(Color.BLUE);
+                c.drawText(Integer.toString(player.getScore()), 100, screenHeight * 0.2f, paint);
                 paint.setColor(Color.WHITE);
                 paint.setStrokeWidth(50);
                 c.drawLine(0, screenHeight / 2f, screenWidth, screenHeight / 2f, paint);
