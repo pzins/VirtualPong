@@ -3,9 +3,11 @@ package com.mi12.pierre.virtualpong;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 
 import com.mi12.R;
 
@@ -58,6 +60,36 @@ public class Main2Activity extends AppCompatActivity {
         hide_UI();
         setContentView(R.layout.activity_main2);
         mContentView = findViewById(R.id.fullscreen_content);
+
+        //Réseau local
+        Button button_local_connect = (Button) findViewById(R.id.button_local_connect);
+        button_local_connect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Local connection", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        //Wifi direct 2 smartphones
+        Button button_wifi_direct2 = (Button) findViewById(R.id.button_wifi_direct2);
+        button_wifi_direct2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Wifi direct 2", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        //Wifi direct 3 smartphones
+        Button button_wifi_direct3 = (Button) findViewById(R.id.button_wifi_direct3);
+        button_wifi_direct3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Wifi direct 3", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
     }
 
     private void hide_UI() {
@@ -73,3 +105,6 @@ public class Main2Activity extends AppCompatActivity {
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 }
+
+
+
