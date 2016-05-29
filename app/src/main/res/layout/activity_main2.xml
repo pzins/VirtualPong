@@ -6,7 +6,6 @@
              android:paddingLeft="@dimen/activity_horizontal_margin"
              android:paddingRight="@dimen/activity_horizontal_margin"
              android:paddingTop="@dimen/activity_vertical_margin"
-             android:background="#FFFFFF"
              tools:context="com.mi12.pierre.virtualpong.Main2Activity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
@@ -19,7 +18,8 @@
         android:id="@+id/fullscreen_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:paddingBottom="10dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -36,31 +36,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Connexion via réseau local :"
+            android:text="Jouer avec 2 smartphones :"
             android:id="@+id/textView2"
-            android:paddingTop="40dp"/>
+            android:paddingBottom="0dp"
+            android:layout_marginTop="40dp"
+            />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Connexion"
-            android:id="@+id/button_local_connect"
+            android:text="Wifi Direct"
+            android:id="@+id/button_wifi_direct2"
+            android:layout_marginTop="10dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Réseau local"
+            android:id="@+id/button_local_connect2"
             android:layout_marginTop="10dp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Connexion via WiFi direct :"
+            android:text="Jouer avec 3 smartphones :"
             android:id="@+id/textView3"
             android:layout_gravity="center_horizontal"
-            android:paddingTop="40dp"/>
+            android:layout_marginTop="40dp"
+            android:paddingBottom="0dp"/>
 
         <Button
+            style="?android:attr/buttonStyleSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mode 2 Smartphones"
-            android:id="@+id/button_wifi_direct2"
+            android:text="Wifi Direct"
+            android:id="@+id/button_wifi_direct3"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"/>
 
@@ -68,8 +79,8 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mode 3 Smartphones"
-            android:id="@+id/button_wifi_direct3"
+            android:text="Réseau local"
+            android:id="@+id/button_local_connect3"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"/>
     </LinearLayout>
