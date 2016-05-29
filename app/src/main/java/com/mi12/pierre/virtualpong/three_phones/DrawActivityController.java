@@ -1,6 +1,5 @@
 package com.mi12.pierre.virtualpong.three_phones;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -63,7 +62,11 @@ public class DrawActivityController  extends AppCompatActivity implements Sensor
         Sensor mySensor = event.sensor;
         synchronized (sendTask){
             if (mySensor.getType() == Sensor.TYPE_GRAVITY) {
-                float x = event.values[0];
+                //0 => gravité sur X
+                //1 => gravité sur Y
+                //2 => gravité sur Z
+                float x = event.values[1];
+
                 //threshold [-1;1]
                 if (x > 1) {
                     sendTask.setDirection((byte) 0x0);
