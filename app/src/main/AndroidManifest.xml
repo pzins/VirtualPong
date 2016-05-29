@@ -31,8 +31,8 @@
         <activity android:name=".pierre.virtualpong.three_phones.DrawActivityController" />
         <activity android:name=".pierre.virtualpong.three_phones.wifidirect.WifiDirect3Activity" />
         <activity android:name=".pierre.virtualpong.two_phones.wifidirect.WifiDirect2Activity" />
-        <activity android:name=".pierre.virtualpong.two_phones.reseau_local.ReseauLocal2Activity" />
-        <activity android:name=".pierre.virtualpong.three_phones.reseau_local.ReseauLocal3Activity">
+        <activity android:name=".pierre.virtualpong.two_phones.local_network.LocalNetwork2Activity" />
+        <activity android:name=".pierre.virtualpong.three_phones.local_network.LocalNetwork3Activity">
         </activity>
 
         <!--

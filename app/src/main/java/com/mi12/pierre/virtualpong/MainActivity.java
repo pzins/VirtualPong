@@ -5,12 +5,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import com.mi12.R;
-import com.mi12.pierre.virtualpong.three_phones.reseau_local.ReseauLocal3Activity;
+import com.mi12.pierre.virtualpong.three_phones.local_network.LocalNetwork3Activity;
 import com.mi12.pierre.virtualpong.three_phones.wifidirect.WifiDirect3Activity;
-import com.mi12.pierre.virtualpong.two_phones.reseau_local.ReseauLocal2Activity;
+import com.mi12.pierre.virtualpong.two_phones.local_network.LocalNetwork2Activity;
 import com.mi12.pierre.virtualpong.two_phones.wifidirect.WifiDirect2Activity;
 
 public class MainActivity extends Activity {
@@ -35,7 +34,7 @@ public class MainActivity extends Activity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, ReseauLocal2Activity.class);
+                        Intent intent = new Intent(MainActivity.this, LocalNetwork2Activity.class);
                         startActivity(intent);
                     }
                 }
@@ -53,7 +52,7 @@ public class MainActivity extends Activity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, ReseauLocal3Activity.class);
+                        Intent intent = new Intent(MainActivity.this, LocalNetwork3Activity.class);
                         startActivity(intent);
                     }
                 }

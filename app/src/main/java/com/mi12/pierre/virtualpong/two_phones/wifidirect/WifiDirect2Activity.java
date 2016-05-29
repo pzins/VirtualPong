@@ -20,11 +20,13 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mi12.R;
 import com.mi12.pierre.virtualpong.WifiDirectActivity;
 import com.mi12.pierre.virtualpong.WifiDirectBroadcastReceiver;
 import com.mi12.pierre.virtualpong.two_phones.DrawActivityClient;
 import com.mi12.pierre.virtualpong.two_phones.DrawActivityServer;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
