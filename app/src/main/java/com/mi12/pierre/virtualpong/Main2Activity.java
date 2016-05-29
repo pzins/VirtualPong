@@ -1,15 +1,18 @@
 package com.mi12.pierre.virtualpong;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 import com.mi12.R;
+import com.mi12.pierre.virtualpong.three_phones.reseau_local.ReseauLocal3Activity;
+import com.mi12.pierre.virtualpong.three_phones.wifidirect.WifiDirect3Activity;
+import com.mi12.pierre.virtualpong.two_phones.wifidirect.WifiDirect2Activity;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -66,8 +69,8 @@ public class Main2Activity extends AppCompatActivity {
         button_local_connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Local connection", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(Main2Activity.this, ReseauLocal3Activity.class);
+                startActivity(intent);
             }
         });
 
@@ -76,8 +79,8 @@ public class Main2Activity extends AppCompatActivity {
         button_wifi_direct2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Wifi direct 2", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(Main2Activity.this, WifiDirect2Activity.class);
+                startActivity(intent);
             }
         });
 
@@ -86,8 +89,8 @@ public class Main2Activity extends AppCompatActivity {
         button_wifi_direct3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Wifi direct 3", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(Main2Activity.this, WifiDirect3Activity.class);
+                startActivity(intent);
             }
         });
     }
