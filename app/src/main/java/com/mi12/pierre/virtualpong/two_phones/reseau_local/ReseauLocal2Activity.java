@@ -24,6 +24,7 @@ public class ReseauLocal2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reseau_local2);
+
         final Button bt_create = (Button) findViewById(R.id.create);
         bt_create.setOnClickListener(
                 new View.OnClickListener() {
