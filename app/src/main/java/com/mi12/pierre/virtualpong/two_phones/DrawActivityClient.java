@@ -34,7 +34,7 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
     private SensorManager sensorManager;
     private Sensor gravity;
 
-    private InetAddress goIpAddr;
+    private InetAddress goIpAddr; //ip adr of the group owner
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,29 +42,34 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        //get screen size
         Display screenSize = getWindowManager().getDefaultDisplay();
         int screenWidth = screenSize.getWidth();
         int screenHeight = screenSize.getHeight();
 
+        //creation of the players
         Player player = new Player(screenWidth * 0.5f, screenHeight * 0.05f, (int) (screenWidth * 0.2f),
                 (int) (screenHeight * 0.02f), Color.BLUE);
         Player opp = new Player(screenWidth * 0.5f, screenHeight * 0.95f, (int) (screenWidth * 0.2f),
                 (int) (screenHeight * 0.02f), Color.RED);
 
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
-
         setContentView(gameView);
 
+        //get parameters
         Bundle b = getIntent().getExtras();
         if(b != null) {
             goIpAddr = (InetAddress) b.getSerializable("ip");
         }
+
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
+        //thread to send orientation to the group owner
         sendTask = new SendClientTask(goIpAddr);
         sendTask.start();
 
+        //thread to get game positions
         new ClientComAsyncTask(this, gameView).execute();
     }
 
@@ -90,12 +95,13 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         synchronized (sendTask){
             if(mySensor.getType() == Sensor.TYPE_GRAVITY){
                 float x = event.values[0];
+                //threshold [-1;1] => no movement, otherwise player cannot stay
                 if(x > 1) {
                     sendTask.setDirection((byte) 0x0);
-                    sendTask.notify();
+                    sendTask.notify(); //wake up thread to send data
                 }else if (x < -1) {
                     sendTask.setDirection((byte) 0x1);
-                    sendTask.notify();
+                    sendTask.notify(); //wake up thread to send data
                 }
             }
         }
@@ -110,18 +116,18 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         private SurfaceHolder holder;
         private boolean status = false;
 
-
+        //ball
         private Bitmap ball;
         private float x_ball, y_ball;
 
+        //player
         private Player player;
         private Player opp;
+        private Bitmap playerBTM;
+        private Bitmap oppBTM;
 
         private int screenWidth;
         private int screenHeight;
-
-        private Bitmap playerBTM;
-        private Bitmap oppBTM;
 
         public GameView(Context context, Player _player, Player _opp, int _width, int _height) {
             super(context);
@@ -153,14 +159,12 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
             opp.setScore(str.scorePlayer);
         }
 
-
         public void run(){
             Canvas c;
             while (status){
                 if (!holder.getSurface().isValid()){
                     continue;
                 }
-
                 //dessin du jeu
                 //lock Before painting
                 c = holder.lockCanvas();

@@ -14,7 +14,6 @@ import java.net.Socket;
  */
 public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
 
-    private GamePositions direction;
     private DrawActivityClient.GameView gameView;
 
     public ClientComAsyncTask (Context context, DrawActivityClient.GameView gameView) {
@@ -24,7 +23,7 @@ public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
     @Override
     protected String doInBackground(Void... params) {
         ServerSocket s;
-        ObjectInputStream ois=  null;
+        ObjectInputStream ois = null;
         Socket soc;
         try {
             s = new ServerSocket(8989);
@@ -53,7 +52,6 @@ public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
     @Override
     protected void onProgressUpdate(GamePositions... progress) {
         super.onProgressUpdate(progress);
-
         if(this.gameView != null) {
             this.gameView.setPositions(progress[0]);
         }

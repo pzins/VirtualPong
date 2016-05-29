@@ -7,7 +7,6 @@ import java.net.Socket;
 /**
  * Created by pierre on 25/05/16.
  */
-//pour l'envoi des données (positions du jeu)
 public class SendServerTask extends Thread
 {
     private DrawActivityServer.GameView gameView;
@@ -31,10 +30,9 @@ public class SendServerTask extends Thread
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         while (true) {
             try {
-                Thread.sleep(4);
+                Thread.sleep(4); //delay between two game positions sending
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

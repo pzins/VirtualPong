@@ -16,7 +16,6 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
     private WifiP2pManager.Channel channel;
     private WifiDirectActivity activity;
 
-
     public WifiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel,
                                        WifiDirectActivity activity){
         super();
@@ -24,7 +23,6 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
         this.channel = channel;
         this.activity = activity;
     }
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -38,7 +36,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
                 activity.setIsWifiP2pEnabled(true);
             } else {
                 activity.setIsWifiP2pEnabled(false);
-//                activity.resetData();
+                activity.resetData();
             }
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
             // request available peers from the wifi p2p manager. This is an
@@ -65,13 +63,6 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
                 // It's a disconnect
                 activity.resetData();
             }
-        } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-            Log.w("WIFI P2P THIS", " DEVICE CHANGED");
-//            DeviceListFragment fragment = (DeviceListFragment) activity.getFragmentManager()
-//                    .findFragmentById(R.id.frag_list);
-//            fragment.updateThisDevice((WifiP2pDevice) intent.getParcelableExtra(
-//                    WifiP2pManager.EXTRA_WIFI_P2P_DEVICE));
-
         }
     }
 
