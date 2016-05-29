@@ -29,11 +29,18 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
+
+        <activity android:name=".pierre.virtualpong.DrawActivityScreen"/>
+        <activity android:name=".pierre.virtualpong.DrawActivityController"/>
+        <activity android:name=".pierre.virtualpong.WifiDirect3Activity"/>
+        <activity android:name=".pierre.virtualpong.WifiDirect2Activity"/>
+        <activity android:name=".pierre.virtualpong.ReseauLocalActivity"/>
         <activity
             android:name=".pierre.virtualpong.Main2Activity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/FullscreenTheme">
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+           <!-- android:theme="@style/FullscreenTheme"-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
