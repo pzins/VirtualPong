@@ -2,7 +2,11 @@ package com.mi12.pierre.virtualpong.two_phones;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Environment;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -15,9 +19,20 @@ import java.net.Socket;
 public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
 
     private DrawActivityClient.GameView gameView;
+    private FileOutputStream fstream;
 
     public ClientComAsyncTask (Context context, DrawActivityClient.GameView gameView) {
         this.gameView = gameView;
+        File dir = new File (Environment.getExternalStorageDirectory().getAbsolutePath() +
+                "/echantillonnage");
+
+        dir.mkdirs();
+        File file = new File(dir, "receive.txt");
+        try {
+            fstream = new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -32,9 +47,14 @@ public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        int counter = 0;
+        long curTime;
         while (true)
         {
             try {
+                GamePositions gp = (GamePositions) ois.readObject();
+                curTime = System.currentTimeMillis();
+                writeFile(Integer.toString(counter++) + " " + Long.toString(curTime) + "\n");
                 publishProgress((GamePositions) ois.readObject());
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -54,6 +74,17 @@ public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
         super.onProgressUpdate(progress);
         if(this.gameView != null) {
             this.gameView.setPositions(progress[0]);
+        }
+    }
+
+    public void writeFile(String d)
+    {
+        try {
+            fstream.write(d.getBytes());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
