@@ -21,6 +21,8 @@ import android.view.Window;
 import com.mi12.R;
 import com.mi12.pierre.virtualpong.Player;
 
+import java.util.Date;
+
 public class DrawActivityServer extends AppCompatActivity implements SensorEventListener {
 
     private GameView gameView;
@@ -75,9 +77,32 @@ public class DrawActivityServer extends AppCompatActivity implements SensorEvent
         }
     }
 
+
+    Date lastDate = new Date();
+    long dateIndex = 0;
+    int resetAfter = 200;
+    float averageDiff = 0;
+    long worstDiff = 0;
+    long lastDiff = 0;
+
     @Override
     public void onSensorChanged(SensorEvent event) {
+        if (resetAfter !=0 && dateIndex == 1000){
+            resetAfter = 0;
+            dateIndex = 0;
+            worstDiff = 0;
+        }
+
         Sensor mySensor = event.sensor;
+        Date curDate = new Date();
+        long diff = curDate.getTime() - lastDate.getTime();
+        averageDiff = (averageDiff * (float)dateIndex + diff)/(++dateIndex);
+        if (worstDiff < diff){
+            worstDiff = diff;
+        }
+        lastDiff = diff;
+        lastDate = curDate;
+
         if (mySensor.getType() == Sensor.TYPE_GRAVITY) {
             float x = event.values[0];
             if (x > 1) {
@@ -235,6 +260,13 @@ public class DrawActivityServer extends AppCompatActivity implements SensorEvent
                 paint.setTextSize(100);
                 c.drawText(Integer.toString(player.getScore()), 100, screenHeight * 0.8f, paint);
                 paint.setColor(Color.RED);
+
+                c.drawText("moy: " + String.valueOf(averageDiff), 300, screenHeight * 0.8f, paint);
+                paint.setColor(Color.RED);
+                c.drawText("Diff: " + String.valueOf(lastDiff), 300, screenHeight * 0.6f, paint);
+                c.drawText("worst: " + String.valueOf(worstDiff), 300, screenHeight * 0.2f, paint);
+                paint.setColor(Color.RED);
+
                 c.drawText(Integer.toString(opp.getScore()), 100, screenHeight * 0.2f, paint);
                 paint.setColor(Color.WHITE);
                 paint.setStrokeWidth(50);
