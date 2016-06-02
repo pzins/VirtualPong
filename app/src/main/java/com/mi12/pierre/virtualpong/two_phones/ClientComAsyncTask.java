@@ -27,7 +27,7 @@ public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
                 "/echantillonnage");
 
         dir.mkdirs();
-        File file = new File(dir, "receive.txt");
+        File file = new File(dir, "client_receive.txt");
         try {
             fstream = new FileOutputStream(file);
         } catch (FileNotFoundException e) {
@@ -37,6 +37,7 @@ public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
 
     @Override
     protected String doInBackground(Void... params) {
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         ServerSocket s;
         ObjectInputStream ois = null;
         Socket soc;
@@ -47,14 +48,12 @@ public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int counter = 0;
         long curTime;
         while (true)
         {
             try {
                 GamePositions gp = (GamePositions) ois.readObject();
-                curTime = System.currentTimeMillis();
-                writeFile(Integer.toString(counter++) + " " + Long.toString(curTime) + "\n");
+                writeFile(Long.toString(System.nanoTime()) + "\n");
                 publishProgress((GamePositions) ois.readObject());
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();

@@ -27,7 +27,7 @@ public class SendClientTask extends Thread
                 "/echantillonnage");
 
         dir.mkdirs();
-        File file = new File(dir, "send.txt");
+        File file = new File(dir, "client_send.txt");
         try {
             fstream = new FileOutputStream(file);
         } catch (FileNotFoundException e) {
@@ -53,15 +53,12 @@ public class SendClientTask extends Thread
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        int counter = 0;
-        long curTime;
         //should be synchro, for : wait() and notify()
         synchronized (this){
             while (true) {
                 try {
                     dos.writeByte(dir);
-                    curTime = System.currentTimeMillis();
-                    writeFile(Integer.toString(counter++) + " " + Long.toString(curTime) + "\n");
+                    writeFile(Long.toString(System.nanoTime()) + "\n");
                     wait(); //the thread sleep, it will wake up when sensor detect gravity change
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
