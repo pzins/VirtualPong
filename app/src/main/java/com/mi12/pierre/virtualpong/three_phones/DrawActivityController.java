@@ -55,7 +55,7 @@ public class DrawActivityController  extends AppCompatActivity implements Sensor
     protected void onResume() {
         super.onResume();
         if (sensorManager != null) {
-            sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_GAME);
+            sensorManager.registerListener(this, gravity, CST.SENSOR_SAMPLING);
         }
     }
 

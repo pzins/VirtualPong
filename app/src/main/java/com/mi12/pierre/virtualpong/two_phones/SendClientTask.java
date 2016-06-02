@@ -41,6 +41,7 @@ public class SendClientTask extends Thread
             while (true) {
                 try {
                     dos.writeByte(dir);
+                    dos.flush();
                     wait(); //the thread sleep, it will wake up when sensor detect gravity change
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();

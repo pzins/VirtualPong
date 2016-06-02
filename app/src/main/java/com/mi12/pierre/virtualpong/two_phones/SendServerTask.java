@@ -1,5 +1,7 @@
 package com.mi12.pierre.virtualpong.two_phones;
 
+import android.util.Log;
+
 import com.mi12.pierre.virtualpong.CST;
 
 import java.io.IOException;
@@ -40,6 +42,7 @@ public class SendServerTask extends Thread
             }
             try {
                 ois.writeObject(gameView.getPositions());
+                ois.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }

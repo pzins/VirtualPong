@@ -1,5 +1,7 @@
 package com.mi12.pierre.virtualpong;
 
+import android.hardware.SensorManager;
+
 /**
  * Created by pierre on 02/06/16.
  */
@@ -34,5 +36,7 @@ public class CST {
 
     public final static int PLAYER_SPEED = 10;
     public final static int SERVER_DELAY = 4;
+
+    public final static int SENSOR_SAMPLING = SensorManager.SENSOR_DELAY_GAME;
 }
 

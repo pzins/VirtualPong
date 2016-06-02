@@ -90,7 +90,7 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
         super.onResume();
         gameView.resume();
         if(sensorManager != null) {
-            sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_GAME);
+            sensorManager.registerListener(this, gravity, CST.SENSOR_SAMPLING);
         }
     }
 
