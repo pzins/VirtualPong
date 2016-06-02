@@ -2,6 +2,8 @@ package com.mi12.pierre.virtualpong.three_phones;
 
 
 
+import com.mi12.pierre.virtualpong.CST;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ConnectException;
@@ -16,7 +18,7 @@ import java.net.Socket;
 
 public class SendControllerTask extends Thread
 {
-    private byte dir = 0x0;
+    private byte dir = CST.MOVE_RIGHT;
     private InetAddress goIp;
 
     public SendControllerTask(InetAddress _ip){
@@ -29,12 +31,12 @@ public class SendControllerTask extends Thread
         Socket socket = null;
         //try goIp:  port 8988
         try {
-            socket = new Socket(goIp, 8988);
+            socket = new Socket(goIp, CST.PORT_A);
         }
         catch(ConnectException ce){
             //if connection failed : try a second port : 8989
             try {
-                socket = new Socket(goIp, 8989);
+                socket = new Socket(goIp, CST.PORT_B);
             } catch (IOException e) {
                 //if connection failed loop to run
                 // => wait until the controller is connected to the screen)

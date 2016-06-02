@@ -3,6 +3,8 @@ package com.mi12.pierre.virtualpong.two_phones;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.mi12.pierre.virtualpong.CST;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -26,7 +28,7 @@ public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
         ObjectInputStream ois = null;
         Socket soc;
         try {
-            s = new ServerSocket(8989);
+            s = new ServerSocket(CST.PORT_B);
             soc = s.accept();
             ois = new ObjectInputStream(soc.getInputStream());
         } catch (IOException e) {

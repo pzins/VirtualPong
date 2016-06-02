@@ -1,5 +1,7 @@
 package com.mi12.pierre.virtualpong.two_phones;
 
+import com.mi12.pierre.virtualpong.CST;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -11,7 +13,7 @@ import java.net.Socket;
 
 public class SendClientTask extends Thread
 {
-    private byte dir = 0x0;
+    private byte dir = CST.MOVE_RIGHT;
     private InetAddress goIp;
 
     public SendClientTask(InetAddress _ip){goIp = _ip;}
@@ -23,7 +25,7 @@ public class SendClientTask extends Thread
     public void run() {
         Socket socket = null;
         try {
-            socket = new Socket(goIp, 8988);
+            socket = new Socket(goIp, CST.PORT_A);
         } catch (IOException e) {
             e.printStackTrace();
             run();

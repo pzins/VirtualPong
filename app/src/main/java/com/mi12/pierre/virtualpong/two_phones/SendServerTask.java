@@ -1,5 +1,7 @@
 package com.mi12.pierre.virtualpong.two_phones;
 
+import com.mi12.pierre.virtualpong.CST;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -20,7 +22,7 @@ public class SendServerTask extends Thread
     public void run() {
         Socket socket = null;
         try {
-            socket = new Socket(clientIp, 8989);
+            socket = new Socket(clientIp, CST.PORT_B);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -32,7 +34,7 @@ public class SendServerTask extends Thread
         }
         while (true) {
             try {
-                Thread.sleep(4); //delay between two game positions sending
+                Thread.sleep(CST.SERVER_DELAY); //delay between two game positions sending
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

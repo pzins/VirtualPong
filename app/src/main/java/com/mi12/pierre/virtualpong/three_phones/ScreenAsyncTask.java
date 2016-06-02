@@ -4,6 +4,8 @@ package com.mi12.pierre.virtualpong.three_phones;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.mi12.pierre.virtualpong.CST;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -53,14 +55,14 @@ public class ScreenAsyncTask extends AsyncTask<Void, Byte, String> {
     protected void onProgressUpdate(Byte... progress) {
         super.onProgressUpdate(progress);
         if(this.gameView != null) {
-            if(port == 8988){
-                if(progress[0] == 0x0)
+            if(port == CST.PORT_A){
+                if(progress[0] == CST.MOVE_RIGHT)
                     this.gameView.moveOpponent("g");
                 else
                     this.gameView.moveOpponent("d");
 
             }else{
-                if(progress[0] == 0x0)
+                if(progress[0] == CST.MOVE_RIGHT)
                     this.gameView.movePlayer("g");
                 else
                     this.gameView.movePlayer("d");

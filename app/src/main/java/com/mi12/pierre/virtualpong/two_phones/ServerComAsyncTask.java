@@ -8,6 +8,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.mi12.pierre.virtualpong.CST;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -41,7 +43,7 @@ public class ServerComAsyncTask extends AsyncTask<Void, Byte, String> {
     protected String doInBackground(Void... params) {
         try
         {
-            ServerSocket s = new ServerSocket(8988);
+            ServerSocket s = new ServerSocket(CST.PORT_A);
             Socket soc = s.accept();
             progress.dismiss(); //stop dialog progress when the other player is connected
             adr = soc.getInetAddress().toString().substring(1); //get ip adr of the other player
@@ -73,10 +75,10 @@ public class ServerComAsyncTask extends AsyncTask<Void, Byte, String> {
     protected void onProgressUpdate(Byte... progress) {
         super.onProgressUpdate(progress);
         if(this.gameView != null) {
-            if(progress[0] == 0x0)
-                this.gameView.moveOpponent("g");
+            if(progress[0] == CST.MOVE_RIGHT)
+                this.gameView.moveOpponent(CST.MOVE_LEFT_LOCAL);
             else
-                this.gameView.moveOpponent("d");
+                this.gameView.moveOpponent(CST.MOVE_RIGHT_LOCAL);
         }
     }
 }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mi12.R;
+import com.mi12.pierre.virtualpong.CST;
 import com.mi12.pierre.virtualpong.two_phones.DrawActivityClient;
 import com.mi12.pierre.virtualpong.two_phones.DrawActivityServer;
 
@@ -51,7 +52,7 @@ public class LocalNetwork2Activity extends AppCompatActivity {
                             } catch (UnknownHostException e) {
                                 e.printStackTrace();
                             }
-                            b.putInt("port", 8988);
+                            b.putInt("port", CST.PORT_A);
                             intent.putExtras(b);
                             startActivity(intent);
                         }

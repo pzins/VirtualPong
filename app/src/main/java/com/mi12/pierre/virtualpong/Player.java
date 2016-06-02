@@ -22,7 +22,7 @@ public class Player {
         this.y = _y;
         this.width = _width;
         this.height = _height;
-        this.speed = 10;
+        this.speed = CST.PLAYER_SPEED;
         this.color = _color;
         this.score = 0;
     }

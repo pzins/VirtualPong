@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.mi12.R;
+import com.mi12.pierre.virtualpong.CST;
 
 import java.net.InetAddress;
 
@@ -29,7 +30,8 @@ public class DrawActivityController  extends AppCompatActivity implements Sensor
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw_controller);
-        this.findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        this.findViewById(android.R.id.content).setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
         Bundle b = getIntent().getExtras();
         if (b != null) {
@@ -68,11 +70,11 @@ public class DrawActivityController  extends AppCompatActivity implements Sensor
                 float x = event.values[1];
 
                 //threshold [-1;1]
-                if (x > 1) {
-                    sendTask.setDirection((byte) 0x0);
+                if (x > CST.THRESHOLD_SENSOR) {
+                    sendTask.setDirection((byte) CST.MOVE_RIGHT);
                     sendTask.notify();
-                } else if (x < -1) {
-                    sendTask.setDirection((byte) 0x1);
+                } else if (x < -CST.THRESHOLD_SENSOR) {
+                    sendTask.setDirection((byte) CST.MOVE_LEFT);
                     sendTask.notify();
                 }
             }

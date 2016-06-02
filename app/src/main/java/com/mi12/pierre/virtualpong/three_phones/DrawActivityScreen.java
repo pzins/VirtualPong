@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 
 import com.mi12.R;
+import com.mi12.pierre.virtualpong.CST;
 import com.mi12.pierre.virtualpong.Player;
 
 
@@ -28,7 +29,8 @@ public class DrawActivityScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //FullScreen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        this.findViewById(android.R.id.content).setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
         Display screenSize = getWindowManager().getDefaultDisplay();
         int screenWidth = screenSize.getWidth();
         int screenHeight = screenSize.getHeight();
@@ -36,17 +38,19 @@ public class DrawActivityScreen extends AppCompatActivity {
         setContentView(R.layout.activity_draw_screen);
 
         //creation of the players
-        Player player = new Player(screenWidth * 0.5f, screenHeight * 0.95f, (int) (screenWidth * 0.2f),
-                (int) (screenHeight * 0.02f), Color.BLUE);
-        Player opp = new Player(screenWidth * 0.5f, screenHeight * 0.05f, (int) (screenWidth * 0.2f),
-                (int) (screenHeight * 0.02f), Color.RED);
+        Player player = new Player(screenWidth * CST.PLAYER_PERCENT_X,
+                screenHeight * CST.PLAYER_PERCENT_Y_BTM, (int) (screenWidth * CST.PLAYER_PERCENT_W),
+                (int) (screenHeight * CST.PLAYER_PERCENT_H), Color.BLUE);
+        Player opp = new Player(screenWidth * CST.PLAYER_PERCENT_X,
+                screenHeight * CST.PLAYER_PERCENT_Y_TOP, (int) (screenWidth * CST.PLAYER_PERCENT_W),
+                (int) (screenHeight * CST.PLAYER_PERCENT_H), Color.RED);
 
         gameView = new GameView(this, player, opp, screenWidth, screenHeight);
         setContentView(gameView);
 
         //2 asynctaks to receive data from 2 players
-        ScreenAsyncTask comOppAT = new ScreenAsyncTask(gameView, 8988);
-        ScreenAsyncTask comPlayerAT = new ScreenAsyncTask(gameView, 8989);
+        ScreenAsyncTask comOppAT = new ScreenAsyncTask(gameView, CST.PORT_A);
+        ScreenAsyncTask comPlayerAT = new ScreenAsyncTask(gameView, CST.PORT_B);
         comOppAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         comPlayerAT.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -107,27 +111,27 @@ public class DrawActivityScreen extends AppCompatActivity {
 
             //get ball
             ball = BitmapFactory.decodeResource(getResources(), R.drawable.yellowball);
-            ball = Bitmap.createScaledBitmap(ball, 50, 50, false);
+            ball = Bitmap.createScaledBitmap(ball, CST.BALL_SCALE_X, CST.BALL_SCALE_Y, false);
 
             //initial position and speed and lastTouch
-            initBall(0,0,4,4);
+            initBall(CST.BALL_INIT_POS_X,CST.BALL_INIT_POS_Y,CST.BALL_INIT_DX,CST.BALL_INIT_DY);
 
         }
         public void setIsFirstLaunch(boolean state){isFirstLaunch = state;}
 
 
         public void moveOpponent(String str) {
-            if (str.equals("d") && opp.getX() + oppBTM.getWidth() < screenWidth) {
+            if (str.equals(CST.MOVE_RIGHT_LOCAL) && opp.getX() + oppBTM.getWidth() < screenWidth) {
                 opp.moveRight();
-            } else if (str.equals("g") && opp.getX() > 0) {
+            } else if (str.equals(CST.MOVE_LEFT_LOCAL) && opp.getX() > 0) {
                 opp.moveLeft();
             }
         }
 
         public void movePlayer(String str){
-            if(str.equals("d") && player.getX() + playerBTM.getWidth() < screenWidth){
+            if(str.equals(CST.MOVE_RIGHT_LOCAL) && player.getX() + playerBTM.getWidth() < screenWidth){
                 player.moveRight();
-            } else if(str.equals("g") && player.getX() > 0){
+            } else if(str.equals(CST.MOVE_LEFT_LOCAL) && player.getX() > 0){
                 player.moveLeft();
             }
         }
@@ -167,12 +171,12 @@ public class DrawActivityScreen extends AppCompatActivity {
 
                 //balle sort en haut => point player
                 if (y_ball <= 0 ){
-                    initBall(0,0,4,4);
+                    initBall(CST.BALL_INIT_POS_X,CST.BALL_INIT_POS_Y,CST.BALL_INIT_DX,CST.BALL_INIT_DY);
                     player.addOnePoint();
                 }
                 //balle sort en bas => point opp
                 if(y_ball > screenHeight - ball.getHeight()){
-                    initBall(0,0,4,4);
+                    initBall(CST.BALL_INIT_POS_X,CST.BALL_INIT_POS_Y,CST.BALL_INIT_DX,CST.BALL_INIT_DY);
                     opp.addOnePoint();
                 }
 
@@ -204,12 +208,14 @@ public class DrawActivityScreen extends AppCompatActivity {
                 Paint paint = new Paint();
                 paint.setColor(Color.BLUE);
                 paint.setStyle(Paint.Style.FILL);
-                paint.setTextSize(100);
-                c.drawText(Integer.toString(player.getScore()), 100, screenHeight * 0.8f, paint);
+                paint.setTextSize(CST.SCORE_TXT_SIZE);
+                c.drawText(Integer.toString(player.getScore()), CST.SCORE_X,
+                        screenHeight * CST.SCORE_PERCENT_BTM_Y, paint);
                 paint.setColor(Color.RED);
-                c.drawText(Integer.toString(opp.getScore()), 100, screenHeight * 0.2f, paint);
+                c.drawText(Integer.toString(opp.getScore()), CST.SCORE_X,
+                        screenHeight * CST.SCORE_PERCENT_TOP_Y, paint);
                 paint.setColor(Color.WHITE);
-                paint.setStrokeWidth(50);
+                paint.setStrokeWidth(CST.LINE_WIDTH);
                 c.drawLine(0, screenHeight / 2f, screenWidth, screenHeight / 2f, paint);
 
                 c.drawBitmap(ball, x_ball, y_ball, null);
