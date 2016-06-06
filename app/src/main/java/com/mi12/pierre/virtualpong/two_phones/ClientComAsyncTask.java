@@ -3,6 +3,7 @@ package com.mi12.pierre.virtualpong.two_phones;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,7 +28,7 @@ public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
                 "/echantillonnage");
 
         dir.mkdirs();
-        File file = new File(dir, "client_receive.txt");
+        File file = new File(dir, "client.txt");
         try {
             fstream = new FileOutputStream(file);
         } catch (FileNotFoundException e) {
@@ -37,10 +38,9 @@ public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
 
     @Override
     protected String doInBackground(Void... params) {
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        ServerSocket s;
+        ServerSocket s = null;
         ObjectInputStream ois = null;
-        Socket soc;
+        Socket soc = null;
         try {
             s = new ServerSocket(8989);
             soc = s.accept();
@@ -48,24 +48,32 @@ public class ClientComAsyncTask extends AsyncTask<Void, GamePositions, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        long curTime;
-        while (true)
+        long[] data = new long[1000];
+        int i = 0;
+        while (i < 1000)
         {
             try {
                 GamePositions gp = (GamePositions) ois.readObject();
-                writeFile(Long.toString(System.nanoTime()) + "\n");
+//                writeFile(Long.toString(System.nanoTime()) + "\n");
                 publishProgress((GamePositions) ois.readObject());
+                data[i++] = System.currentTimeMillis();
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
             if(false){break;}
         }
+
+        for(int j = 0; j < 1000; ++j){
+            writeFile(Long.toString(data[j]) + "\n");
+        }
+
         try{
             s.close();
             soc.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return "";
     }
     @Override

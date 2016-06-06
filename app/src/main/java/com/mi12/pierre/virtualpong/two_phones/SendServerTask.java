@@ -26,7 +26,7 @@ public class SendServerTask extends Thread
                 "/echantillonnage");
 
         dir.mkdirs();
-        File file = new File(dir, "server_send.txt");
+        File file = new File(dir, "server.txt");
         try {
             fstream = new FileOutputStream(file);
         } catch (FileNotFoundException e) {
@@ -48,10 +48,11 @@ public class SendServerTask extends Thread
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        while (true) {
+        long[] data = new long[2000];
+        int i = 0;
+        while (i < 2000) {
             try {
-                Thread.sleep(4); //delay between two game positions sending
+                Thread.sleep(100); //delay between two game positions sending
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -62,6 +63,10 @@ public class SendServerTask extends Thread
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            data[i++] = System.currentTimeMillis();
+        }
+        for(int j = 0; j < 2000; ++j){
+            writeFile(Long.toString(data[j]) + "\n");
         }
     }
 

@@ -188,6 +188,11 @@ public class DrawActivityClient  extends AppCompatActivity implements SensorEven
 
                 c.drawBitmap(ball, x_ball, y_ball, null);
                 holder.unlockCanvasAndPost(c);
+                try {
+                    Thread.sleep(4);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

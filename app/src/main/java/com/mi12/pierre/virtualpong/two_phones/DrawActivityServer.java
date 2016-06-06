@@ -242,6 +242,8 @@ public class DrawActivityServer extends AppCompatActivity implements SensorEvent
 
                 c.drawBitmap(ball, x_ball, y_ball, null);
                 holder.unlockCanvasAndPost(c);
+
+
             }
         }
 
