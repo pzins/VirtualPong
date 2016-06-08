@@ -35,7 +35,7 @@ public class CST {
     public final static int BALL_INIT_DY = 4;
 
     public final static int PLAYER_SPEED = 10;
-    public final static int SERVER_DELAY = 4;
+    public final static int SERVER_DELAY = 4; //sleep server send
 
     public final static int SENSOR_SAMPLING = SensorManager.SENSOR_DELAY_GAME;
 }

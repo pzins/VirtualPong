@@ -1,7 +1,5 @@
 package com.mi12.pierre.virtualpong.two_phones;
 
-import android.util.Log;
-
 import com.mi12.pierre.virtualpong.CST;
 
 import java.io.IOException;
