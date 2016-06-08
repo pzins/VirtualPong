@@ -1,0 +1,21 @@
+/*
+
+@startuml
+
+class DrawActivityClient
+DrawActivityClient *-- SendClientTask
+SendClientTask <|-- Thread
+DrawActivityClient *-- ClientComAsyncTask
+ClientComAsyncTask <|-- AsyncTask
+ClientComAsyncTask <|-- SensorEventListener
+
+class DrawActivityServer
+DrawActivityServer *-- SendServerTask
+SendServerTask <|-- Thread
+DrawActivityServer *-- ServerComAsyncTask
+ServerComAsyncTask <|-- AsyncTask
+ServerComAsyncTask <|-- SensorEventListener
+@enduml
+
+
+*/

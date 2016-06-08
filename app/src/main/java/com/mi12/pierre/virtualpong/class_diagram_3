@@ -1,0 +1,16 @@
+/*
+
+@startuml
+
+class DrawActivityScreen
+DrawActivityScreen *-- ScreenAsyncTask
+ScreenAsyncTask <|-- AsyncTask
+class DrawActivityController
+DrawActivityController *-- SendControllerTask
+DrawActivityController <|-- SensorEventListener
+SendControllerTask <|-- Thread
+
+@enduml
+
+
+*/

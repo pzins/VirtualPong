@@ -11,7 +11,15 @@ import com.mi12.pierre.virtualpong.three_phones.local_network.LocalNetwork3Activ
 import com.mi12.pierre.virtualpong.three_phones.wifidirect.WifiDirect3Activity;
 import com.mi12.pierre.virtualpong.two_phones.local_network.LocalNetwork2Activity;
 import com.mi12.pierre.virtualpong.two_phones.wifidirect.WifiDirect2Activity;
+/*
 
+* @startuml
+
+* p --|> wheels
+
+* @enduml
+
+*/
 public class MainActivity extends Activity {
 
     @Override

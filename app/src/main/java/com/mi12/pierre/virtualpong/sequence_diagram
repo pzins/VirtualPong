@@ -1,0 +1,24 @@
+/*
+
+@startuml
+
+MainActivity -> WifiDirect2Activity
+WifiDirect2Activity -> DrawActivityClient
+WifiDirect2Activity -> DrawActivityServer
+WifiDirect2Activity --> MainActivity
+MainActivity -> LocalNetwork2Activity
+LocalNetwork2Activity -> DrawActivityClient
+LocalNetwork2Activity -> DrawActivityServer
+LocalNetwork2Activity --> MainActivity
+MainActivity -> WifiDirect3Activity
+WifiDirect3Activity -> DrawActivityController
+WifiDirect3Activity -> DrawActivityServer
+WifiDirect3Activity --> MainActivity
+MainActivity -> LocalNetwork3Activity
+LocalNetwork3Activity -> DrawActivityScreen
+LocalNetwork3Activity -> DrawActivityController
+LocalNetwork3Activity --> MainActivity
+
+@enduml
+
+*/
