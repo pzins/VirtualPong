@@ -3,6 +3,7 @@ package com.mi12.pierre.virtualpong.three_phones;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.mi12.pierre.virtualpong.CST;
 
@@ -30,6 +31,7 @@ public class ScreenAsyncTask extends AsyncTask<Void, Byte, String> {
         {
             ServerSocket s = new ServerSocket(port);
             Socket soc = s.accept();
+            Log.w("OKOKO : port : ", Integer.toString(port));
             //noinspection ResourceType
             gameView.readyToStart();
 

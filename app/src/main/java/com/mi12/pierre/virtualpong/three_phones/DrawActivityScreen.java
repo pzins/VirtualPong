@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -148,7 +149,9 @@ public class DrawActivityScreen extends AppCompatActivity {
 
         public void readyToStart(){
             nbConnectedPlayer++;
+            Log.w("d+d+fg+dfg", Integer.toString(nbConnectedPlayer));
             if(nbConnectedPlayer == 2){
+                Log.w("0000sdsdf", Integer.toString(nbConnectedPlayer));
                 nbConnectedPlayer = 0;
                 isFirstLaunch = false;
                 this.thread.start();

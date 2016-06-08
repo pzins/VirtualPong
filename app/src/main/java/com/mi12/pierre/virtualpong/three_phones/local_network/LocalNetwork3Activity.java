@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mi12.R;
+import com.mi12.pierre.virtualpong.CST;
 import com.mi12.pierre.virtualpong.three_phones.DrawActivityController;
 import com.mi12.pierre.virtualpong.three_phones.DrawActivityScreen;
 
@@ -34,7 +35,7 @@ public class LocalNetwork3Activity extends AppCompatActivity {
                     }
                 });
         final EditText ipServer   = (EditText)findViewById(R.id.ip);
-        Button bt_join = (Button) findViewById(R.id.join);
+        Button bt_join = (Button) findViewById(R.id.join1);
         bt_join.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -47,6 +48,29 @@ public class LocalNetwork3Activity extends AppCompatActivity {
                             Bundle b = new Bundle();
                             try {
                                 b.putSerializable("ip", InetAddress.getByName(ipServer.getText().toString()));
+                                b.putInt("port", CST.PORT_A);
+                            } catch (UnknownHostException e) {
+                                e.printStackTrace();
+                            }
+                            intent.putExtras(b);
+                            startActivity(intent);
+                        }
+                    }
+                });
+        bt_join = (Button) findViewById(R.id.join2);
+        bt_join.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(((EditText) findViewById(R.id.ip)).getText().toString().matches("")){
+                            Toast.makeText(LocalNetwork3Activity.this, "Please fill the IP address",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Intent intent = new Intent(LocalNetwork3Activity.this, DrawActivityController.class);
+                            Bundle b = new Bundle();
+                            try {
+                                b.putSerializable("ip", InetAddress.getByName(ipServer.getText().toString()));
+                                b.putInt("port", CST.PORT_B);
                             } catch (UnknownHostException e) {
                                 e.printStackTrace();
                             }

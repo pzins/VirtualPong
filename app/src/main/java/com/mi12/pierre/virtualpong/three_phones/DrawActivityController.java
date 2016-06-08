@@ -33,15 +33,17 @@ public class DrawActivityController  extends AppCompatActivity implements Sensor
         this.findViewById(android.R.id.content).setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
+        Integer port = 0;
         Bundle b = getIntent().getExtras();
         if (b != null) {
             goIpAddr = (InetAddress) b.getSerializable("ip");
+            port = b.getInt("port");
         }
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
         //task to send movement to the screen
-        sendTask = new SendControllerTask(goIpAddr);
+        sendTask = new SendControllerTask(goIpAddr, port);
         sendTask.start();
     }
 
