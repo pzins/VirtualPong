@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.mi12.R;
@@ -39,6 +40,7 @@ public class DrawActivityController  extends AppCompatActivity implements Sensor
             goIpAddr = (InetAddress) b.getSerializable("ip");
             port = b.getInt("port");
         }
+        Log.w("portport", Integer.toString(port));
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
